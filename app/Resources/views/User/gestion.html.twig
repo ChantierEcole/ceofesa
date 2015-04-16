@@ -1,0 +1,44 @@
+{% extends "::layout.html.twig" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-tasks"></span> Liste des utilisateurs </div>
+            </div>
+            <div class="panel-body padding-bottom-none">
+                <table aria-describedby="datatable_info" class="table table-striped table-bordered table-hover dataTable" id="datatable">
+                    <thead>
+                        <tr role="row">
+                            <th>Nom</th>
+                            <th>Mail</th>
+                            <th class="hidden-xs">Activé</th>
+                            <th class="visible-lg">Roles</th>
+                            <th class="visible-lg">Structure</th>
+                        </tr>
+                    </thead>
+                    <tbody aria-relevant="all" aria-live="polite" role="alert">
+                        {% for user in users %}
+                        <tr class="even">
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.enabled }}</td>
+                            <td>
+                                <ul>
+                                {% for role in user.roles %}
+                                    <li>{{ role }}</li>
+                                {% endfor %}
+                                </ul>
+                            </td>
+                            <td>{{ user.structure }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

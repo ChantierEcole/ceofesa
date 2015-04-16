@@ -1,0 +1,45 @@
+{% extends "::layout.html.twig" %}
+{% block body %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <i class="fa fa-smile-o"></i> Bienvenue 
+              </div>
+            </div>
+            <div class="panel-body">
+              <p> Bienvenue sur l'intranet d'OFESA et de CHANTIER ECOLE </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if is_granted('ROLE_ADMIN') %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12"> </div>
+            <div class="col-md-12">
+              <div class="panel">
+                <div class="panel-heading">
+                  <div class="panel-title"> <i class="fa fa-bar-chart-o"></i> Informations sur le site </div>
+                </div>
+                <div class="panel-body">
+                  
+                </div>
+                <div class="panel-footer">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    
+  
+
+<!-- End: Main --> 
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

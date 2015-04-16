@@ -1,0 +1,75 @@
+{# Surchage d'une vue de FOSUserBundle (v2.0@dev) #}
+
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}error</div>
+{% endif %}
+<div id="main">
+    <div class="container">
+        <div class="row">
+          <div id="page-logo"> <img src="{{ asset('img/logos/logo-ceofesa.png') }}" class="img-responsive" alt="logo"> </div>
+        </div>
+        <div class="row">
+            <div class="panel">
+                <div class="panel-heading">
+                  <div class="panel-title"> <span class="glyphicon glyphicon-lock"></span> Connexion 
+                  </div>
+                </div>
+                <form class="cmxform" id="altForm" action="{{ path("fos_user_security_check") }}" method="post">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="input-group"> 
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span> </span>
+                                <input type="text" id="username" class="form-control phone" name="_username" autocomplete="off" placeholder="Nom d'utilisateur" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group"> 
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-link"></span> </span>
+                                <input type="password" id="password" class="form-control product" name="_password" autocomplete="off" placeholder="Mot de Passe" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group-last checkbutton">
+                            <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                            <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+                        </div>
+                    </div>
+                    <div class="panel-footer"> <span class="panel-title-sm pull-left" style="padding-top: 7px;"><a href="{{ path('fos_user_resetting_request') }}"> Mot de passe oublié ?</a></span>
+                        <div class="form-group margin-bottom-none">
+                            <input id="_submit" class="btn btn-primary pull-right" type="submit" value="{{ 'security.login.submit'|trans }}" name="_submit" />
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br/>
+            <a href="{{ path("login_new") }}" class="btn btn-default btn-xs">Faire une demande de compte pour votre structure</a>
+        </div>
+    </div>
+</div>
+{% endblock fos_user_content %}
+
+{% block javascripts %}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script> 
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script> <!-- Theme Javascript --> 
+<script type="text/javascript" src="{{ asset('js/uniform.min.js') }}"></script> 
+<script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/custom.js') }}"></script> 
+<script type="text/javascript">
+
+jQuery(document).ready(function() {
+
+    // Init Theme Core    
+    Core.init();   
+    
+});
+</script>
+
+{% endblock javascripts %}

@@ -1,0 +1,89 @@
+{% extends '::layout.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-user"></span>Modification de la Structure </div>
+            </div>
+            <div class="panel-body">
+                <div class="panel-body padding-bottom-none">
+
+                    {{ form_start(edit_form) }}
+                    {{ form_errors(edit_form) }}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(edit_form.strNom) }}
+                            {{ form_row(edit_form.strAdresse1) }}
+                            {{ form_row(edit_form.strAdresse2) }}
+                            {{ form_row(edit_form.strCp) }}
+                            {{ form_row(edit_form.strVille) }}
+                            {{ form_row(edit_form.strReponsable) }}
+                            {{ form_row(edit_form.strFonction) }}
+                            
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(edit_form.strSiret) }}
+                            {{ form_row(edit_form.strNumof) }}
+                            {{ form_row(edit_form.strIncom) }}
+                            {{ form_row(edit_form.strTelephone) }}
+                            {{ form_row(edit_form.strEmail) }}
+                            {{ form_row(edit_form.strRegion) }}
+                            {{ form_row(edit_form.strType) }}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form_row(edit_form.strAdherent) }}                            
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(edit_form.strDateagrement) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(edit_form.strDatefin) }}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(edit_form.strEnvoiconvention) }}
+                            {{ form_row(edit_form.strDateenvoiconvention) }}
+                            {{ form_row(edit_form.strRetourconvention) }}
+                            {{ form_row(edit_form.strDateretourconvention) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(edit_form.strEnvoiavenant) }}
+                            {{ form_row(edit_form.strDateenvoiavenant) }}
+                            {{ form_row(edit_form.strRetouravenant) }}
+                            {{ form_row(edit_form.strDateretouravenant) }}
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% block form_row %}
+                                {{ form_widget(edit_form.enregistrer) }}
+                            {% endblock form_row %}
+                            <a href="{{ path('soustraitant_show', { 'id': entity.strId }) }}">
+                                <button type="button" class="btn btn-light4 spacing-button">
+                                    Retour
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                    {{ form_end(edit_form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

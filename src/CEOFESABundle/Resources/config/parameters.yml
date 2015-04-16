@@ -1,0 +1,4 @@
+parameters:
+    tarif_ofesa: 12.00
+    tarif_straitant: 13
+    max_heures: 399

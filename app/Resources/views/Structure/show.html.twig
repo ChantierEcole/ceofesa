@@ -1,0 +1,134 @@
+{% extends '::layout.html.twig' %}
+
+{% block body -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du sous-traitant</div>
+            </div>
+            <div class="panel-body">
+                <table class="record_properties table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ entity.strNom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adresse 1</th>
+                            <td>{{ entity.strAdresse1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adresse 2</th>
+                            <td>{{ entity.strAdresse2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Code Postal</th>
+                            <td>{{ entity.strCp }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ville</th>
+                            <td>{{ entity.strVille }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro Incom</th>
+                            <td>{{ entity.strIncom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro SIRET</th>
+                            <td>{{ entity.strSiret }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro OF</th>
+                            <td>{{ entity.strNumof }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adhérent</th>
+                            <td>{{ entity.strAdherent == '1' ? "oui" : "non" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Télephone</th>
+                            <td>{{ entity.strTelephone }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ entity.strEmail }}</td>
+                        </tr>
+                        <tr>
+                            <th>Convention envoyée</th>
+                            <td>{{ entity.strEnvoiconvention == '1' ? "oui" : "non" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Avenant envoyé</th>
+                            <td>{{ entity.strEnvoiavenant == '1' ? "oui" : "non" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Convention revenue</th>
+                            <td>{{ entity.strRetourconvention == '1' ? "oui" : "non" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Avenant revenu</th>
+                            <td>{{ entity.strRetouravenant == '1' ? "oui" : "non" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date agrement</th>
+                            <td>{{ entity.strDateagrement is empty ? "" : entity.strDateagrement|date("d-m-Y") }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date fin</th>
+                            <td>{{ entity.strDatefin is empty ? "" : entity.strDatefin|date("d-m-Y") }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date envoi convention</th>
+                            <td>{{ entity.strDateenvoiconvention is empty ? "" : entity.strDateenvoiconvention|date("d-m-Y") }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date retour convention</th>
+                            <td>{{ entity.strDateretourconvention is empty ? "" : entity.strDateretourconvention|date("d-m-Y") }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date envoi avenant</th>
+                            <td>{{ entity.strDateenvoiavenant is empty ? "" : entity.strDateenvoiavenant|date("d-m-Y") }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date retour avenant</th>
+                            <td>{{ entity.strDateretouravenant is empty ? "" : entity.strDateretouravenant|date("d-m-Y") }}</td>
+                        </tr>
+                        <tr>
+                            <th>Reponsable</th>
+                            <td>{{ entity.strReponsable }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fonction</th>
+                            <td>{{ entity.strFonction }}</td>
+                        </tr>
+                        <tr>
+                            <th>Region</th>
+                            <td>
+                            {% if entity.strRegion %}
+                                {{ entity.strRegion.regNom }}
+                            {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br/>
+
+                <a href="{{ path('structure_edit', { 'id': entity.strId }) }}">
+                    <button type="button" class="btn btn-blue4">
+                        Modifier
+                    </button>
+                </a>
+
+                <a href="{{ path('structure') }}">
+                    <button type="button" class="btn btn-light4">
+                        Retour à la liste
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

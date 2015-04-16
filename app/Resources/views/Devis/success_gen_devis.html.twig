@@ -1,0 +1,22 @@
+{% extends "::layout.html.twig" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs">
+                    <span class="glyphicon glyphicon-info-sign"></span>Devis enregistré
+                </div>
+            </div>
+            <div class="panel-body alerts-panel">
+                    <div class="alert alert-success alert-dismissable">
+                        <strong>Votre devis a bien été pris en compte</strong><br/> Nos équipes vont vérifier les informations enregistrées et reviendront vers vous dans les plus bref délais.
+                    </div>
+                    <a href="{{ path('dashboard') }}"><button type="button" class="btn btn-default btn-gradient"><i class="fa fa-home"></i> Retour au dashboard</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

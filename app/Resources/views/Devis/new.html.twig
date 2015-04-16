@@ -1,0 +1,178 @@
+{% extends '::layout.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-download"></span>Générer un devis</div>
+            </div>
+            <div class="panel-body padding-bottom-none">
+
+            {{ form_start(form) }}
+                    {{ form_errors(form) }}
+
+                    <div class="col-md-6">
+                        {{ form_row(form.devDatedebut) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.devDatefin) }}
+                    </div>
+                    <div class="col-md-12 parcours-forms">
+                        {{ form_row(form.devParcours) }}
+                    </div>
+                    <div class="col-md-12">
+                      <a class="pull-left" href="{{ path('stagiaire_create') }}">
+                        <button type="button" class="btn btn-light2">
+                            Créer un nouveau stagiaire
+                        </button>
+                      </a>
+                      <div style="float: right;">
+                        {{ form_row(form.enregistrer) }}
+                      </div>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+        
+{% block javascripts %}
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+
+    var $container = $('div#ceofesabundle_devis_devParcours');
+
+    // On ajoute un lien pour ajouter une nouvelle catégorie
+
+    var $addLink = $('<a href="#" id="add_category" class="btn btn-dark2">Ajouter un Parcours de Stagiaire</a>');
+
+    $container.after($addLink);
+
+    // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+
+    $addLink.click(function(e) {
+
+      addCategory($container);
+
+      e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+
+      return false;
+
+    });
+
+    // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+
+    var index = $container.children('.form-group').length;
+
+    $container.children('.form-group').each(function() {
+      var data = $(this).children('label').text();
+      data =  parseInt(data)+1;
+      $(this).children('label').text("Parcours n° "+data);
+    });
+    
+    // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un
+    if (index == 0) {
+      addCategory($container);
+    } else {
+      // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
+      $container.children('div').each(function() {
+        addDeleteLink($(this));
+      });
+    }
+    
+
+    // La fonction qui ajoute un formulaire Parcours
+
+    function addCategory($container) {
+
+      // Dans le contenu de l'attribut « data-prototype », on remplace :
+
+      // - le texte "__name__label__" qu'il contient par le label du champ
+
+      // - le texte "__name__" qu'il contient par le numéro du champ
+
+      var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Parcours n°' + (index+1))
+
+          .replace(/__name__/g, index));
+
+      // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+
+      addDeleteLink($prototype);
+
+      // On ajoute le prototype modifié à la fin de la balise <div>
+
+      $container.append($prototype);
+
+      // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+
+      index++;
+
+    }
+
+    // La fonction qui ajoute un lien de suppression d'une catégorie
+
+    function addDeleteLink($prototype) {
+
+      // Création du lien
+
+      $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+
+      // Ajout du lien
+
+      $prototype.append($deleteLink);
+
+      // Ajout du listener sur le clic du lien
+
+      $deleteLink.click(function(e) {
+
+        $prototype.remove();
+
+        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+
+        return false;
+
+      });
+
+    }
+
+    // Modification dynamique du champ "OF" du formulaire en fonction du champ "Type"
+    var url             = "{{ path('devis_ajax') }}";
+    var typeSelect     = 'select[id^="ceofesabundle_devis_devParcours_"][id$="_dprType"]';
+
+    $('#ceofesabundle_devis_devParcours').on('change', typeSelect, function(){
+
+      var type_id = $(this).val();
+      var select_id = $(this).attr("id").split("_")[3];
+      var ofElement = 'select[id="ceofesabundle_devis_devParcours_'+select_id+'_dprStructure"]';
+
+      $.ajax({  type: "POST",
+        url: url,
+        data: {'type_id':type_id},
+        dataType: 'json',
+        timeout: 30000,
+        success: function (data) {
+          console.log(data);          
+          //réinitialise la liste des joueurs
+          $(ofElement).html('');
+
+          //met à jour la liste des joueurs
+          $.each(data, function(index){
+            var id      = data[index].id;
+            var name    = data[index].nom;
+            $(ofElement).append('<option value="'+id+'">'+name+'</option>');
+          });
+        },
+        error: function(exception){
+          alert('Erreur, la connexion au serveur a été interrompue');
+        }
+      });
+    });
+  });
+
+</script>
+{% endblock %}

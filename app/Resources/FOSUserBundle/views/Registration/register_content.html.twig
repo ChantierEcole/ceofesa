@@ -1,0 +1,41 @@
+{# Surchage d'une vue de FOSUserBundle (v2.0@dev) #}
+
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+  <div class="container">
+    <div class="row">
+      <div id="page-logo"> <img src="{{ asset('img/logos/logo-ceofesa.png') }}" class="img-responsive" alt="logo"> </div>
+    </div>
+    <div class="row">
+      <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title"> <span class="glyphicon glyphicon-pencil"></span> Inscrire un nouvel utilisateur
+            </div>
+        </div>
+        <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="input-group">
+                        {{ form_widget(form) }}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="form-group margin-bottom-none">
+                    <input class="btn btn-primary pull-right" type="submit" value="{{ 'registration.submit'|trans }}" />
+                    <a class="pull-right" href="{{ path('dashboard') }}">
+                        <button type="button" class="btn btn-light4">
+                            Retour
+                        </button>
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

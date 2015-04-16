@@ -1,0 +1,80 @@
+{% extends '::layout.html.twig' %}
+
+{% block body -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du Devis </div>
+            </div>
+            <div class="panel-body">
+                <table class="record_properties table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Année</th>
+                            <td>{{ entity.devAnnee }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro</th>
+                            <td>{{ entity.devNumero }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Création</th>
+                            <td>{{ entity.devDatedevis|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Début</th>
+                            <td>{{ entity.devDatedebut|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Fin</th>
+                            <td>{{ entity.devDatefin|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Taux Horaire</th>
+                            <td>{{ entity.devTauxhoraire }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Parcours de stagiaire</h3>
+                <table class="table table-bordered table-condensed table-hover">
+                    <tr>
+                        <th>Stagiaire</th>
+                        <th>Module</th>
+                        <th>Nombre d'Heures</th>
+                        <th>Type</th>
+                        <th>OF</th>
+                    </tr>
+                    {% for parcours in entities %}
+                        <tr>
+                            <td>{{ parcours.dprTiers.trsNomPrenom }}</td>
+                            <td>{{ parcours.dprModule.modCode }}</td>
+                            <td>{{ parcours.dprNombreHeure }}</td>
+                            <td>{{ parcours.dprType.mtyType }}</td>
+                            <td>{{ parcours.dprStructure.strNom }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <br/>
+
+                <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
+                    <button type="button" class="btn btn-blue4">
+                        Modifier
+                    </button>
+                </a>
+
+                <a href="{{ path('devis') }}">
+                    <button type="button" class="btn btn-light4 spacing-button">
+                        Retour à la liste
+                    </button>
+                </a>
+
+                {{ form(delete_form, { 'attr': {'style': 'float:right;'} }) }}
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

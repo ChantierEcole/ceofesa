@@ -1,0 +1,11 @@
+services:
+    ceofesa.registration.form.type:
+        class: CEOFESABundle\Form\Type\RegistrationFormType
+        tags:
+            - { name: form.type, alias: ceofesa_registration }
+
+    validator.unique.parcours:
+        class: CEOFESABundle\Validator\Constraints\ParcoursValidator
+        arguments: ["%max_heures%"]
+        tags:
+            - { name: validator.constraint_validator, alias: max_heures }

@@ -1,0 +1,36 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        main:
+            pattern: ^/
+            anonymous: true
+            form_login:
+                provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+            logout: true
+            remember_me:
+                key:             %secret%        # On définit la clé pour le remember_me (%secret% est un parametre de parameters.yml)
+                lifetime:        10800
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: ROLE_ADMIN }
+        - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/users/, role: ROLE_ADMIN }
+        - { path: ^/structure/, role: ROLE_ADMIN }
+        - { path: ^/dashboard/, role: ROLE_USER }
+        - { path: ^/devis/, role: ROLE_USER }
+        - { path: ^/stagiaire/, role: ROLE_USER }
+        - { path: ^/soustraitant/, role: ROLE_USER }
+

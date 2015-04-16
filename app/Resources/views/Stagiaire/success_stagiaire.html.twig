@@ -1,0 +1,22 @@
+{% extends "::layout.html.twig" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs">
+                    <span class="glyphicon glyphicon-info-sign"></span>Stagiaire enregistré
+                </div>
+            </div>
+            <div class="panel-body alerts-panel">
+                    <div class="alert alert-success alert-dismissable">
+                        <strong>Le nouveau stagiaire a bien été enregistré</strong><br/> Vous pouvez le retrouver dans la liste des stagiaires et le rajouter à un devis.
+                    </div>
+                    <a href="{{ path('dashboard') }}"><button type="button" class="btn btn-default btn-gradient"><i class="fa fa-home"></i> Retour au dashboard</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

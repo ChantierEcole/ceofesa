@@ -1,0 +1,51 @@
+{% extends "::user_layout.html.twig" %}
+{% block body %}
+<div id="main">
+    <div class="container">
+        <div class="row">
+          <div id="page-logo"> <img src="{{ asset('img/logos/logo-ceofesa.png') }}" class="img-responsive" alt="logo"> </div>
+        </div>
+        <div class="row">
+            <div class="panel">
+                <div class="panel-heading">
+                  <div class="panel-title"> <span class="glyphicon glyphicon-pencil"></span> Demande de compte 
+                  </div>
+                </div>
+                <div class="panel-body">
+                    <form class="cmxform form-horizontal requser" id="requserForm" action="{{ path("login_new") }}" method="post">
+                        {{ form_start(form) }}
+                        {{ form_errors(form) }}
+
+                        {{ form_row(form.nom) }}
+                        {{ form_row(form.prenom) }}
+                        <div>
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                        </div>
+                        <div>
+                        {{ form_label(form.siret) }}
+                        {{ form_widget(form.siret) }}
+                        {{ form_errors(form.siret) }}
+                        </div>
+                        {{ form_row(form.structure) }}
+                        {{ form_row(form.role) }}
+                        <div>
+                            {{ form_row(form.envoyer) }}
+                            <a href="{{ path('fos_user_security_login') }}">
+                                <button type="button" class="btn btn-light4">
+                                    Retour
+                                </button>
+                            </a>
+                        </div>
+                        {{ form_end(form) }}
+                    </form>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block javascripts %}
+{% endblock javascripts %}

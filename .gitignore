@@ -1,0 +1,10 @@
+app/bootstrap.php.cache
+app/config/parameters.yml
+app/cache/
+app/logs/
+vendor/
+web/bundles
+web/uploads
+
+bin/
+
