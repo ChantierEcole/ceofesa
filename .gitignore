@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+/web/bundles/
+/web/uploads/
+/app/bootstrap*
+/app/cache/*
+/app/logs/*
+/vendor/
+/app/config/parameters.yml
+
+/bin/
+=======
 app/bootstrap.php.cache
 app/config/parameters.yml
 app/cache/
@@ -8,3 +19,4 @@ web/uploads
 
 bin/
 
+>>>>>>> 16049f79cb725b5b49fb44ddf4705dc825263824
