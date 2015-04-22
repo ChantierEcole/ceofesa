@@ -35,6 +35,8 @@ class AdminController extends Controller
     }
 
 	/**
+	* Liste les devis en cours
+    *
     * @Route(
     * 	path="/devis",
     * 	name="devis_gestion"
@@ -42,6 +44,9 @@ class AdminController extends Controller
     */
     public function devisGestionAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
+        return $this->render("Devis/admin.html.twig",array('entities' => $entities));
     }
 }
