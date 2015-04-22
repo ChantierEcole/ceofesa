@@ -1,6 +1,7 @@
 set :stages,        [ "preprod", "prod" ]
 set :default_stage, "preprod"
 set :stage_dir,     "app/config"
+require 'capistrano/ext/multistage'
 
 set :application,   "ceofesa"
 set :domain, "www.ceintranet.org"
