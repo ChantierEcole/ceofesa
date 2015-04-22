@@ -2,6 +2,7 @@
 
 //// Surchage du RegistrationController de FOSUserBundle ////////////////
 //// pour désactiver le log automatique après inscription ///////////////
+//// + Ajout formulaire de demande d'inscription ////////////////////////
 
 namespace CEOFESABundle\Controller;
 
@@ -16,6 +17,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use CEOFESABundle\Form\Domain\utilisateur;
+use CEOFESABundle\Form\Type\UtilisateurType;
+
 
 class RegistrationController extends BaseController
 {
@@ -63,5 +69,33 @@ class RegistrationController extends BaseController
         return $this->render('FOSUserBundle:Registration:register.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+    * @Route(
+    *       path="/login/new",
+    *       name="login_new"
+    * )
+    * @Method({"GET","POST"})
+    */
+    public function loginNewAction(Request $request)
+    {
+        $utilisateur = new utilisateur();
+        $form = $this->createForm(new UtilisateurType(),$utilisateur);
+        $form -> handleRequest($request);
+
+        if ($form->isValid()) {
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Demande de compte')
+                ->setFrom('webmestre@chantierecole.org')
+                ->setTo('webmestre@chantierecole.org')
+                ->setBody($this->renderView('Contact\utilisateur.txt.twig',array('utilisateur' => $utilisateur)))
+            ;
+            $this->get('mailer')->send($message);
+
+            echo 'le formulaire est valide et un mail a été envoyé';
+        }
+
+        return $this->render("User/loginnew.html.twig",array('form' => $form->createView()));
     }
 }

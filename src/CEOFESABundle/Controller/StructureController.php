@@ -13,7 +13,7 @@ use CEOFESABundle\Form\Type\StructureType;
 /**
  * Structure controller.
  *
- * @Route("/structure")
+ * @Route("/admin/structure")
  */
 class StructureController extends Controller
 {
