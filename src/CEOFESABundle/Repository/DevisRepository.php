@@ -36,8 +36,7 @@ class DevisRepository extends EntityRepository
     }
 
     public function getDevisEnCours(){
-        $date = date("Y-m-d");
-
+        // Sélection des numéros de devis qui apparaissent dans des parcours
         $qb2 = $this->_em->createQueryBuilder();
         $qb2->select('IDENTITY(dp.dprDevis)')
             ->from('CEOFESABundle\Entity\Parcours', 'pr')
@@ -45,6 +44,7 @@ class DevisRepository extends EntityRepository
             ->groupBy('dp.dprDevis')
         ;
 
+        // Sélection des devis qui ne sont pas parmis ceux de la requete précédente
         $qb = $this->createQueryBuilder('s');
         $qb ->where($qb->expr()->notIn('s.devId', $qb2->getDQL()))
             ->andWhere('s.devDatefin > :date')

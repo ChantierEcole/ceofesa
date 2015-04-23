@@ -16,6 +16,7 @@
                             <th>Numero</th>
                             <th>Date du devis</th>
                             <th>Prix total</th>
+                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -26,6 +27,7 @@
                             <td>{{ entity.devAnnee }}-{{ "%04d"|format(entity.devNumero) }}</td>
                             <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
                             <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
+                            <td>{{ entity.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
