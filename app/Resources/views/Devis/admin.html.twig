@@ -2,7 +2,7 @@
 {% block body %}
 
 	{% for entity in entities %}
-		{{ entity.devId }}
+		{{ entity.devDatefin|date('Y-m-d') }}
 	{% endfor %}
 
 {% endblock %}

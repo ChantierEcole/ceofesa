@@ -36,12 +36,7 @@ class DevisRepository extends EntityRepository
     }
 
     public function getDevisEnCours(){
-        /*$qb = $this->createQueryBuilder('n');
-        return $this
-        -> createQueryBuilder('c')
-        -> leftjoin('c.devID','dp')
-        ;*/
-
+        $date = date("Y-m-d");
 
         $qb2 = $this->_em->createQueryBuilder();
         $qb2->select('IDENTITY(dp.dprDevis)')
@@ -50,27 +45,14 @@ class DevisRepository extends EntityRepository
             ->groupBy('dp.dprDevis')
         ;
 
-        /*return $qb2
-        ->getQuery()
-        ->getArrayResult()
-        ;*/
-
         $qb = $this->createQueryBuilder('s');
-        $qb ->where($qb->expr()->notIn('s.devId', $qb2->getDQL()));
+        $qb ->where($qb->expr()->notIn('s.devId', $qb2->getDQL()))
+            ->andWhere('s.devDatefin > :date')
+            ->setParameter('date', new \DateTime());
+
 
         $query  = $qb->getQuery();
         return $query->getResult();
 
-
-/*
-        $qb  = $this->_em->createQueryBuilder();
-        $qb->select('mm')
-            ->from('Custom\Entity\Membre', 'mm')
-            ->where($qb->expr()->notIn('mm.id', $qb2->getDQL())
-        );
-        $qb->setParameter(1, $service);
-        $query  = $qb->getQuery();
-
-        return $query->getResult();*/
     }
 }
