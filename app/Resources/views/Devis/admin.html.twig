@@ -15,8 +15,7 @@
                             <th>Structure Concernée</th>
                             <th>Numero</th>
                             <th>Date du devis</th>
-                            <th>Date de debut</th>
-                            <th>Date de fin</th>
+                            <th>Prix total</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -24,10 +23,9 @@
                     	{% for entity in entities %}
                     	<tr>
                     		<td>{{ entity.devStructure.strNom }}
-                            <td>{{ entity.devNumero }}</td>
+                            <td>{{ entity.devAnnee }}-{{ "%04d"|format(entity.devNumero) }}</td>
                             <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if entity.devDatedebut %}{{ entity.devDatedebut|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if entity.devDatefin %}{{ entity.devDatefin|date('Y-m-d') }}{% endif %}</td>
+                            <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">

@@ -326,4 +326,19 @@ class Devis
     {
         return $this->devParcours;
     }
+
+    /**
+    * Get Prix total d'un Devis
+    *
+    * @return string
+    */
+    public function getDevPrixTotal()
+    {
+        $prix = 0;
+        foreach($this->getDevParcours() as $parcour)
+        {
+            $prix += $parcour->getDprNombreheure() * $this->getDevTauxhoraire();
+        }
+        return $prix;
+    }
 }
