@@ -1,9 +1,48 @@
 {% extends '::layout.html.twig' %}
 {% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-list"></span> Liste des Devis en Cours </div>
+            </div>
+            <div class="panel-body">
+                <div class="clearfix"></div>
 
-	{% for entity in entities %}
-		{{ entity.devDatefin|date('Y-m-d') }}
-	{% endfor %}
+                <table class="table table-striped table-bordered table-hover dataTable records_list" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>Structure Concernée</th>
+                            <th>Numero</th>
+                            <th>Date du devis</th>
+                            <th>Date de debut</th>
+                            <th>Date de fin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	{% for entity in entities %}
+                    	<tr>
+                    		<td>{{ entity.devStructure.strNom }}
+                            <td>{{ entity.devNumero }}</td>
+                            <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
+                            <td>{% if entity.devDatedebut %}{{ entity.devDatedebut|date('Y-m-d') }}{% endif %}</td>
+                            <td>{% if entity.devDatefin %}{{ entity.devDatefin|date('Y-m-d') }}{% endif %}</td>
+                            <td class="text-center">
+                                <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
+                                    <button type="button" class="btn btn-green3 btn-xs">
+                                        <i class="fa fa-eye"></i> Voir
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                       {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 {% block javascripts %}
