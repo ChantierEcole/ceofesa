@@ -30,10 +30,22 @@
                             <td>{{ entity.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
-                                    <button type="button" class="btn btn-green3 btn-xs">
+                                    <button type="button" class="btn btn-blue3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
+                                {% if entity.devStatut == "en cours" %}
+	                                <a href="{{ path('dashboard') }}">
+	                                    <button type="button" class="btn btn-green3 btn-xs">
+	                                        <i class="fa fa-check"></i> Valider
+	                                    </button>
+	                                </a>
+	                                <a href="{{ path('dashboard') }}">
+	                                    <button type="button" class="btn btn-red3 btn-xs">
+	                                        <i class="fa fa-times"></i> Refuser
+	                                    </button>
+	                                </a>
+	                            {% endif %}
                             </td>
                         </tr>
                        {% endfor %}
