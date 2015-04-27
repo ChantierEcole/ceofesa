@@ -47,6 +47,69 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
-        return $this->render("Devis/admin.html.twig",array('entities' => $entities));
+        $validForm = $this->createValidForm();
+        $refuseForm = $this->createRefuseForm();
+
+        return $this->render("Devis/admin.html.twig",array(
+        	'entities' => $entities,
+        	'valid_form' => $validForm->createView(),
+        	'refuse_form' => $refuseForm->createView(),
+        ));
     }
+
+    /**
+	* Traitement ajax validation devis
+    *
+    * @Route(
+    * 	path="/devis/valid",
+    * 	name="devis_valid"
+    * )
+    */
+    public function validAjaxAction(Request $request, $id){
+
+    }
+
+    /**
+	* Traitement ajax validation devis
+    *
+    * @Route(
+    * 	path="/devis/refuse",
+    * 	name="devis_refuse"
+    * )
+    */
+    public function refuseAjaxAction(Request $request, $id){
+
+    }
+
+    /**
+	* Creates a form to valid a Devis entity by id.
+	*
+	* @param mixed $id The entity id
+	*
+	* @return \Symfony\Component\Form\Form The form
+	*/
+	private function createValidForm()
+	{
+	    return $this->createFormBuilder()
+	        ->setAction($this->generateUrl('devis_valid'))
+	        ->add('submit', 'submit', array('label' => 'Valider','attr' => array('class' => 'btn btn-green3')))
+	        ->getForm()
+	    ;
+	}
+
+	/**
+	* Creates a form to refuse a Devis entity by id.
+	*
+	* @param mixed $id The entity id
+	*
+	* @return \Symfony\Component\Form\Form The form
+	*/
+	private function createRefuseForm()
+	{
+	    return $this->createFormBuilder()
+	        ->setAction($this->generateUrl('devis_refuse'))
+	        ->add('submit', 'submit', array('label' => 'Refuser','attr' => array('class' => 'btn btn-red3')))
+	        ->getForm()
+	    ;
+	}	
 }

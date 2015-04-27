@@ -34,6 +34,7 @@
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
+
                                 {% if entity.devStatut == "en cours" %}
 	                                <a href="{{ path('dashboard') }}">
 	                                    <button type="button" class="btn btn-green3 btn-xs">
@@ -45,7 +46,11 @@
 	                                        <i class="fa fa-times"></i> Refuser
 	                                    </button>
 	                                </a>
+
 	                            {% endif %}
+
+	                            {{ form(valid_form, { 'attr': {'id': 'valid_'~(entity.devId|default('')) } }) }}
+
                             </td>
                         </tr>
                        {% endfor %}
