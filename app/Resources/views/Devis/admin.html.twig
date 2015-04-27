@@ -27,7 +27,7 @@
                             <td>{{ entity.devAnnee }}-{{ "%04d"|format(entity.devNumero) }}</td>
                             <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
                             <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
-                            <td>{{ entity.devStatut }}</td>
+                            <td class="statut">{{ entity.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
                                     <button type="button" class="btn btn-blue3 btn-xs">
@@ -36,20 +36,16 @@
                                 </a>
 
                                 {% if entity.devStatut == "en cours" %}
-	                                <a href="{{ path('dashboard') }}">
-	                                    <button type="button" class="btn btn-green3 btn-xs">
+	                                
+	                                    <button type="button" class="btn btn-green3 btn-xs btn-valid" data-entityid="{{entity.devId|default('')}}">
 	                                        <i class="fa fa-check"></i> Valider
 	                                    </button>
-	                                </a>
-	                                <a href="{{ path('dashboard') }}">
-	                                    <button type="button" class="btn btn-red3 btn-xs">
+	                                
+	                                    <button type="button" class="btn btn-red3 btn-xs btn-refuse">
 	                                        <i class="fa fa-times"></i> Refuser
 	                                    </button>
-	                                </a>
 
 	                            {% endif %}
-
-	                            {{ form(valid_form, { 'attr': {'id': 'valid_'~(entity.devId|default('')) } }) }}
 
                             </td>
                         </tr>
@@ -63,4 +59,31 @@
 
 {% endblock %}
 {% block javascripts %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        
+        $("body").on("click",".btn-valid", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).next('.btn-refuse').hide();
+            $(this).parent().prev('td.statut').html('Validé');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_valid') }}",
+                data: 'id=' + entityid,
+                timeout: 10000,
+                success: function(data){ 
+                    alert("Devis validé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : le devis ne s'est pas validé dans la base de données")
+                }
+            }); 
+        });
+    });
+
+</script>
 {% endblock %}

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use CEOFESABundle\Form\Domain\utilisateur;
 use CEOFESABundle\Form\Type\UtilisateurType;
 
@@ -47,13 +48,8 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
-        $validForm = $this->createValidForm();
-        $refuseForm = $this->createRefuseForm();
-
         return $this->render("Devis/admin.html.twig",array(
         	'entities' => $entities,
-        	'valid_form' => $validForm->createView(),
-        	'refuse_form' => $refuseForm->createView(),
         ));
     }
 
@@ -65,8 +61,11 @@ class AdminController extends Controller
     * 	name="devis_valid"
     * )
     */
-    public function validAjaxAction(Request $request, $id){
+    public function validAjaxAction(Request $request){
+        $DevisId = $request->request->get('id');
 
+        return new Response($DevisId);
+        
     }
 
     /**
@@ -77,39 +76,7 @@ class AdminController extends Controller
     * 	name="devis_refuse"
     * )
     */
-    public function refuseAjaxAction(Request $request, $id){
+    public function refuseAjaxAction(Request $request){
 
     }
-
-    /**
-	* Creates a form to valid a Devis entity by id.
-	*
-	* @param mixed $id The entity id
-	*
-	* @return \Symfony\Component\Form\Form The form
-	*/
-	private function createValidForm()
-	{
-	    return $this->createFormBuilder()
-	        ->setAction($this->generateUrl('devis_valid'))
-	        ->add('submit', 'submit', array('label' => 'Valider','attr' => array('class' => 'btn btn-green3')))
-	        ->getForm()
-	    ;
-	}
-
-	/**
-	* Creates a form to refuse a Devis entity by id.
-	*
-	* @param mixed $id The entity id
-	*
-	* @return \Symfony\Component\Form\Form The form
-	*/
-	private function createRefuseForm()
-	{
-	    return $this->createFormBuilder()
-	        ->setAction($this->generateUrl('devis_refuse'))
-	        ->add('submit', 'submit', array('label' => 'Refuser','attr' => array('class' => 'btn btn-red3')))
-	        ->getForm()
-	    ;
-	}	
 }
