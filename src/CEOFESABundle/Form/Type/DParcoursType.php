@@ -86,7 +86,7 @@ class DParcoursType extends AbstractType
                         'label' => 'OF',
                         'multiple' => false,
                         'query_builder' => function(StructureRepository $repo){
-                            return $repo->getSoustraitants();
+                            return $repo->getSoustraitants($id);
                         }
                     ));
                 }

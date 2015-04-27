@@ -124,11 +124,12 @@ class DevisController extends Controller
 
         $typeId = $request->request->get('type_id');
         $em = $this->getDoctrine()->getManager();
+        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
 
         if($typeId == '0'){
             $rep = $em->getRepository('CEOFESABundle:Structure')->getIntra();
         }elseif($typeId == '1'){
-            $rep = $em->getRepository('CEOFESABundle:Structure')->getSoustraitants();
+            $rep = $em->getRepository('CEOFESABundle:Structure')->getSoustraitants($id);
         }
 
         $structures = $rep->getQuery()->getResult();
