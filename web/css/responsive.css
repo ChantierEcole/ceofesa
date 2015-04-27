@@ -183,13 +183,6 @@ body.sidebar-collapsed ul.sidebar-nav > li > a .glyphicons {
 ul.sidebar-nav li.active > a .glyphicons {
   color: #d9534f; }
 
-/* Align Title and Submenu together */
-ul.sidebar-nav .sidebar-title,
-ul.sidebar-nav ul.sub-nav,
-body.sidebar-collapsed ul.sidebar-nav .sidebar-title,
-body.sidebar-collapsed ul.sidebar-nav ul.sub-nav {
-  border: 1px solid #ccc; }
-
 /* Side Nav Title */
 ul.sidebar-nav > li > a .sidebar-title,
 body.sidebar-collapsed ul.sidebar-nav > li > a .sidebar-title {
