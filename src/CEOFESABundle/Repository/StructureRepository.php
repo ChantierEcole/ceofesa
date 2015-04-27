@@ -42,13 +42,22 @@ class StructureRepository extends EntityRepository
         ;
     }
 
-    public function getSoustraitants()
+    public function getSoustraitants($id)
     {
-        return $this
-        ->createQueryBuilder('s')
-        ->where('s.strType = 3')
-        ->orderBy('s.strNom','ASC')
+        $qb2 = $this->_em->createQueryBuilder();
+        $qb2->select('IDENTITY(rl.relSoustraitant)')
+            ->from('CEOFESABundle\Entity\Relation', 'rl')
+            ->where('rl.relStructure = :test')
         ;
+
+        $qb = $this->createQueryBuilder('st');
+        $qb ->where('st.strType = 3')
+            ->andWhere($qb->expr()->in('st.strId', $qb2->getDQL()))
+            ->setParameter('test',$id)
+            ->orderBy('st.strNom','ASC')
+        ;
+
+        return $qb;
     }
 
     public function getIntra()
