@@ -41,7 +41,7 @@
 	                                        <i class="fa fa-check"></i> Valider
 	                                    </button>
 	                                
-	                                    <button type="button" class="btn btn-red3 btn-xs btn-refuse">
+	                                    <button type="button" class="btn btn-red3 btn-xs btn-refuse" data-entityid="{{entity.devId|default('')}}">
 	                                        <i class="fa fa-times"></i> Refuser
 	                                    </button>
 
@@ -83,6 +83,28 @@
                 }
             }); 
         });
+
+        $("body").on("click",".btn-refuse", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).prev('.btn-valid').hide();
+            $(this).parent().prev('td.statut').html('Refusé');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_refuse') }}",
+                data: 'id=' + entityid,
+                timeout: 10000,
+                success: function(data){ 
+                    alert("Devis refusé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : l'opération ne s'est pas enregistrée dans la base de données")
+                }
+            }); 
+        });
+
     });
 
 </script>
