@@ -9,3 +9,9 @@ services:
         arguments: ["%max_heures%"]
         tags:
             - { name: validator.constraint_validator, alias: max_heures }
+
+    kernel.listener.login_listener:
+        class: CEOFESABundle\EventListener\LoginListener
+        arguments: ['@security.context', '@session']
+        tags:
+            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
