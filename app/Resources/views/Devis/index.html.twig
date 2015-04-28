@@ -18,6 +18,7 @@
                             <th>Date du devis</th>
                             <th>Date de debut</th>
                             <th>Date de fin</th>
+                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -29,18 +30,20 @@
                             <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
                             <td>{% if entity.devDatedebut %}{{ entity.devDatedebut|date('Y-m-d') }}{% endif %}</td>
                             <td>{% if entity.devDatefin %}{{ entity.devDatefin|date('Y-m-d') }}{% endif %}</td>
+                            <td>{{ entity.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
-
-                                <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
-                                    <button type="button" class="btn btn-blue4 btn-xs">
-                                        <i class="fa fa-pencil"></i> Editer
-                                    </button>
-                                </a>
+                                {% if entity.devStatut != "Validé" %}
+                                    <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
+                                        <button type="button" class="btn btn-blue4 btn-xs">
+                                            <i class="fa fa-pencil"></i> Editer
+                                        </button>
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
