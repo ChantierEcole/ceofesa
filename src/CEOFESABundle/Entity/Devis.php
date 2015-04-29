@@ -94,6 +94,14 @@ class Devis
     */
     protected $devParcours;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dev_Statut", type="string", length=20, nullable=false, options={"default" = "en cours"})
+     */
+    private $devStatut = 'en cours';
+
+
     public function __construct()
     {
         $this->devParcours = new ArrayCollection();
@@ -325,6 +333,29 @@ class Devis
     public function getDevParcours()
     {
         return $this->devParcours;
+    }
+
+    /**
+     * Set devStatut
+     *
+     * @param string $devStatut
+     * @return Devis
+     */
+    public function setDevStatut($devStatut)
+    {
+        $this->devStatut = $devStatut;
+
+        return $this;
+    }
+
+    /**
+     * Get devStatut
+     *
+     * @return string 
+     */
+    public function getDevStatut()
+    {
+        return $this->devStatut;
     }
 
     /**

@@ -16,6 +16,7 @@
                             <th>Numero</th>
                             <th>Date du devis</th>
                             <th>Prix total</th>
+                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -26,12 +27,26 @@
                             <td>{{ entity.devAnnee }}-{{ "%04d"|format(entity.devNumero) }}</td>
                             <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
                             <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
+                            <td class="statut">{{ entity.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
-                                    <button type="button" class="btn btn-green3 btn-xs">
+                                    <button type="button" class="btn btn-blue3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
+
+                                {% if entity.devStatut == "en cours" %}
+	                                
+	                                    <button type="button" class="btn btn-green3 btn-xs btn-valid" data-entityid="{{entity.devId|default('')}}">
+	                                        <i class="fa fa-check"></i> Valider
+	                                    </button>
+	                                
+	                                    <button type="button" class="btn btn-red3 btn-xs btn-refuse" data-entityid="{{entity.devId|default('')}}">
+	                                        <i class="fa fa-times"></i> Refuser
+	                                    </button>
+
+	                            {% endif %}
+
                             </td>
                         </tr>
                        {% endfor %}
@@ -44,4 +59,53 @@
 
 {% endblock %}
 {% block javascripts %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        
+        $("body").on("click",".btn-valid", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).next('.btn-refuse').hide();
+            $(this).parent().prev('td.statut').html('Validé');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_valid') }}",
+                data: 'id=' + entityid,
+                timeout: 10000,
+                success: function(data){ 
+                    alert("Devis validé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : le devis ne s'est pas validé dans la base de données")
+                }
+            }); 
+        });
+
+        $("body").on("click",".btn-refuse", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).prev('.btn-valid').hide();
+            $(this).parent().prev('td.statut').html('Refusé');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_refuse') }}",
+                data: 'id=' + entityid,
+                timeout: 10000,
+                success: function(data){ 
+                    alert("Devis refusé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : l'opération ne s'est pas enregistrée dans la base de données")
+                }
+            }); 
+        });
+
+    });
+
+</script>
 {% endblock %}

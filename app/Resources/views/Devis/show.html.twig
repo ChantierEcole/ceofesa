@@ -34,6 +34,10 @@
                             <th>Taux Horaire</th>
                             <td>{{ entity.devTauxhoraire }}</td>
                         </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>{{ entity.devStatut }}</td>
+                        </tr>
                     </tbody>
                 </table>
                 <h3>Parcours de stagiaire</h3>
@@ -56,21 +60,23 @@
                     {% endfor %}
                 </table>
                 <br/>
-
-                <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
-                    <button type="button" class="btn btn-blue4">
-                        Modifier
-                    </button>
-                </a>
-
+                {% if entity.devStatut != "Validé" %}
+                    <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
+                        <button type="button" class="btn btn-blue4">
+                            Modifier
+                        </button>
+                    </a>
+                {% endif %}
+                
                 <a href="{{ path('devis') }}">
                     <button type="button" class="btn btn-light4 spacing-button">
                         Retour à la liste
                     </button>
                 </a>
 
-                {{ form(delete_form, { 'attr': {'style': 'float:right;'} }) }}
-                
+                {% if entity.devStatut != "Validé" %}
+                    {{ form(delete_form, { 'attr': {'style': 'float:right;'} }) }}
+                {% endif %}
             </div>
         </div>
     </div>

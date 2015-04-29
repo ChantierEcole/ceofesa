@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use CEOFESABundle\Form\Domain\utilisateur;
 use CEOFESABundle\Form\Type\UtilisateurType;
 
@@ -47,6 +48,65 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
-        return $this->render("Devis/admin.html.twig",array('entities' => $entities));
+        return $this->render("Devis/admin.html.twig",array(
+        	'entities' => $entities,
+        ));
+    }
+
+    /**
+	* Traitement ajax validation devis
+    *
+    * @Route(
+    * 	path="/devis/valid",
+    * 	name="devis_valid"
+    * )
+    * @Method("POST")
+    */
+    public function validAjaxAction(Request $request){
+
+        $DevisId = $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+
+        if (!$devis) {
+            throw $this->createNotFoundException(
+                'Aucun devis trouvé pour cet id : '.$id
+            );
+        }
+
+        $devis->setDevStatut('Validé');
+        $em->flush();
+
+        return new Response($DevisId); 
+    }
+
+    /**
+	* Traitement ajax refus devis
+    *
+    * @Route(
+    * 	path="/devis/refuse",
+    * 	name="devis_refuse"
+    * )
+    * @Method("POST")
+    */
+    public function refuseAjaxAction(Request $request){
+
+        $DevisId = $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+
+        if (!$devis) {
+            throw $this->createNotFoundException(
+                'Aucun devis trouvé pour cet id : '.$id
+            );
+        }
+
+        $devis->setDevStatut('Refusé');
+        $em->flush();
+
+        return new Response($DevisId); 
+
     }
 }

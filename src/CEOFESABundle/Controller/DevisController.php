@@ -5,6 +5,8 @@ namespace CEOFESABundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -182,6 +184,9 @@ class DevisController extends Controller
      */
     public function editAction($id)
     {
+        $this->checkStructure($id);
+        $this->checkValid($id);
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CEOFESABundle:Devis')->find($id);
@@ -229,6 +234,8 @@ class DevisController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        $this->checkStructure($id);
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CEOFESABundle:Devis')->find($id);
@@ -259,6 +266,9 @@ class DevisController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        $this->checkStructure($id);
+        $this->checkValid($id);
+
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -292,5 +302,25 @@ class DevisController extends Controller
             ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2')))
             ->getForm()
         ;
+    }
+
+    private function checkStructure($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $structure = $em->getRepository('CEOFESABundle:Devis')->getStructureDevis($id);
+
+         if ($structure != $this->get('session')->get('structure')) {
+            throw new NotFoundHttpException("Vous n'avez pas les droits nécessaires pour accéder à la page demandée");
+        }
+    }
+
+    private function checkValid($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $statut = $em->getRepository('CEOFESABundle:Devis')->getStatutDevis($id);
+
+         if ($statut == "Validé") {
+            throw new NotFoundHttpException("Le statut de ce devis ne permet pas d'accéder à la page demandée");
+        }
     }
 }
