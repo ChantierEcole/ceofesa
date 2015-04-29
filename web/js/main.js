@@ -129,14 +129,6 @@ var Core = function () {
             }
             $.uniform.update('input.row-checkbox');
         });
-		
-        // Disable Selection on checklist to prevent excessive text-highlighting
-        var disableSelection = function disableSelection() {
-            return this.bind(($.support.selectstart ? "selectstart" : "mousedown") + ".ui-disableSelection", function (event) {
-                event.preventDefault();
-            });
-        };
-        $(".table-checklist tbody tr").disableSelection();
     }
 
     // Init Button "active" states

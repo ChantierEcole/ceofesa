@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use CEOFESABundle\Form\Domain\utilisateur;
 use CEOFESABundle\Form\Type\UtilisateurType;
 
@@ -108,5 +109,32 @@ class AdminController extends Controller
 
         return new Response($DevisId); 
 
+    }
+
+    /**
+    * Traitement ajax liste des structures admin menu header
+    *
+    * @Route(
+    *   path="/structure/change",
+    *   name="structure_change"
+    * )
+    */
+    public function listAjaxAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getRepository('CEOFESABundle:Structure')->getStructures();
+
+        $structures = $query->getQuery()->getResult();
+        
+        $StrList = array();
+
+        foreach ($structures as $structure) {
+            $p = array();
+            $p['id'] = $structure->getStrId();
+            $p['nom'] = $structure->getStrNom();
+            $StrList[] = $p;
+        }
+
+        return new JsonResponse($StrList);
     }
 }

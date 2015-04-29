@@ -42,6 +42,17 @@
                 </a> 
             </div>
             <div class="pull-right header-btns">
+            	{% if is_granted('ROLE_ADMIN') %}
+	            	<div class="header-txt">
+	            		<p>Changer de Structure :</p>
+	            	</div>
+	            	<div class="btn-group">
+	                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"> Défaut <span class="caret"></span> </button>
+	                    <ul class="dropdown-menu" role="menu" id="strSelect">
+	                    	<li><a href="#">Loading</a></li>
+	                    </ul>
+	                </div>
+                {% endif %}
                 <div class="user-menu">
                     <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"> <span class="glyphicons glyphicons-user"></span> <b> {{ app.user.username }} </b> </button>
                     <ul class="dropdown-menu checkbox-persist" role="menu">
@@ -148,6 +159,9 @@
         {% block javascripts %}{% endblock %}
 
         <!-- Theme Javascript --> 
+        <script type="text/javascript"> 
+ 			var urlAjax1 = '{{ path("structure_change") }}';
+ 		</script>
         <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
