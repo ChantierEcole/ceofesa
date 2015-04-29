@@ -65,4 +65,14 @@ class DevisRepository extends EntityRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    public function getStatutDevis($id_devis){
+        $qb = $this->createQueryBuilder('s');
+        $qb->select('s.devStatut')
+        ->where('s.devId = :id')
+        ->setParameter('id', $id_devis)
+        ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

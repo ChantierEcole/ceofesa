@@ -184,6 +184,7 @@ class DevisController extends Controller
     public function editAction($id)
     {
         $this->checkStructure($id);
+        $this->checkValid($id);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -265,7 +266,8 @@ class DevisController extends Controller
     public function deleteAction(Request $request, $id)
     {
         $this->checkStructure($id);
-        
+        $this->checkValid($id);
+
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -308,6 +310,16 @@ class DevisController extends Controller
 
          if ($structure != $this->get('session')->get('structure')) {
             throw new NotFoundHttpException("Vous n'avez pas les droits nécessaires pour accéder à la page demandée");
+        }
+    }
+
+    private function checkValid($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $statut = $em->getRepository('CEOFESABundle:Devis')->getStatutDevis($id);
+
+         if ($statut == "Validé") {
+            throw new NotFoundHttpException("Le statut de ce devis ne permet pas d'accéder à la page demandée");
         }
     }
 }
