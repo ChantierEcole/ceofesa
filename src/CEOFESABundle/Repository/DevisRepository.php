@@ -48,11 +48,21 @@ class DevisRepository extends EntityRepository
         $qb = $this->createQueryBuilder('s');
         $qb ->where($qb->expr()->notIn('s.devId', $qb2->getDQL()))
             ->andWhere('s.devDatefin > :date')
-            ->setParameter('date', new \DateTime());
-
+            ->setParameter('date', new \DateTime())
+        ;
 
         $query  = $qb->getQuery();
         return $query->getResult();
 
+    }
+
+    public function getStructureDevis($id_devis){
+        $qb = $this->createQueryBuilder('s');
+        $qb->select('IDENTITY(s.devStructure)')
+        ->where('s.devId = :id')
+        ->setParameter('id', $id_devis)
+        ;
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }
