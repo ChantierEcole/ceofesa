@@ -157,10 +157,10 @@
         timeout: 30000,
         success: function (data) {
           console.log(data);          
-          //réinitialise la liste des joueurs
+          //réinitialise la liste des sous-traitants
           $(ofElement).html('');
 
-          //met à jour la liste des joueurs
+          //met à jour la liste des sous-traitants
           $.each(data, function(index){
             var id      = data[index].id;
             var name    = data[index].nom;

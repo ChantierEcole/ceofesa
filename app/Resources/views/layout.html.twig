@@ -47,7 +47,7 @@
 	            		<p>Changer de Structure :</p>
 	            	</div>
 	            	<div class="btn-group struct-menu">
-	                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"> Défaut <span class="caret"></span> </button>
+	                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">&nbsp;<span class="caret"></span> </button>
 	                    <ul class="dropdown-menu" role="menu" id="strSelect">
 	                    	<li><a href="#">Loading</a></li>
 	                    </ul>
@@ -161,6 +161,8 @@
         <!-- Theme Javascript --> 
         <script type="text/javascript"> 
  			var urlAjax1 = '{{ path("structure_change") }}';
+ 			var urlAjax2 = '{{ path("structure_session") }}';
+ 			var urlAjax3 = '{{ path("change_session") }}';
  		</script>
         <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>

@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 use CEOFESABundle\Form\Domain\utilisateur;
 use CEOFESABundle\Form\Type\UtilisateurType;
 
@@ -136,5 +137,41 @@ class AdminController extends Controller
         }
 
         return new JsonResponse($StrList);
+    }
+
+    /**
+    * Traitement ajax structure sélectionnée admin menu header
+    *
+    * @Route(
+    *   path="/structure/session",
+    *   name="structure_session"
+    * )
+    */
+    public function sessionAjaxAction(Request $request){
+
+        $idStructure = $this->get('session')->get('structure');
+        $em = $this->getDoctrine()->getManager();
+        $StrSession = $em->getRepository('CEOFESABundle:Structure')->find($idStructure);
+        return new Response($StrSession);
+
+    }
+
+    /**
+    * Traitement ajax changement de structure pour la session
+    *
+    * @Route(
+    *   path="/change/session",
+    *   name="change_session"
+    * )
+    */
+    public function changeSessionAjaxAction(Request $request){
+
+        $structureId = $request->request->get('structure_id');
+        if (!empty($structureId)) {
+            $this->get('session')->set('structure', $structureId);
+        }
+
+        return new Response($this->get('session')->get('structure'));
+
     }
 }

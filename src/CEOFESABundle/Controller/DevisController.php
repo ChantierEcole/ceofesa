@@ -32,7 +32,7 @@ class DevisController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $id = $this->get('session')->get('structure');
 
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisStructure($id)->getQuery()->getResult();
 
@@ -88,7 +88,7 @@ class DevisController extends Controller
     {
         // Tarif défini dans /src/CEOFESABundle/Resources/config/parameters.yml
         $tarif = $this->container->getParameter('tarif_ofesa');
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new DevisType($id,$tarif), $entity, array(
             'action' => $this->generateUrl('devis_create'),
@@ -126,7 +126,7 @@ class DevisController extends Controller
 
         $typeId = $request->request->get('type_id');
         $em = $this->getDoctrine()->getManager();
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $id = $this->get('session')->get('structure');
 
         if($typeId == '0'){
             $rep = $em->getRepository('CEOFESABundle:Structure')->getIntra();
@@ -216,7 +216,7 @@ class DevisController extends Controller
     {
         // Tarif défini dans /src/CEOFESABundle/Resources/config/parameters.yml
         $tarif = $this->container->getParameter('tarif_ofesa');
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new DevisType($id,$tarif), $entity, array(
             'action' => $this->generateUrl('devis_update', array('id' => $entity->getDevId())),

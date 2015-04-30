@@ -28,7 +28,7 @@ class StagiaireController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure()->getStrId();
+        $id = $this->get('session')->get('structure');
         $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureTiers($id)->getQuery()->getResult();
         return array(
             'entities' => $entities,
@@ -70,7 +70,7 @@ class StagiaireController extends Controller
      */
     private function createCreateForm(Tiers $entity)
     {
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new StagiaireType($id), $entity, array(
             'action' => $this->generateUrl('stagiaire_create'),
@@ -159,7 +159,7 @@ class StagiaireController extends Controller
     */
     private function createEditForm(Tiers $entity)
     {
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $this->get('session')->get('structure');
 
         $form = $this->createForm(new StagiaireType($id), $entity, array(
             'action' => $this->generateUrl('stagiaire_update', array('id' => $entity->getTrsId())),

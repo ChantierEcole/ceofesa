@@ -28,7 +28,7 @@ class SoustraitantController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $id = $this->get('security.context')->getToken()->getUser()->getStructure();
+        $id = $this->get('session')->get('structure');
 
         $entities = $em->getRepository('CEOFESABundle:Structure')->getSoustraitants($id)->getQuery()->getResult();
         return array(
