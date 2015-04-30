@@ -363,7 +363,12 @@ hr.tall {
 
 .user-menu ul.dropdown-menu {
   width: 250px;
-  margin-left: -180px; }
+  margin-left: -170px; }
+
+.struct-menu #strSelect {
+  right: 0px;
+  left: auto;
+}
 
 .alerts-menu ul.dropdown-menu {
   width: 300px;
