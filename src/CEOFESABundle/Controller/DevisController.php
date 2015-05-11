@@ -304,6 +304,9 @@ class DevisController extends Controller
         ;
     }
 
+    /*
+    * Fonction pour vérifer si l'id d'une structure correspond bien à la structure de la session
+    */
     private function checkStructure($id){
 
         $em = $this->getDoctrine()->getManager();
@@ -314,6 +317,9 @@ class DevisController extends Controller
         }
     }
 
+    /*
+    * Fonction pour vérifier si le statut d'un devis est bien à "Validé"
+    */
     private function checkValid($id){
 
         $em = $this->getDoctrine()->getManager();
@@ -322,5 +328,24 @@ class DevisController extends Controller
          if ($statut == "Validé") {
             throw new NotFoundHttpException("Le statut de ce devis ne permet pas d'accéder à la page demandée");
         }
+    }
+
+    /**
+     * Render a pdf document as response Route
+     *
+     * @Route("/{id}/pdf", name="devis_print")
+     */
+    public function printAction($id)
+    {    
+        $html = $this->renderView('::Devis\print.html.twig', array(
+            'id'  => $id
+        ));
+
+        $response= new Response();
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape')));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-disposition', 'filename=mon_fichier.pdf');
+        
+        return $response;
     }
 }
