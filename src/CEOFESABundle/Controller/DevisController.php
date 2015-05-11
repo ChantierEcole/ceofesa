@@ -21,7 +21,6 @@ use CEOFESABundle\Form\Type\DevisType;
  */
 class DevisController extends Controller
 {
-
     /**
      * Lists all Devis entities.
      *
@@ -96,6 +95,18 @@ class DevisController extends Controller
         ));
 
         return $form;
+    }
+
+    /**
+     * Route pour tester le template pdf de devis
+     *
+     * @Route("/template/{id}", name="devis_template")
+     * @Method("GET")
+     */
+    public function templateAction($id){
+        return $this->render('::Devis\print.html.twig', array(
+            'id' => $id,
+        ));
     }
 
     /**
@@ -342,10 +353,10 @@ class DevisController extends Controller
         ));
 
         $response= new Response();
-        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape')));
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait')));
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-disposition', 'filename=mon_fichier.pdf');
-        
+        $response->headers->set('Content-disposition', 'filename=devis.pdf');
+
         return $response;
     }
 }
