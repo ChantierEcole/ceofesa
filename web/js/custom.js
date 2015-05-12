@@ -63,6 +63,7 @@ jQuery(document).ready(function() {
           		console.debug(exception);
         	}
         });
+    });
 
     $(".confirmjq").on('click',function(event){
     	event.stopPropagation();
