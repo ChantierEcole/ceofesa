@@ -289,7 +289,7 @@ class DevisController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('devis_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2')))
+            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
             ->getForm()
         ;
     }

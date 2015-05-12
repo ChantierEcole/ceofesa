@@ -16,4 +16,22 @@ jQuery(document).ready(function() {
     // Init Theme Core    
     Core.init();
 
+    $(".confirmjq").on("click",function(event){
+    	event.stopPropagation();
+    	if (confirm("Confirmer la suppression de cet élément ?")){
+    		this.click;
+	    } else {
+	    	event.preventDefault();
+	    }
+    });
+
+    $(".modif-alert").on("click",function(event){
+    	event.stopPropagation();
+    	if (confirm("Attention : si vous quittez cette page, tout élément non enregistré sera perdu. Etes-vous sur de vouloir continuer ?")){
+    		this.click;
+	    } else {
+	    	event.preventDefault();
+	    }
+    });
+
 });
