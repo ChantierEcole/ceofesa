@@ -347,9 +347,12 @@ class DevisController extends Controller
      * @Route("/{id}/pdf", name="devis_print")
      */
     public function printAction($id)
-    {    
+    {   
+        $em = $this->getDoctrine()->getManager();
+        $parcours = $em->getRepository('CEOFESABundle:Devis');
+
         $html = $this->renderView('::Devis\print.html.twig', array(
-            'id'  => $id
+            'parcours'  => $parcours,
         ));
 
         $response= new Response();

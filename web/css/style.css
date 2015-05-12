@@ -183,7 +183,3 @@
 #print .page .devis_logo:first-child {
     float: left;
 }
-
-#print .page .devis_logo:last-child {
-    float: right;
-}
