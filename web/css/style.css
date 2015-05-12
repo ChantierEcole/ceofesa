@@ -170,9 +170,10 @@
 }
 
 #print .page {
-    width: 210mm;
+    position: relative;
+    width: 200mm;
     height: 297mm;
-    border: black 1px solid;
+    padding: 0 5mm;
 }
 
 #print .page .devis_logo {
@@ -180,6 +181,18 @@
     width: auto;
 }
 
-#print .page .devis_logo:first-child {
-    float: left;
+#print .page .adresse{
+    margin-left: 110mm;
+    font-weight: bold;
+    width: 90mm;
+}
+
+#print .page .date{
+    width: 210mm;
+}
+
+#print .page .titre{
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 10mm;
 }

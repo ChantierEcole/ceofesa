@@ -1,15 +1,51 @@
 <!DOCTYPE html>
 <html>
     <head>
+    	<meta charset="utf-8">
         <title>Devis</title>
 		<link rel="stylesheet" type="text/css" href="{{ asset('css/style.css', absolute=true ) }}">
 	</head>
 	<body id="print">
 
 		<div class="page">
-			{{ logo }}
+			{# logo #}
 			<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
-			}
+
+			<div class="adresse">
+				<p>str_Nom<br/>
+				<br/>
+				str_Adresse1<br/>
+				str_Adresse2<br/>
+				str_CP str_Ville</p>
+			</div>
+
+			<div class="date">
+				Paris, le {{ 'now' | localizeddate('full', 'none') }}
+			</div>
+
+			<div class="titre">
+				<h2>DEVIS N° dev_Annee-dev_Numero/dev_SNumero</h2>
+			</div>
+
+			
+		</div>
+		<div class="page">
+			{# logo #}
+			<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
+
+			<div class="adresse">
+				<p>str_Nom<br/>
+				<br/>
+				str_Adresse1<br/>
+				str_Adresse2<br/>
+				str_CP str_Ville</p>
+			</div>
+
+			<div class="date">
+				Paris, le {{ 'now' | localizeddate('full', 'none') }}
+			</div>
+
+			
 		</div>
 		
 	</body>
