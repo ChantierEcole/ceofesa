@@ -12,6 +12,7 @@ class TiersRepository extends EntityRepository
         ->createQueryBuilder('u')
         ->where('u.trsStructure = :StructureId')
         ->setParameter('StructureId',$id_structure)
+        ->orderBy('u.trsNom','ASC')
         ;
     } 
 }
