@@ -163,36 +163,3 @@
 .btn .caret {
     margin-left: 4px;
 }
-
-#print {
-    margin: 0;
-    padding: 0;
-}
-
-#print .page {
-    position: relative;
-    width: 200mm;
-    height: 297mm;
-    padding: 0 5mm;
-}
-
-#print .page .devis_logo {
-    height: 19.3mm;
-    width: auto;
-}
-
-#print .page .adresse{
-    margin-left: 110mm;
-    font-weight: bold;
-    width: 90mm;
-}
-
-#print .page .date{
-    width: 210mm;
-}
-
-#print .page .titre{
-    text-align: center;
-    text-decoration: underline;
-    margin-top: 10mm;
-}

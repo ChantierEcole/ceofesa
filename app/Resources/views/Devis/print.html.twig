@@ -3,7 +3,7 @@
     <head>
     	<meta charset="utf-8">
         <title>Devis</title>
-		<link rel="stylesheet" type="text/css" href="{{ asset('css/style.css', absolute=true ) }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('css/devis.css', absolute=true ) }}">
 	</head>
 	<body id="print">
 
@@ -19,6 +19,8 @@
 				str_CP str_Ville</p>
 			</div>
 
+			<br/>
+
 			<div class="date">
 				Paris, le {{ 'now' | localizeddate('full', 'none') }}
 			</div>
@@ -27,8 +29,84 @@
 				<h2>DEVIS N° dev_Annee-dev_Numero/dev_SNumero</h2>
 			</div>
 
+			<br/>
+
+			<div class="infos">
+				<b>Objet de la formation :</b> Certificat de Qualification Professionnel (CQP) Salarié Polyvalent<br/>
+				<br/>
+				<b>Type d'action de formation :</b> formation alternée sous la forme de période de professionnalisation (article L. 900-2 du code du travail).<br/>
+				<br/>
+				<b>Nom de la structure :</b> str_Nom<br/>
+				<br/>
+				<b>Bénéficiaire :</b> trs_Civilite trs_Nom trs_Prenom<br/>
+				<br/>
+			</div>
 			
+			<div class="modules">
+				<b>Durée de formation : </b>
+				<table>
+					<thead>
+						<tr>
+							<th>Modules</th>
+							<th>Heures</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td>M2 – Utiliser les techniques de l’information et de la communication</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td>M3 – Développer la sécurité au travail</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td><b>Total :</b></td>
+							<td>000,00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<br/>
+
+			<div class="infos2">
+				<b>Lieu de la formation :</b> str_Ville<br/>
+				<b>Dates :</b> du dev_DateDebut au dev_DateFin<br/>
+				<b>Coût horaire :</b> dev_TauxHoraire €<br/>
+				<br/>
+				<b>Soit un coût total de : dev_montant €</b>
+			</div>
+
+			<div class="footer">
+				<div class="gauche">
+					OF’ESA<br/>
+					Courriel : <a href="mailto:contact@ofesa.org">contact@ofesa.org</a><br/>
+					Tél. : 01 48 07 60 31<br/>
+					N° SIRET : 799 177 100 00010
+				</div>
+				<div class="droite">
+					75018 PARIS<br/>
+					site Internet : <a href="http://www.ofesa.org">www.ofesa.org</a><br/>
+					Fax : 01 48 07 52 11<br/>
+					N° OF : 11 755 141 875
+				</div>
+				<div class="milieu">
+					119-121 rue Damrémont
+				</div>
+				
+			</div>
+	
 		</div>
+
 		<div class="page">
 			{# logo #}
 			<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
@@ -41,11 +119,92 @@
 				str_CP str_Ville</p>
 			</div>
 
+			<br/>
+
 			<div class="date">
 				Paris, le {{ 'now' | localizeddate('full', 'none') }}
 			</div>
 
+			<div class="titre">
+				<h2>DEVIS N° dev_Annee-dev_Numero/dev_SNumero</h2>
+			</div>
+
+			<br/>
+
+			<div class="infos">
+				<b>Objet de la formation :</b> Certificat de Qualification Professionnel (CQP) Salarié Polyvalent<br/>
+				<br/>
+				<b>Type d'action de formation :</b> formation alternée sous la forme de période de professionnalisation (article L. 900-2 du code du travail).<br/>
+				<br/>
+				<b>Nom de la structure :</b> str_Nom<br/>
+				<br/>
+				<b>Bénéficiaire :</b> trs_Civilite trs_Nom trs_Prenom<br/>
+				<br/>
+			</div>
 			
+			<div class="modules">
+				<b>Durée de formation : </b>
+				<table>
+					<thead>
+						<tr>
+							<th>Modules</th>
+							<th>Heures</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td>M2 – Utiliser les techniques de l’information et de la communication</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td>M3 – Développer la sécurité au travail</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
+							<td>00.00</td>
+						</tr>
+						<tr>
+							<td><b>Total :</b></td>
+							<td>000,00</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<br/>
+
+			<div class="infos2">
+				<b>Lieu de la formation :</b> str_Ville<br/>
+				<b>Dates :</b> du dev_DateDebut au dev_DateFin<br/>
+				<b>Coût horaire :</b> dev_TauxHoraire €<br/>
+				<br/>
+				<b>Soit un coût total de : dev_montant €</b>
+			</div>
+
+			<div class="footer">
+				<div class="gauche">
+					OF’ESA<br/>
+					Courriel : <a href="mailto:contact@ofesa.org">contact@ofesa.org</a><br/>
+					Tél. : 01 48 07 60 31<br/>
+					N° SIRET : 799 177 100 00010
+				</div>
+				<div class="droite">
+					75018 PARIS<br/>
+					site Internet : <a href="http://www.ofesa.org">www.ofesa.org</a><br/>
+					Fax : 01 48 07 52 11<br/>
+					N° OF : 11 755 141 875
+				</div>
+				<div class="milieu">
+					119-121 rue Damrémont
+				</div>
+				
+			</div>
+	
 		</div>
 		
 	</body>
