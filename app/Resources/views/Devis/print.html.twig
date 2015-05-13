@@ -7,205 +7,110 @@
 	</head>
 	<body id="print">
 
-		<div class="page">
-			{# logo #}
-			<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
+		{% for stagiaire in stagiaires %}
+			<div class="page">
 
-			<div class="adresse">
-				<p>str_Nom<br/>
-				<br/>
-				str_Adresse1<br/>
-				str_Adresse2<br/>
-				str_CP str_Ville</p>
-			</div>
+				<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
 
-			<br/>
-
-			<div class="date">
-				Paris, le {{ 'now' | localizeddate('full', 'none') }}
-			</div>
-
-			<div class="titre">
-				<h2>DEVIS N° dev_Annee-dev_Numero/dev_SNumero</h2>
-			</div>
-
-			<br/>
-
-			<div class="infos">
-				<b>Objet de la formation :</b> Certificat de Qualification Professionnel (CQP) Salarié Polyvalent<br/>
-				<br/>
-				<b>Type d'action de formation :</b> formation alternée sous la forme de période de professionnalisation (article L. 900-2 du code du travail).<br/>
-				<br/>
-				<b>Nom de la structure :</b> str_Nom<br/>
-				<br/>
-				<b>Bénéficiaire :</b> trs_Civilite trs_Nom trs_Prenom<br/>
-				<br/>
-			</div>
-			
-			<div class="modules">
-				<b>Durée de formation : </b>
-				<table>
-					<thead>
-						<tr>
-							<th>Modules</th>
-							<th>Heures</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td>M2 – Utiliser les techniques de l’information et de la communication</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td>M3 – Développer la sécurité au travail</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td><b>Total :</b></td>
-							<td>000,00</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<br/>
-
-			<div class="infos2">
-				<b>Lieu de la formation :</b> str_Ville<br/>
-				<b>Dates :</b> du dev_DateDebut au dev_DateFin<br/>
-				<b>Coût horaire :</b> dev_TauxHoraire €<br/>
-				<br/>
-				<b>Soit un coût total de : dev_montant €</b>
-			</div>
-
-			<div class="footer">
-				<div class="gauche">
-					OF’ESA<br/>
-					Courriel : <a href="mailto:contact@ofesa.org">contact@ofesa.org</a><br/>
-					Tél. : 01 48 07 60 31<br/>
-					N° SIRET : 799 177 100 00010
+				<div class="adresse">
+					<p>{{devis.devStructure.strNom}}<br/>
+					<br/>
+					{{devis.devStructure.strAdresse1}}<br/>
+					{% if(devis.devStructure.strAdresse2) %} 
+						{{devis.devStructure.strAdresse2}}<br/> 
+					{% endif %}
+					{{devis.devStructure.strCP}} {{devis.devStructure.strVille}}</p>
 				</div>
-				<div class="droite">
-					75018 PARIS<br/>
-					site Internet : <a href="http://www.ofesa.org">www.ofesa.org</a><br/>
-					Fax : 01 48 07 52 11<br/>
-					N° OF : 11 755 141 875
+
+				<br/>
+
+				<div class="date">
+					Paris, le {{ 'now' | localizeddate('full', 'none') }}
 				</div>
-				<div class="milieu">
-					119-121 rue Damrémont
+
+				<div class="titre">
+					<h2>DEVIS N° {{devis.devAnnee}}-{{ "%04d"|format(devis.devNumero) }}/{{stagiaire.dprNumero}}</h2>
+				</div>
+
+				<br/>
+
+				<div class="infos">
+					<b>Objet de la formation :</b> Certificat de Qualification Professionnel (CQP) Salarié Polyvalent<br/>
+					<br/>
+					<b>Type d'action de formation :</b> formation alternée sous la forme de période de professionnalisation (article L. 900-2 du code du travail).<br/>
+					<br/>
+					<b>Nom de la structure :</b> {{devis.devStructure.strNom}}<br/>
+					<br/>
+					<b>Bénéficiaire :</b> {{stagiaire.dprTiers.trsCivilite.ctyTypecourt}} {{stagiaire.dprTiers.trsNom}} {{stagiaire.dprTiers.trsPrenom}}<br/>
+					<br/>
 				</div>
 				
-			</div>
-	
-		</div>
-
-		<div class="page">
-			{# logo #}
-			<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
-
-			<div class="adresse">
-				<p>str_Nom<br/>
-				<br/>
-				str_Adresse1<br/>
-				str_Adresse2<br/>
-				str_CP str_Ville</p>
-			</div>
-
-			<br/>
-
-			<div class="date">
-				Paris, le {{ 'now' | localizeddate('full', 'none') }}
-			</div>
-
-			<div class="titre">
-				<h2>DEVIS N° dev_Annee-dev_Numero/dev_SNumero</h2>
-			</div>
-
-			<br/>
-
-			<div class="infos">
-				<b>Objet de la formation :</b> Certificat de Qualification Professionnel (CQP) Salarié Polyvalent<br/>
-				<br/>
-				<b>Type d'action de formation :</b> formation alternée sous la forme de période de professionnalisation (article L. 900-2 du code du travail).<br/>
-				<br/>
-				<b>Nom de la structure :</b> str_Nom<br/>
-				<br/>
-				<b>Bénéficiaire :</b> trs_Civilite trs_Nom trs_Prenom<br/>
-				<br/>
-			</div>
-			
-			<div class="modules">
-				<b>Durée de formation : </b>
-				<table>
-					<thead>
-						<tr>
-							<th>Modules</th>
-							<th>Heures</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td>M2 – Utiliser les techniques de l’information et de la communication</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td>M3 – Développer la sécurité au travail</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
-							<td>00.00</td>
-						</tr>
-						<tr>
-							<td><b>Total :</b></td>
-							<td>000,00</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<br/>
-
-			<div class="infos2">
-				<b>Lieu de la formation :</b> str_Ville<br/>
-				<b>Dates :</b> du dev_DateDebut au dev_DateFin<br/>
-				<b>Coût horaire :</b> dev_TauxHoraire €<br/>
-				<br/>
-				<b>Soit un coût total de : dev_montant €</b>
-			</div>
-
-			<div class="footer">
-				<div class="gauche">
-					OF’ESA<br/>
-					Courriel : <a href="mailto:contact@ofesa.org">contact@ofesa.org</a><br/>
-					Tél. : 01 48 07 60 31<br/>
-					N° SIRET : 799 177 100 00010
+				<div class="modules">
+					<b>Durée de formation : </b>
+					<table>
+						<thead>
+							<tr>
+								<th>Modules</th>
+								<th>Heures</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
+								<td>00.00</td>
+							</tr>
+							<tr>
+								<td>M2 – Utiliser les techniques de l’information et de la communication</td>
+								<td>00.00</td>
+							</tr>
+							<tr>
+								<td>M3 – Développer la sécurité au travail</td>
+								<td>00.00</td>
+							</tr>
+							<tr>
+								<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
+								<td>00.00</td>
+							</tr>
+							<tr>
+								<td><b>Total :</b></td>
+								{% set total = 0 %}
+								<td>000,00</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-				<div class="droite">
-					75018 PARIS<br/>
-					site Internet : <a href="http://www.ofesa.org">www.ofesa.org</a><br/>
-					Fax : 01 48 07 52 11<br/>
-					N° OF : 11 755 141 875
+
+				<br/>
+
+				<div class="infos2">
+					<b>Lieu de la formation :</b> {{devis.devStructure.strVille}}<br/>
+					<b>Dates :</b> du {{devis.devDatedebut|date('d/m/Y')}} au {{devis.devDatefin|date('d/m/Y')}}<br/>
+					<b>Coût horaire :</b> {{ devis.devTauxhoraire }} €<br/>
+					<br/>
+					<b>Soit un coût total de : {{total * devis.devTauxhoraire}} €</b>
 				</div>
-				<div class="milieu">
-					119-121 rue Damrémont
+
+				<div class="footer">
+					<div class="gauche">
+						OF’ESA<br/>
+						Courriel : <a href="mailto:contact@ofesa.org">contact@ofesa.org</a><br/>
+						Tél. : 01 48 07 60 31<br/>
+						N° SIRET : 799 177 100 00010
+					</div>
+					<div class="droite">
+						75018 PARIS<br/>
+						site Internet : <a href="http://www.ofesa.org">www.ofesa.org</a><br/>
+						Fax : 01 48 07 52 11<br/>
+						N° OF : 11 755 141 875
+					</div>
+					<div class="milieu">
+						119-121 rue Damrémont
+					</div>
+					
 				</div>
-				
-			</div>
-	
-		</div>
 		
+			</div>
+		{% endfor %}
+	
 	</body>
 </html>
