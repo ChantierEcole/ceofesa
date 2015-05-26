@@ -104,14 +104,15 @@ class DevisController extends Controller
      * @Method("GET")
      */
     public function templateAction($id){
+
         $em = $this->getDoctrine()->getManager();
-        $numeros = $em->getRepository('CEOFESABundle:DParcours')->getNumerosDevis($id);
+        $stagiaires = $em->getRepository('CEOFESABundle:DParcours')->getStagiairesDevis($id)->getQuery()->getResult();
         $parcours = $em->getRepository('CEOFESABundle:DParcours')->getParcoursDevis($id)->getQuery()->getResult();
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
 
-        return $this->render('::Devis\print.html.twig', array(
+        return $this->render('::Templates\devis.html.twig', array(
             'id' => $id,
-            'numeros' => $numeros,
+            'stagiaires' => $stagiaires,
             'parcours' => $parcours,
             'devis' => $devis,
         ));
@@ -361,7 +362,7 @@ class DevisController extends Controller
         $parcours = $em->getRepository('CEOFESABundle:DParcours')->getParcoursDevis($id)->getQuery()->getResult();
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
 
-        $html = $this->renderView('::Devis\print.html.twig', array(
+        $html = $this->renderView('::Templates\devis.html.twig', array(
             'id' => $id,
             'stagiaires' => $stagiaires,
             'parcours' => $parcours,

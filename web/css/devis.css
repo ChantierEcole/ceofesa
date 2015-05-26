@@ -18,13 +18,18 @@
 #print .page {
     width: 200mm;
     height: 297mm;
-    padding: 0 5mm;
+    padding: 5mm 5mm;
     position: relative;
 }
 
-#print .page .devis_logo {
+#print .page .logo {
     height: 19.3mm;
     width: auto;
+}
+
+#print .page .devis_logo {
+    max-height: 19.3mm;
+    max-width: 55mm;
 }
 
 #print .page .adresse{
