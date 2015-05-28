@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset="utf-8">
+        <title>Devis</title>
+		<link rel="stylesheet" type="text/css" href="{{ asset('css/devis.css', absolute=true ) }}">
+	</head>
+	<body id="print">
+
+		{% for stagiaire in stagiaires %}
+			<div class="page">
+				<div class="logo">
+					{% if(devis.devOF.strID == '1') %}
+						<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
+					{% elseif(devis.devOF.strID == '2') %}
+						<img src="{{ asset('img/logos/logo-OFESA.jpg', absolute=true ) }}" class="devis_logo" alt="logo Of'ESA"/>
+					{% else %}
+						<img src="{{ asset('img/logos/empty.png', absolute=true ) }}" class="devis_logo" alt="empty logo"/>
+					{% endif %}
+				</div>
+
+				<div class="adresse">
+					<p>{{devis.devStructure.strNom}}<br/>
+					<br/>
+					{{devis.devStructure.strAdresse1}}<br/>
+					{% if(devis.devStructure.strAdresse2) %} 
+						{{devis.devStructure.strAdresse2}}<br/> 
+					{% endif %}
+					{{devis.devStructure.strCP}} {{devis.devStructure.strVille}}</p>
+				</div>
+
+				<br/>
+
+				<div class="date">
+					Paris, le {{ 'now' | localizeddate('full', 'none') }}
+				</div>
+
+				<div class="titre">
+					<h2>DEVIS N° {{devis.devAnnee}}-{{ "%04d"|format(devis.devNumero) }}/{{stagiaire.dprNumero}}</h2>
+				</div>
+
+				<br/>
+
+				<div class="infos">
+					<b>Objet de la formation :</b> Certificat de Qualification Professionnel (CQP) Salarié Polyvalent<br/>
+					<br/>
+					<b>Type d'action de formation :</b> formation alternée sous la forme de période de professionnalisation (article L. 900-2 du code du travail).<br/>
+					<br/>
+					<b>Nom de la structure :</b> {{devis.devStructure.strNom}}<br/>
+					<br/>
+					<b>Bénéficiaire :</b> {{stagiaire.dprTiers.trsCivilite.ctyTypecourt}} {{stagiaire.dprTiers.trsNom}} {{stagiaire.dprTiers.trsPrenom}}<br/>
+					<br/>
+				</div>
+				
+				<div class="modules">
+					<b>Durée de formation : </b>
+					<table>
+						<thead>
+							<tr>
+								<th>Modules</th>
+								<th>Heures</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% set heuresM1, heuresM2, heuresM3, heuresM4 = 0, 0, 0, 0 %}
+							{% for parcour in parcours if parcour.dprTiers == stagiaire.dprTiers %}
+								{% if(parcour.dprModule.modCode == "M1") %}
+									<tr>
+										{% set heuresM1 = parcour.dprNombreheure %}
+										<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
+										<td>{{heuresM1}}</td>
+								</tr>
+								{% elseif(parcour.dprModule.modCode == "M2") %}
+									<tr>
+										{% set heuresM2 = parcour.dprNombreheure %}
+										<td>M2 – Utiliser les techniques de l’information et de la communication</td>
+										<td>{{heuresM2}}</td>
+									</tr>
+								{% elseif(parcour.dprModule.modCode == "M3") %}
+									<tr>
+										{% set heuresM3 = parcour.dprNombreheure %}
+										<td>M3 – Développer la sécurité au travail</td>
+										<td>{{heuresM3}}</td>
+									</tr>
+								{% elseif(parcour.dprModule.modCode == "M4") %}
+									<tr>
+										{% set heuresM4 = parcour.dprNombreheure %}
+										<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
+										<td>{{heuresM4}}</td>
+									</tr>
+								{% endif %}
+							{% endfor %}
+							<tr>
+								<td><b>Total :</b></td>
+								{% set total = heuresM1 + heuresM2 + heuresM3 + heuresM4 %}
+								<td>{{total|number_format(2)}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<br/>
+
+				<div class="infos2">
+					<b>Lieu de la formation :</b> {{devis.devStructure.strVille}}<br/>
+					<b>Dates :</b> du {{devis.devDatedebut|date('d/m/Y')}} au {{devis.devDatefin|date('d/m/Y')}}<br/>
+					<b>Coût horaire :</b> {{ devis.devTauxhoraire }} €<br/>
+					<br/>
+					<b>Soit un coût total de : {{total * devis.devTauxhoraire}} €</b>
+				</div>
+
+				<div class="footer">
+					{% if(devis.devOF.strID == '1') %}
+						<div class="gauche">
+							CHANTIER école<br/>
+							<a href="mailto:administration.formation@chantierecole.org ">administration.formation@chantierecole.org </a><br/>
+							Tél. : 01 48 07 52 10<br/>
+							N° SIRET : 414 982140 00058
+						</div>
+						<div class="droite">
+							75018 PARIS<br/>
+							<a href="http://www.chantierecole.org ">www.chantierecole.org</a><br/>
+							Fax : 01 48 07 52 11<br/>
+							N° OF : 11 754 093 675
+						</div>
+						<div class="milieu">
+							119-121 rue Damrémont
+						</div>
+					{% elseif(devis.devOF.strID == '2') %}
+						<div class="gauche">
+							OF’ESA<br/>
+							Courriel : <a href="mailto:contact@ofesa.org">contact@ofesa.org</a><br/>
+							Tél. : 01 48 07 60 31<br/>
+							N° SIRET : 799 177 100 00010
+						</div>
+						<div class="droite">
+							75018 PARIS<br/>
+							site Internet : <a href="http://www.ofesa.org">www.ofesa.org</a><br/>
+							Fax : 01 48 07 52 11<br/>
+							N° OF : 11 755 141 875
+						</div>
+						<div class="milieu">
+							119-121 rue Damrémont
+						</div>
+					{% else %}
+						<div class="gauche">
+						</div>
+						<div class="droite">
+						</div>
+						<div class="milieu">
+						</div>
+					{% endif %}
+					
+				</div>
+		
+			</div>
+		{% endfor %}
+	
+	</body>
+</html>

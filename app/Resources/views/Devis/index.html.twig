@@ -43,6 +43,12 @@
                                             <i class="fa fa-pencil"></i> Editer
                                         </button>
                                     </a>
+                                {% else %}
+                                    <a href="{{ path('devis_print', { 'id': entity.devId }) }}">
+                                        <button type="button" class="btn btn-blue4 btn-xs">
+                                            <i class="fa fa-pencil"></i> Imprimer
+                                        </button>
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

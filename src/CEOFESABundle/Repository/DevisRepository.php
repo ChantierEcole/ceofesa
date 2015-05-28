@@ -15,7 +15,7 @@ class DevisRepository extends EntityRepository
         ->orderBy('n.devNumero','DESC')
         ->setMaxResults(1)
         ->setParameter('annee', $annee)
-        ;   
+        ;
 
         $result = $qb->getQuery()->getSingleScalarResult();
 

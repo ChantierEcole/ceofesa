@@ -15,3 +15,8 @@ services:
         arguments: ['@security.context', '@session']
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+
+    twig.extension.intl:
+       class: Twig_Extensions_Extension_Intl
+       tags:
+           - { name: twig.extension }
