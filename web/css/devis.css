@@ -78,12 +78,17 @@
 
 #print .page .footer .gauche{
     float: left;
+    width: 50%;
 }
+
 #print .page .footer .milieu{
     text-align: center;
+    position: absolute;
+    width: 100%;
 }
 
 #print .page .footer .droite{
     float: right;
     text-align: right;
+    width: 50%;
 }
