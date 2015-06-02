@@ -159,8 +159,7 @@ class Tiers
      * @var string
      *
      * @ORM\Column(name="trs_NumSecu", type="string", length=45, nullable=true)
-     * @CeofesaAssert\Numsecu
-     * @Assert\Length(max=21)
+     * @Assert\Length(min=13,max=21)
      */
     private $trsNumsecu;
 
