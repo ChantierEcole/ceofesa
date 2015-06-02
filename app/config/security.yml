@@ -16,7 +16,7 @@ security:
             logout: true
             remember_me:
                 key:             %secret%        # On définit la clé pour le remember_me (%secret% est un parametre de parameters.yml)
-                lifetime:        10800
+                lifetime:        2629743
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
