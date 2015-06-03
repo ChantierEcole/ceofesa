@@ -5,14 +5,17 @@ namespace CEOFESABundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+use Doctrine\ORM\EntityManager;
+
 class ParcoursValidator extends ConstraintValidator
 {
 
-    public function __construct($maxHeures){
+    public function __construct($maxHeures,EntityManager $entityManager){
         $this->max_heures = $maxHeures;
+        $this->em = $entityManager;
     }
 
-    //Vérification de l'unicité de chaque entrée de parcours ainsi que d'un maximum d'heure pour le devis
+    //Vérification de l'unicité de chaque entrée de parcours, d'un maximum d'heures pour le devis et de la concordance Module/Sous-traitant (RCont)
     public function validate($value, Constraint $constraint)
     {
         $i = 0;
@@ -25,8 +28,7 @@ class ParcoursValidator extends ConstraintValidator
             // Récupération des données pour l'unicité
             $data[0] = $parcour->getDprType()->getMtyType();
             $data[1] = $parcour->getDprModule()->getModCode();
-            //$data[2] = $parcour->getDprStructure()->getStrNom();
-            $data[3] = $parcour->getDprTiers()->getTrsNomPrenom();
+            $data[2] = $parcour->getDprTiers()->getTrsNomPrenom();
 
             // création d'une chaine de données pour l'entrée
             $result = implode(",", $data);
@@ -40,17 +42,25 @@ class ParcoursValidator extends ConstraintValidator
 
             // ajout de la chaine dans un tableau pour la comparer avec les suivantes
             $parcours[$i] = $result;
+            $i++;
 
             // Ajout du stagiaire dans un tableau si il n'existe pas déjà
-            if(!array_key_exists($data[3],$stagiaires))
+            if(!array_key_exists($data[2],$stagiaires))
             {
-                $stagiaires[$data[3]] = 0;
+                $stagiaires[$data[2]] = 0;
             }
 
             // Ajout du nombe d'heure au stagiaire (total Heures/Stagiaire)
-            $stagiaires[$data[3]] += $parcour->getDprNombreheure();
+            $stagiaires[$data[2]] += $parcour->getDprNombreheure();
 
-            $i++;
+            if($data[0] == "EXTERNE")
+            {
+                $idModule = $parcour->getDprModule()->getModId();
+                $sousTraitant = $parcour->getDprStructure()->getStrNom();
+                $repository = $this->em->getRepository('CEOFESABundle:RCont');
+                $this->context->addViolation($constraint->message3, array('%moduleid%' => $idModule, '%sousTraitant%' => $sousTraitant));
+            }
+            
         }
 
         foreach ($stagiaires as $stagiaire => $heures) {

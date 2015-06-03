@@ -6,6 +6,6 @@ services:
 
     validator.unique.parcours:
         class: CEOFESABundle\Validator\Constraints\ParcoursValidator
-        arguments: ["%max_heures%"]
+        arguments: ["%max_heures%","@doctrine.orm.entity_manager"]
         tags:
             - { name: validator.constraint_validator, alias: max_heures }
