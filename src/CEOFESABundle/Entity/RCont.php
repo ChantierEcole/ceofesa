@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * RCont
  *
  * @ORM\Table(name="tb_RCont", uniqueConstraints={@ORM\UniqueConstraint(name="unq_rcont", columns={"rcn_Relation", "rnc_Module"})}, indexes={@ORM\Index(name="FKEY18_idx", columns={"rcn_Relation"}), @ORM\Index(name="FKEY19_idx", columns={"rnc_Module"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\RContRepository")
  */
 class RCont
 {

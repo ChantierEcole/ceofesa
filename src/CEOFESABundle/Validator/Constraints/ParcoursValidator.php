@@ -57,7 +57,9 @@ class ParcoursValidator extends ConstraintValidator
             {
                 $idModule = $parcour->getDprModule()->getModId();
                 $sousTraitant = $parcour->getDprStructure()->getStrNom();
+                $structure = $parcour->getDprDevis()->getDevStructure();
                 $repository = $this->em->getRepository('CEOFESABundle:RCont');
+                $test = $repository->getModules($structure,$sousTraitant)->getQuery()->getScalarResult();
                 $this->context->addViolation($constraint->message3, array('%moduleid%' => $idModule, '%sousTraitant%' => $sousTraitant));
             }
             
