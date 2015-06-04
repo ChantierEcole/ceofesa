@@ -53,14 +53,42 @@ class ParcoursValidator extends ConstraintValidator
             // Ajout du nombe d'heure au stagiaire (total Heures/Stagiaire)
             $stagiaires[$data[2]] += $parcour->getDprNombreheure();
 
+            ///
+
             if($data[0] == "EXTERNE")
             {
                 $idModule = $parcour->getDprModule()->getModId();
                 $sousTraitant = $parcour->getDprStructure()->getStrNom();
-                $structure = $parcour->getDprDevis()->getDevStructure();
-                $repository = $this->em->getRepository('CEOFESABundle:RCont');
-                $test = $repository->getModules($structure,$sousTraitant)->getQuery()->getScalarResult();
-                $this->context->addViolation($constraint->message3, array('%moduleid%' => $idModule, '%sousTraitant%' => $sousTraitant));
+
+                $idStructure = $parcour->getDprDevis()->getDevStructure();
+                $idOF = $parcour->getDprDevis()->getDevOf();
+                $idSousTraitant = $parcour->getDprStructure()->getStrId();
+
+                //On vérifie si la relation OF/Structure/Sous-traitant existe bien et on prend son ID
+                $relation = $this->em->getRepository('CEOFESABundle:Relation')->getRelation($idStructure,$idSousTraitant,$idOF)->getQuery()->getOneOrNullResult();
+                if($relation){
+                    $idRelation = $relation->getRelId();
+                } else {
+                    $this->context->addViolation($constraint->message3, array('%sousTraitant%' => $sousTraitant));
+                }
+
+                //On vérifie si le sous-traitant s'occupe bien du module choisi
+                $modules = $this->em->getRepository('CEOFESABundle:RCont')->getModules($idRelation)->getQuery()->getResult();
+
+                if(!$modules){
+                    $this->context->addViolation($constraint->message4, array('%moduleid%' => 'pas de module', '%sousTraitant%' => $sousTraitant));
+                } else {
+                    $valid = 'false';
+                    foreach ($modules as $module) {
+                        $RelationModId = $module->getRncModule()->getModId();
+                        if($RelationModId == $idModule){
+                            $valid = 'true';
+                        }
+                    }
+                    if($valid == 'false'){
+                        $this->context->addViolation($constraint->message4, array('%moduleid%' => 'pas de bon module', '%sousTraitant%' => $sousTraitant));
+                    }
+                }
             }
             
         }
