@@ -36,11 +36,6 @@ class DevisType extends AbstractType
                 'attr' => array('class' => 'hide'),
                 'label' => false
             ))
-            /*->add('devNumero','text',array(
-                    'data' => $numDevis,
-                    'attr' => array('class' => 'hide'),
-                    'label' => false
-                ))*/
             ->add('devDatedevis','datetime',array(
                 'data' => new \DateTime(),
                 'attr' => array('class' => 'hide'),
@@ -64,7 +59,6 @@ class DevisType extends AbstractType
                 'query_builder' => function(StructureRepository $repo) use ($id) {
                     return $repo->getUserStructure($id);
                 },
-                'data' => 2,
                 'attr' => array('class' => 'hide'),
                 'label' => false
             ))
