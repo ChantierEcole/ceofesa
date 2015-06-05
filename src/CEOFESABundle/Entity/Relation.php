@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Relation
  *
  * @ORM\Table(name="tb_Relation", uniqueConstraints={@ORM\UniqueConstraint(name="unq_relation", columns={"rel_Structure", "rel_SousTraitant", "rel_OF"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\RelationRepository")
  */
 class Relation
 {

@@ -160,6 +160,12 @@
     margin: 0 10px;
 }
 
+
 .btn .caret {
     margin-left: 4px;
 }
+
+.alert .glyphicon {
+    padding-right: 10px;
+}
+
