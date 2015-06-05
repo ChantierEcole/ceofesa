@@ -86,7 +86,7 @@ class ParcoursValidator extends ConstraintValidator
                         }
                     }
                     if($valid == 'false'){
-                        $this->context->addViolation($constraint->message4, array('%moduleid%' => 'pas de bon module', '%sousTraitant%' => $sousTraitant));
+                        $this->context->addViolation($constraint->message4, array('%moduleid%' => $idModule, '%sousTraitant%' => $sousTraitant));
                     }
                 }
             }
