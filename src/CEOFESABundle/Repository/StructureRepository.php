@@ -6,6 +6,16 @@ use Doctrine\ORM\EntityRepository;
 
 class StructureRepository extends EntityRepository
 {
+
+    public function getStructure($id)
+    {
+        return $this
+        ->createQueryBuilder('s')
+        ->where('s.strId = :ofId')
+        ->setParameter('ofId',$id)
+        ;
+    }
+
     public function getUserStructure($id)
     {
         return $this
