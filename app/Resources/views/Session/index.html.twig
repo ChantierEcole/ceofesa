@@ -39,6 +39,41 @@
 		</div>
 	</div>	
 </div>
+{% if entities is defined and of is defined and module is defined and type is defined %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-visible">
+					{% if entities is empty %}
+						<p>Il n'y a pas de données</p>
+					{% else %}
+						<table>
+							<thead>
+								<tr>
+									<th>id</th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for entity in entities %}
+								<tr>
+									<td>{{ entity.sesId }}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+				 <div class="panel-body">
+				 </div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
 {% endblock %}
 {% block javascripts %}
 <script type="text/javascript">

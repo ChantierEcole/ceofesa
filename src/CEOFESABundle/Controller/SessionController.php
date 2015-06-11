@@ -5,11 +5,12 @@ namespace CEOFESABundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use CEOFESABundle\Repository\SessionRepository;
+use CEOFESABundle\Repository\StructureRepository;
 
 
 /**
@@ -24,23 +25,49 @@ class SessionController extends Controller
     * 	path="/",
     * 	name="session_index"
     * )
-    * @Method({"GET","POST"})
+    * @Method({"GET"})
     * @Template("::Session\index.html.twig")
     */
     public function indexAction(Request $request)
     {
        	$form = $this->createChooseForm();
 
-		if ($request->isMethod('POST')) {
-
-            // data is an array
-            $data = $form->getData();
-        }
-
         return array(
             'choose_form' => $form->createView(),
         );
     }
+
+   /**
+    * @Route(
+    * 	path="/list",
+    * 	name="session_list"
+    * )
+    * @Method({"POST"})
+    * @Template("::Session\index.html.twig")
+    */
+    public function listAction(Request $request)
+    {
+    	$form = $this->createChooseForm();
+
+    	$form->handleRequest($request);
+        // data is an array
+        $data = $form->getData();
+        $module = $data['module'];
+        $modType = $data['type'];
+        $of = $data['of'];
+        $id = $this->get('session')->get('structure');
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(),$modType->getMtyId(),$of->getStrId(),$id)->getQuery()->getResult();
+
+		return array(
+		    'choose_form' => $form->createView(),
+		    'entities' => $entities,
+		    'module' => $module,
+		    'type' => $modType,
+		    'of' => $of,
+		);
+	}
 
     /**
      * Création d'un formulaire pour choisir les "paramètres" des sessions à afficher
@@ -73,6 +100,10 @@ class SessionController extends Controller
                 'attr' => array('class' => 'btn-primary')
             ))
         ;
+        $formBuilder
+        	->setAction($this->generateUrl('session_list'))
+			->setMethod('POST')
+		;
 
         $formBuilder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
     		$formulaire = $event->getForm();
