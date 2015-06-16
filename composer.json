@@ -23,7 +23,8 @@
         "doctrine/migrations": "dev-master",
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "knplabs/knp-snappy-bundle": "dev-master",
-        "sensio/generator-bundle": "^2.5"
+        "sensio/generator-bundle": "^2.5",
+        "doctrine/doctrine-fixtures-bundle": "dev-master"
     },
     "require-dev": {
     },
