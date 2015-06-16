@@ -17,6 +17,7 @@ class Region
      *
      * @ORM\Column(name="reg_ID", type="string", length=4, nullable=false)
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $regId;
 
@@ -28,6 +29,18 @@ class Region
     private $regNom;
 
 
+    /**
+     * Set regId
+     *
+     * @param string $regId
+     * @return Region
+     */
+    public function setRegId($regId)
+    {
+        $this->regId = $regId;
+
+        return $this;
+    }
 
     /**
      * Get regId
