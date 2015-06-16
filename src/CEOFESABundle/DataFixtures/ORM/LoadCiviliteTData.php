@@ -4,7 +4,7 @@ namespace CEOFESABundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Acme\HelloBundle\Entity\User;
+use CEOFESABundle\Entity\CiviliteT;
 
 class LoadCiviliteTData implements FixtureInterface
 {
@@ -19,12 +19,13 @@ class LoadCiviliteTData implements FixtureInterface
         $monsieur->setCtyTypecourt('Mr');
 
         $madame = new CiviliteT();
-        $monsieur->setCtyId(1);
+        $madame->setCtyId(1);
         $madame->setCtyType('Madame');
         $madame->setCtyTypecourt('Mme');
 
         $manager->persist($monsieur);
         $manager->persist($madame);
+
         $manager->flush();
     }
 }

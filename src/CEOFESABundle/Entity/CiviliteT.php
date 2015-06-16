@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CiviliteT
 {
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="cty_ID", type="integer")
      * @ORM\Id
@@ -36,6 +36,19 @@ class CiviliteT
     private $ctyTypecourt;
 
     /**
+     * Set ctyId
+     *
+     * @param integer $ctyId
+     * @return CiviliteT
+     */
+    public function setCtyId($ctyId)
+    {
+        $this->ctyId = $ctyId;
+
+        return $this;
+    }
+
+    /**
      * Get ctyId
      *
      * @return integer 
@@ -43,17 +56,6 @@ class CiviliteT
     public function getCtyId()
     {
         return $this->ctyId;
-    }
-
-    /**
-     * Set ctyId
-     *
-     * @param boolean $ctyTypecourt
-     * @return CiviliteT
-     */
-    public function setCtyId($id)
-    {
-        $this->id = $id;
     }
 
     /**
