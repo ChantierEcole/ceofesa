@@ -17,7 +17,6 @@ class ModuleT
      *
      * @ORM\Column(name="mty_ID", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $mtyId;
 
@@ -39,11 +38,23 @@ class ModuleT
     private $mtyStructuretype;
 
 
+    /**
+     * Set mtyId
+     *
+     * @param interger $mtyId
+     * @return ModuleT
+     */
+    public function setMtyId($mtyId)
+    {
+        $this->mtyId = $mtyId;
+
+        return $this;
+    }
 
     /**
      * Get mtyId
      *
-     * @return boolean 
+     * @return interger
      */
     public function getMtyId()
     {

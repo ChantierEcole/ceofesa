@@ -29,11 +29,23 @@ class StructureT
     private $styType;
 
 
+    /**
+     * Set styId
+     *
+     * @param integer $styId
+     * @return StructureT
+     */
+    public function setStyId($styId)
+    {
+        $this->styId = $styId;
+
+        return $this;
+    }
 
     /**
      * Get styId
      *
-     * @return boolean 
+     * @return integer
      */
     public function getStyId()
     {
