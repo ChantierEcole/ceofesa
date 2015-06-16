@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class FormationT
 {
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="fty_ID", type="boolean", nullable=false)
+     * @ORM\Column(name="fty_ID", type="integer", nullable=false)
      * @ORM\Id
      */
     private $ftyId;
@@ -28,11 +28,23 @@ class FormationT
     private $ftyType;
 
 
+    /**
+     * Set ftyId
+     *
+     * @param integer $ftyId
+     * @return FormationT
+     */
+    public function setFtyId($ftyId)
+    {
+        $this->ftyId = $ftyId;
+
+        return $this;
+    }
 
     /**
      * Get ftyId
      *
-     * @return boolean 
+     * @return integer
      */
     public function getFtyId()
     {
