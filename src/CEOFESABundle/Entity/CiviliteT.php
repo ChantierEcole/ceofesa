@@ -17,7 +17,7 @@ class CiviliteT
      *
      * @ORM\Column(name="cty_ID", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $ctyId;
 
@@ -43,6 +43,17 @@ class CiviliteT
     public function getCtyId()
     {
         return $this->ctyId;
+    }
+
+    /**
+     * Set ctyId
+     *
+     * @param boolean $ctyTypecourt
+     * @return CiviliteT
+     */
+    public function setCtyId($id)
+    {
+        $this->id = $id;
     }
 
     /**
