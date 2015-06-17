@@ -13,11 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 class SortieT
 {
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="srt_ID", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $srtId;
 
@@ -29,11 +28,23 @@ class SortieT
     private $srtMotif;
 
 
+    /**
+     * Set srtId
+     *
+     * @param integer $srtId
+     * @return SortieT
+     */
+    public function setSrtId($srtId)
+    {
+        $this->srtId = $srtId;
+
+        return $this;
+    }
 
     /**
      * Get srtId
      *
-     * @return boolean 
+     * @return integer
      */
     public function getSrtId()
     {
