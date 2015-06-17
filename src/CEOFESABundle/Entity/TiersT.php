@@ -29,11 +29,23 @@ class TiersT
     private $ttyType;
 
 
+    /**
+     * Set ttyId
+     *
+     * @param integer $ttyId
+     * @return TiersT
+     */
+    public function setTtyId($ttyId)
+    {
+        $this->ttyId = $ttyId;
+
+        return $this;
+    }
 
     /**
      * Get ttyId
      *
-     * @return boolean 
+     * @return integer
      */
     public function getTtyId()
     {
