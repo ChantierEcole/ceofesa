@@ -20,9 +20,6 @@ class DevisRepository extends EntityRepository
         $result = $qb->getQuery()->getSingleScalarResult();
 
         $result += 1;
-        if($result<100){
-            $result = '0'.$result;
-        }
 
         return $result;
     }

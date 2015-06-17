@@ -49,12 +49,22 @@ class DevisController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Devis();
-        $numDevis = date('Y').'-'.$this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:Devis')->getNextNum();
 
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $numDevis = $this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:Devis')->getNextNum();
+            $entity->setDevNumero($numDevis);
+
+            if($numDevis<100){
+                $mailNumDevis = '0'.$numDevis;
+            }else{
+                $mailNumDevis = $numDevis;
+            }
+
+            $AnneNumDevis = date('Y').'-'.$mailNumDevis;
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -63,7 +73,7 @@ class DevisController extends Controller
                 ->setSubject('Demande de devis')
                 ->setFrom('webmestre@chantierecole.org')
                 ->setTo('webmestre@chantierecole.org')
-                ->setBody($this->renderView('Contact\devis.txt.twig',array('devis' => $entity, 'num' => $numDevis)))
+                ->setBody($this->renderView('Contact\devis.txt.twig',array('devis' => $entity, 'num' => $AnneNumDevis)))
             ;
             $this->get('mailer')->send($message);
 
