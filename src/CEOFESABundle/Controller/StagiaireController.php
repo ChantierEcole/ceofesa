@@ -159,7 +159,7 @@ class StagiaireController extends Controller
     */
     private function createEditForm(Tiers $entity)
     {
-        $this->get('session')->get('structure');
+        $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new StagiaireType($id), $entity, array(
             'action' => $this->generateUrl('stagiaire_update', array('id' => $entity->getTrsId())),
