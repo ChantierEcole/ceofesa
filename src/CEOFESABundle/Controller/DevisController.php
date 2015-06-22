@@ -57,23 +57,15 @@ class DevisController extends Controller
             $numDevis = $this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:Devis')->getNextNum();
             $entity->setDevNumero($numDevis);
 
-            if($numDevis<100){
-                $mailNumDevis = '0'.$numDevis;
-            }else{
-                $mailNumDevis = $numDevis;
-            }
-
-            $AnneNumDevis = date('Y').'-'.$mailNumDevis;
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Demande de devis')
-                ->setFrom('webmestre@chantierecole.org')
-                ->setTo('webmestre@chantierecole.org')
-                ->setBody($this->renderView('Contact\devis.txt.twig',array('devis' => $entity, 'num' => $AnneNumDevis)))
+                ->setFrom($this->get('session')->get('mail'))
+                ->setTo($this->container->getParameter('contact_mail'))
+                ->setBody($this->renderView('Mail\devis.txt.twig',array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);
 
