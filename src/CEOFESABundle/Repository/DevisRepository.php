@@ -52,7 +52,7 @@ class DevisRepository extends EntityRepository
 
 
         $query  = $qb->getQuery();
-        return $query->getScalarResult();
+        return $query->getResult();
 
     }
 }
