@@ -272,6 +272,14 @@ class DevisController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Modification d\'un devis')
+                ->setFrom($this->get('session')->get('mail'))
+                ->setTo($this->container->getParameter('contact_mail'))
+                ->setBody($this->renderView('Mail\modifDevis.txt.twig',array('devis' => $entity)))
+            ;
+            $this->get('mailer')->send($message);
+
             return $this->redirect($this->generateUrl('devis_show', array('id' => $id)));
         }
 
