@@ -50,6 +50,11 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find(572);
+        $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devis->getDevstructure());
+
+        var_dump($mails);
+
         return $this->render("Devis/admin.html.twig",array(
         	'entities' => $entities,
         ));
@@ -70,6 +75,8 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+        $devstructure = $devis->getDevstructure();
+        $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devstructure);
 
         if (!$devis) {
             throw $this->createNotFoundException(
@@ -80,7 +87,15 @@ class AdminController extends Controller
         $devis->setDevStatut('Validé');
         $em->flush();
 
-        return new Response($DevisId); 
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Votre devis a été validé')
+            ->setFrom($this->container->getParameter('contact_mail'))
+            ->setTo($mails)
+            ->setBody($this->renderView('Mail\validDevis.txt.twig',array('devis' => $devis)))
+        ;
+        $this->get('mailer')->send($message);
+
+        return new Response($DevisId);
     }
 
     /**
