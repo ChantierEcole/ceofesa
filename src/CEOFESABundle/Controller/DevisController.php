@@ -269,6 +269,8 @@ class DevisController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('CEOFESABundle:Devis')->find($id);
+        $entity->setDevStatut('en cours');
+        $entity->setDevDatedevis(new \DateTime());
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Devis entity.');
@@ -277,7 +279,7 @@ class DevisController extends Controller
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
+        if ($editForm->isValid()) {     
             $em->flush();
 
             return $this->redirect($this->generateUrl('devis_show', array('id' => $id)));
