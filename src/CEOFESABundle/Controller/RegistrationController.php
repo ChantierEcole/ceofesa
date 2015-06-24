@@ -89,7 +89,7 @@ class RegistrationController extends BaseController
                 ->setSubject('Demande de compte')
                 ->setFrom('webmestre@chantierecole.org')
                 ->setTo('webmestre@chantierecole.org')
-                ->setBody($this->renderView('Contact\utilisateur.txt.twig',array('utilisateur' => $utilisateur)))
+                ->setBody($this->renderView('Mail\utilisateur.txt.twig',array('utilisateur' => $utilisateur)))
             ;
             $this->get('mailer')->send($message);
 

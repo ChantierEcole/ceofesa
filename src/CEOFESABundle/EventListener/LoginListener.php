@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Custom login listener.
+ * Listener qui se lance après login pour enregistrer les variables de session de l'utilisateur (structure et mail)
  */
 class LoginListener
 {
@@ -44,12 +45,16 @@ class LoginListener
 			// user has logged in using remember_me cookie
 		}
 		
-		// do some other magic here
 		$user = $event->getAuthenticationToken()->getUser();
 		$structure = $user->getStructure()->getStrId();
+		$mail = $user->getEmail();
 
 		if (!empty($structure)) {
             $this->session->set('structure', $structure);
+        }
+
+        if (!empty($mail)) {
+            $this->session->set('mail', $mail);
         }
 	}
 }
