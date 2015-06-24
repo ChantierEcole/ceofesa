@@ -53,8 +53,6 @@ class AdminController extends Controller
         $devis = $em->getRepository('CEOFESABundle:Devis')->find(572);
         $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devis->getDevstructure());
 
-        var_dump($mails);
-
         return $this->render("Devis/admin.html.twig",array(
         	'entities' => $entities,
         ));
@@ -113,6 +111,8 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+        $devstructure = $devis->getDevstructure();
+        $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devstructure);
 
         if (!$devis) {
             throw $this->createNotFoundException(
@@ -122,6 +122,14 @@ class AdminController extends Controller
 
         $devis->setDevStatut('Refusé');
         $em->flush();
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Votre devis a été refusé')
+            ->setFrom($this->container->getParameter('contact_mail'))
+            ->setTo($mails)
+            ->setBody($this->renderView('Mail\refuseDevis.txt.twig',array('devis' => $devis)))
+        ;
+        $this->get('mailer')->send($message);
 
         return new Response($DevisId); 
 
