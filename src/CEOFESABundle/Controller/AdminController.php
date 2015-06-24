@@ -50,9 +50,6 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
-        $devis = $em->getRepository('CEOFESABundle:Devis')->find(572);
-        $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devis->getDevstructure());
-
         return $this->render("Devis/admin.html.twig",array(
         	'entities' => $entities,
         ));
