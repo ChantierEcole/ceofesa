@@ -42,33 +42,62 @@
 {% if entities is defined and of is defined and module is defined and type is defined %}
 	<div class="row">
 		<div class="col-md-12">
-			<div class="panel panel-visible">
+			<div class="panel panel-visible margin-bottom-none">
+				<div class="panel-heading">
+	                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Résultats pour le module {{ module.modCode }} avec le type {{ type.mtyType }} pour l'OF {{ of.strNom }} </div>
+	            </div>
+	            <div class="panel-body">
+                <div class="clearfix"></div>
+
 					{% if entities is empty %}
 						<p>Il n'y a pas de données</p>
 					{% else %}
-						<table>
-							<thead>
-								<tr>
-									<th>id</th>
-									<th></th>
-									<th></th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for entity in entities %}
-								<tr>
-									<td>{{ entity.sesId }}</td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
+						<div class="col-md-4 table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Date</th>
+										<th>Type</th>
+										<th>Durée</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for entity in entities %}
+									<tr>
+										<td>{{ entity.sesId }}</td>
+										<td>{{ entity.sesDate|date('Y-m-d') }}</td>
+										<td>{{ entity.sesStype.styType }}</td>
+										<td>
+											{% if entity.sesDuree != "0.00" %}
+												{{ entity.sesDuree }}
+											{% else %}
+												-
+											{% endif %}
+										</td>
+										<td class="text-center">
+											<a href="{{ path('devis_show', { 'id': entity.sesId }) }}">
+                                    			<button type="button" class="btn btn-blue3 btn-xs">
+                                        			<i class="fa fa-eye"></i> Voir
+                                    			</button>
+                                			</a>
+                                		</td>	
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-8">
+							<div class="jumbotron" data-spy="affix" data-offset-top="200" data-offset-bottom="200">
+								<div class="form-presences">
+									
+								</div>
+							</div>
+						</div>
 					{% endif %}
-				 <div class="panel-body">
-				 </div>
+
+				</div>
 			</div>
 		</div>
 	</div>

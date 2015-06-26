@@ -172,3 +172,7 @@
 .select-session-form #form_voir {
     margin-top: 23px;
 }
+
+.form-presences {
+    min-height: 500px;
+}
