@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class SessionT
 {
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="sty_ID", type="boolean", nullable=false)
+     * @ORM\Column(name="sty_ID", type="integer", nullable=false)
      * @ORM\Id
      */
     private $styId;
@@ -28,11 +28,23 @@ class SessionT
     private $styType;
 
 
+    /**
+     * Set styId
+     *
+     * @param integer $styId
+     * @return SessionT
+     */
+    public function setStyId($styId)
+    {
+        $this->styId = $styId;
+
+        return $this;
+    }
 
     /**
      * Get styId
      *
-     * @return boolean 
+     * @return integer 
      */
     public function getStyId()
     {

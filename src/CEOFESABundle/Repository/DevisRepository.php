@@ -20,9 +20,6 @@ class DevisRepository extends EntityRepository
         $result = $qb->getQuery()->getSingleScalarResult();
 
         $result += 1;
-        if($result<100){
-            $result = '0'.$result;
-        }
 
         return $result;
     }
@@ -35,6 +32,7 @@ class DevisRepository extends EntityRepository
         ;
     }
 
+    // Affiche les devis non-intégrés dans des parcours modifiés dans les deux derniers mois
     public function getDevisEnCours(){
         // Sélection des numéros de devis qui apparaissent dans des parcours
         $qb2 = $this->_em->createQueryBuilder();
@@ -44,15 +42,18 @@ class DevisRepository extends EntityRepository
             ->groupBy('dp.dprDevis')
         ;
 
+        // Date d'aujourd'hui moins 2 mois
+        $time = date("Y-m-d", strtotime("-2 month"));
+
         // Sélection des devis qui ne sont pas parmis ceux de la requete précédente
         $qb = $this->createQueryBuilder('s');
         $qb ->where($qb->expr()->notIn('s.devId', $qb2->getDQL()))
-            ->andWhere('s.devDatefin > :date')
-            ->setParameter('date', new \DateTime())
+            ->andWhere('s.devDatedevis > :date')
+            ->setParameter('date', $time)
         ;
 
         $query  = $qb->getQuery();
-        return $query->getScalarResult();
+        return $query->getResult();
 
     }
 

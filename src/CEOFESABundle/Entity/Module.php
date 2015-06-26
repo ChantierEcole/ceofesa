@@ -43,6 +43,18 @@ class Module
     private $modIntituleLong;
 
 
+    /**
+     * Set modId
+     *
+     * @param integer $modId
+     * @return Module
+     */
+    public function setModId($modId)
+    {
+        $this->modId = $modId;
+
+        return $this;
+    }
 
     /**
      * Get modId

@@ -82,6 +82,23 @@ class DevisType extends AbstractType
                 'attr' => array('class' => 'btn-primary')
             ))
         ;
+
+        /*$builder
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+
+                $data = $event->getData();
+                $form = $event->getForm();
+
+                if (!$data || !$data->getId()) {
+                    $form->add('devNumero','text',array(
+                            'data' => $numDevis,
+                            'attr' => array('class' => 'hide'),
+                            'label' => false
+                    ));
+                }
+
+            })
+        ;*/
     }
     
     /**

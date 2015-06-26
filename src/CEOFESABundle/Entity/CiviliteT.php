@@ -13,11 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 class CiviliteT
 {
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="cty_ID", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $ctyId;
 
@@ -34,6 +34,19 @@ class CiviliteT
      * @ORM\Column(name="cty_TypeCourt", type="string", length=3, nullable=false)
      */
     private $ctyTypecourt;
+
+    /**
+     * Set ctyId
+     *
+     * @param integer $ctyId
+     * @return CiviliteT
+     */
+    public function setCtyId($ctyId)
+    {
+        $this->ctyId = $ctyId;
+
+        return $this;
+    }
 
     /**
      * Get ctyId
