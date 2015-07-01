@@ -7,6 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -131,7 +135,8 @@ class SessionController extends Controller
     }
 
     /**
-     * Traitement backoffice de l'AJAX.
+     * Traitement backoffice de l'AJAX
+     * -> affichage de la listes des OF en fonction du module et du type
      * 
      * @Route("/ajax", name="session_ajax")
      *
@@ -157,5 +162,26 @@ class SessionController extends Controller
         }
 
         return new JsonResponse($OFList);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> affichage du détail d'une session choisie
+     * 
+     * @Route("/detail-ajax", name="details_session_ajax")
+     *
+     */
+    public function detailsSessionAjaxAction(Request $request){
+
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $sessionId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $session = $em->getRepository('CEOFESABundle:Session')->find($sessionId);
+        $reponse = $serializer->serialize($session, 'json');
+
+        return new JsonResponse($reponse);
     }
 }
