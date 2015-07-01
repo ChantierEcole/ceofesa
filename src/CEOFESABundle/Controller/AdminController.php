@@ -84,7 +84,7 @@ class AdminController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject('Votre devis a été validé')
-            ->setFrom($this->container->getParameter('contact_mail'))
+            ->setFrom($this->container->getParameter('contact_mail1'))
             ->setTo($mails)
             ->setBody($this->renderView('Mail\validDevis.txt.twig',array('devis' => $devis)))
         ;
@@ -122,7 +122,7 @@ class AdminController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject('Votre devis a été refusé')
-            ->setFrom($this->container->getParameter('contact_mail'))
+            ->setFrom($this->container->getParameter('contact_mail1'))
             ->setTo($mails)
             ->setBody($this->renderView('Mail\refuseDevis.txt.twig',array('devis' => $devis)))
         ;

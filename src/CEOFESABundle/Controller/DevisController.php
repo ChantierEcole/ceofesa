@@ -64,7 +64,7 @@ class DevisController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Demande de devis')
                 ->setFrom($this->get('session')->get('mail'))
-                ->setTo($this->container->getParameter('contact_mail'))
+                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2')))
                 ->setBody($this->renderView('Mail\devis.txt.twig',array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);
@@ -277,7 +277,7 @@ class DevisController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Modification d\'un devis')
                 ->setFrom($this->get('session')->get('mail'))
-                ->setTo($this->container->getParameter('contact_mail'))
+                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2')))
                 ->setBody($this->renderView('Mail\modifDevis.txt.twig',array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);

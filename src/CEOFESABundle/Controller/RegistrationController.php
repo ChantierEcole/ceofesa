@@ -87,8 +87,8 @@ class RegistrationController extends BaseController
         if ($form->isValid()) {
             $message = \Swift_Message::newInstance()
                 ->setSubject('Demande de compte')
-                ->setFrom('webmestre@chantierecole.org')
-                ->setTo('webmestre@chantierecole.org')
+                ->setFrom($this->container->getParameter('contact_mail1'))
+                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2')))
                 ->setBody($this->renderView('Mail\utilisateur.txt.twig',array('utilisateur' => $utilisateur)))
             ;
             $this->get('mailer')->send($message);
