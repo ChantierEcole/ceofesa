@@ -29,7 +29,7 @@
                             <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
                             <td class="statut">{{ entity.devStatut }}</td>
                             <td class="text-center">
-                                <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
+                                <a href="{{ path('devis_admin_show', { 'id': entity.devId }) }}">
                                     <button type="button" class="btn btn-blue3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>

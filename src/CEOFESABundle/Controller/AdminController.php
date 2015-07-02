@@ -56,6 +56,29 @@ class AdminController extends Controller
     }
 
     /**
+     * Finds and displays a Devis entity for admin
+     *
+     * @Route("/devis/{id}", name="devis_admin_show")
+     * @Method("GET")
+     */
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('CEOFESABundle:Devis')->find($id);
+        $entities = $em->getRepository('CEOFESABundle:DParcours')->getParcoursDevis($id)->getQuery()->getResult();
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Devis Introuvable. Désolé');
+        }
+
+        return $this->render("Devis/adminShow.html.twig",array(
+            'entity'      => $entity,
+            'entities' => $entities,
+        ));
+    }
+
+    /**
 	* Traitement ajax validation devis
     *
     * @Route(

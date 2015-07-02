@@ -1,0 +1,135 @@
+{% extends '::layout.html.twig' %}
+
+{% block body -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du Devis </div>
+            </div>
+            <div class="panel-body">
+                <table class="record_properties table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Année</th>
+                            <td>{{ entity.devAnnee }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro</th>
+                            <td>{{ entity.devNumero }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Création</th>
+                            <td>{{ entity.devDatedevis|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Début</th>
+                            <td>{{ entity.devDatedebut|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Fin</th>
+                            <td>{{ entity.devDatefin|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Taux Horaire</th>
+                            <td>{{ entity.devTauxhoraire }}</td>
+                        </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td class="statut">{{ entity.devStatut }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Parcours de stagiaire</h3>
+                <table class="table table-bordered table-condensed table-hover">
+                    <tr>
+                        <th>Stagiaire</th>
+                        <th>Module</th>
+                        <th>Nombre d'Heures</th>
+                        <th>Type</th>
+                        <th>OF</th>
+                    </tr>
+                    {% for parcours in entities %}
+                        <tr>
+                            <td>{{ parcours.dprTiers.trsNomPrenom }}</td>
+                            <td>{{ parcours.dprModule.modCode }}</td>
+                            <td>{{ parcours.dprNombreHeure }}</td>
+                            <td>{{ parcours.dprType.mtyType }}</td>
+                            <td>{{ parcours.dprStructure.strNom }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <br/>
+                
+                <a href="{{ path('devis_gestion') }}">
+                    <button type="button" class="btn btn-light4 spacing-button">
+                        Retour à la liste
+                    </button>
+                </a>
+
+                {% if entity.devStatut == "en cours" %}
+                                    
+                        <button type="button" class="btn btn-green3 btn-valid pull-right" data-entityid="{{entity.devId|default('')}}">
+                            <i class="fa fa-check"></i> Valider
+                        </button>
+                        <div class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        <button type="button" class="btn btn-red3 btn-refuse pull-right" data-entityid="{{entity.devId|default('')}}">
+                            <i class="fa fa-times"></i> Refuser
+                        </button>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        
+        $("body").on("click",".btn-valid", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).next('.btn-refuse').hide();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_valid') }}",
+                data: 'id=' + entityid,
+                timeout: 10000,
+                success: function(data){
+                    $('td.statut').html('Validé');
+                    alert("Devis validé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : le devis ne s'est pas validé dans la base de données")
+                }
+            }); 
+        });
+
+        $("body").on("click",".btn-refuse", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).prev('.btn-valid').hide();
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_refuse') }}",
+                data: 'id=' + entityid,
+                timeout: 10000,
+                success: function(data){ 
+                    $('td.statut').html('Refusé');
+                    alert("Devis refusé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : l'opération ne s'est pas enregistrée dans la base de données")
+                }
+            }); 
+        });
+    });
+
+</script>
+{% endblock %}
