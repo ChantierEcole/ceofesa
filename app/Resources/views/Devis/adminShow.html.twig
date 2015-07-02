@@ -11,6 +11,10 @@
                 <table class="record_properties table table-bordered">
                     <tbody>
                         <tr>
+                            <th>Structure</th>
+                            <td>{{ entity.devStructure.strNom }}</td>
+                        </tr>
+                        <tr>
                             <th>Année</th>
                             <td>{{ entity.devAnnee }}</td>
                         </tr>
@@ -31,8 +35,20 @@
                             <td>{{ entity.devDatefin|date('Y-m-d') }}</td>
                         </tr>
                         <tr>
+                            <th>Nombre de stagiaires</th>
+                            <td>{{ entity.devNbrstagiaires }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre d'heure total</th>
+                            <td>{{ entity.devNbrheures }}</td>
+                        </tr>
+                        <tr>
                             <th>Taux Horaire</th>
                             <td>{{ entity.devTauxhoraire }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix Total</th>
+                            <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
                         </tr>
                         <tr>
                             <th>Statut</th>
@@ -92,7 +108,7 @@
 
             var entityid = $(this).data("entityid");
             $(this).hide();
-            $(this).next('.btn-refuse').hide();
+            $('.btn-refuse').hide();
 
             $.ajax({
                 type: "POST",
@@ -100,7 +116,7 @@
                 data: 'id=' + entityid,
                 timeout: 10000,
                 success: function(data){
-                    $('td.statut').html('Validé');
+                    $('.statut').html('Validé');
                     alert("Devis validé :" + data);
                 },
                 error: function(){
@@ -113,7 +129,7 @@
 
             var entityid = $(this).data("entityid");
             $(this).hide();
-            $(this).prev('.btn-valid').hide();
+            $('.btn-valid').hide();
 
             $.ajax({
                 type: "POST",
@@ -121,7 +137,7 @@
                 data: 'id=' + entityid,
                 timeout: 10000,
                 success: function(data){ 
-                    $('td.statut').html('Refusé');
+                    $('.statut').html('Refusé');
                     alert("Devis refusé :" + data);
                 },
                 error: function(){

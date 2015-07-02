@@ -372,4 +372,37 @@ class Devis
         }
         return $prix;
     }
+
+    /**
+    * Get Nombre stagiaires
+    *
+    * @return int
+    */
+    public function getDevNbrStagiaires()
+    {
+        $stagiaires = array();
+
+        foreach($this->getDevParcours() as $parcour)
+        {
+            $stagiaires[] = $parcour->getDprNumero();
+        }
+
+        $nbr = count(array_unique($stagiaires));
+       
+        return $nbr;
+    }
+
+    /**
+    * Get Nombre heure total
+    * @return int
+    */
+    public function getDevNbrHeures()
+    {
+        $heures = 0;
+        foreach($this->getDevParcours() as $parcour)
+        {
+            $heures += $parcour->getDprNombreheure();
+        }
+        return $heures;
+    }
 }

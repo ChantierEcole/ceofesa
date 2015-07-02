@@ -4,3 +4,4 @@ parameters:
     max_heures: 399
     contact_mail1: 'webmestre@chantierecole.org'
     contact_mail2: 'developpeur@chantierecole.org'
+    contact_mail3: 'a.clavier@ofesa.org'

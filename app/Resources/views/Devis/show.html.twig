@@ -11,6 +11,10 @@
                 <table class="record_properties table table-bordered">
                     <tbody>
                         <tr>
+                            <th>Structure</th>
+                            <td>{{ entity.devStructure.strNom }}</td>
+                        </tr>
+                        <tr>
                             <th>Année</th>
                             <td>{{ entity.devAnnee }}</td>
                         </tr>
@@ -31,8 +35,20 @@
                             <td>{{ entity.devDatefin|date('Y-m-d') }}</td>
                         </tr>
                         <tr>
+                            <th>Nombre de stagiaires</th>
+                            <td>{{ entity.devNbrstagiaires }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre d'heure total</th>
+                            <td>{{ entity.devNbrheures }}</td>
+                        </tr>
+                        <tr>
                             <th>Taux Horaire</th>
                             <td>{{ entity.devTauxhoraire }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix Total</th>
+                            <td>{{ entity.devPrixtotal|number_format(2, ',', ' ')  }} €</td>
                         </tr>
                         <tr>
                             <th>Statut</th>
