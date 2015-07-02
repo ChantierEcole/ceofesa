@@ -62,29 +62,29 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% set heuresM1, heuresM2, heuresM3, heuresM4 = 0, 0, 0, 0 %}
+							{% set heuresM1, heuresM2, heuresM3, heuresM4, total = 0, 0, 0, 0, 0 %}
 							{% for parcour in parcours if parcour.dprTiers == stagiaire.dprTiers %}
 								{% if(parcour.dprModule.modCode == "M1") %}
 									<tr>
-										{% set heuresM1 = parcour.dprNombreheure %}
+										{% set heuresM1 = parcour.dprNombreheure %}{% set total = total + heuresM1 %}
 										<td>M1 – Développer des comportements nécessaires à la réussite du parcours - comprendre et communiquer par l’oral - lire, comprendre et communiquer par l’écrit - appréhender l’espace et le temps - utiliser les mathématiques en situation professionnelle</td>
 										<td>{{heuresM1}}</td>
 								</tr>
 								{% elseif(parcour.dprModule.modCode == "M2") %}
 									<tr>
-										{% set heuresM2 = parcour.dprNombreheure %}
+										{% set heuresM2 = parcour.dprNombreheure %}{% set total = total + heuresM2 %}
 										<td>M2 – Utiliser les techniques de l’information et de la communication</td>
 										<td>{{heuresM2}}</td>
 									</tr>
 								{% elseif(parcour.dprModule.modCode == "M3") %}
 									<tr>
-										{% set heuresM3 = parcour.dprNombreheure %}
+										{% set heuresM3 = parcour.dprNombreheure %}{% set total = total + heuresM3 %}
 										<td>M3 – Développer la sécurité au travail</td>
 										<td>{{heuresM3}}</td>
 									</tr>
 								{% elseif(parcour.dprModule.modCode == "M4") %}
 									<tr>
-										{% set heuresM4 = parcour.dprNombreheure %}
+										{% set heuresM4 = parcour.dprNombreheure %}{% set total = total + heuresM4 %}
 										<td>M4 – Mettre en œuvre des capacités professionnelles de base et réaliser des tâches professionnelles d’un métier</td>
 										<td>{{heuresM4}}</td>
 									</tr>
@@ -92,7 +92,6 @@
 							{% endfor %}
 							<tr>
 								<td><b>Total :</b></td>
-								{% set total = heuresM1 + heuresM2 + heuresM3 + heuresM4 %}
 								<td>{{total|number_format(2)}}</td>
 							</tr>
 						</tbody>
