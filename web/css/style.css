@@ -172,3 +172,11 @@
 .select-session-form #form_voir {
     margin-top: 23px;
 }
+
+.detail-session {}
+    .detail-session label {
+        margin: 10px 0 5px;
+    }
+    .detail-session input {
+        width: 100%;
+    }

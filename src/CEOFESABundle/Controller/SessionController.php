@@ -7,10 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -173,14 +169,16 @@ class SessionController extends Controller
      */
     public function detailsSessionAjaxAction(Request $request){
 
-        $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
-        $serializer = new Serializer($normalizers, $encoders);
-
         $sessionId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $session = $em->getRepository('CEOFESABundle:Session')->find($sessionId);
-        $reponse = $serializer->serialize($session, 'json');
+        $reponse = array();
+        $reponse['date']= date_format($session->getSesDate(), 'd-m-Y');
+        $reponse['hDebut']= $session->getSesHeuredebut();
+        $reponse['hFin']= $session->getSesHeurefin();
+        $reponse['duree']= $session->getSesDuree();
+        $reponse['seance']= $session->getSesStype()->getStyType();
+        $reponse['formation']= $session->getSesFtype()->getFtyType();
 
         return new JsonResponse($reponse);
     }

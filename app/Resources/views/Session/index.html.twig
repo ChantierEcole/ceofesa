@@ -68,7 +68,7 @@
 										{% for entity in entities %}
 										<tr>
 											<td>{{ entity.sesId }}</td>
-											<td>{{ entity.sesDate|date('Y-m-d') }}</td>
+											<td>{{ entity.sesDate|date('d-m-Y') }}</td>
 											<td>{{ entity.sesStype.styType }}</td>
 											<td>
 												{% if entity.sesDuree != "0.00" %}
@@ -90,22 +90,31 @@
 						</div>
 						<div class="col-md-8">
 							<div class="jumbotron">
+								<h3>Détails</h3>
 								<div class="row detail-session">
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<label>Date :</label>
 										<input disabled class="dateSession"></input>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<label>Heure de début :</label>
-										<input class="HDebutSession"></input>
+										<input disabled class="HDebutSession"></input>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<label>Heure de fin :</label>
-										<input class="HFinSession"></input>
+										<input disabled class="HFinSession"></input>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<label>Durée :</label>
-										<input class="DureeSession"></input>
+										<input disabled class="DureeSession"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Séance :</label>
+										<input disabled class="TypeSeance"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Type de Formation :</label>
+										<input disabled class="TypeFormation"></input>
 									</div>
 								</div>
 								<div class="presences">
@@ -170,8 +179,13 @@ $(document).ready(function() {
             data: 'id=' + id,
             timeout: 10000,
             success: function(data){
-            	$("input.dateSession").val(data['sesDate']);
-                alert(JSON.stringify(data));
+            	$("input.dateSession").val(data['date']);
+            	$("input.HDebutSession").val(data['hDebut']);
+            	$("input.HFinSession").val(data['hFin']);
+            	$("input.DureeSession").val(data['duree']);
+            	$("input.TypeSeance").val(data['seance']);
+            	$("input.TypeFormation").val(data['formation']);
+                /*alert(JSON.stringify(data));*/
             },
             error: function (xhr, ajaxOptions, thrownError) {
 				alert(xhr.responseText); //Ce code affichera le message d'erreur, ici Message d'erreur.
