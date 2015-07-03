@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Module
  *
  * @ORM\Table(name="tb_Module", indexes={@ORM\Index(name="mod_Code", columns={"mod_Code"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\ModuleRepository")
  */
 class Module
 {

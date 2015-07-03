@@ -81,12 +81,15 @@
                                     			<button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="{{entity.sesId|default('')}}">
                                         			<i class="fa fa-eye"></i> Détails
                                     			</button>
-	                                		</td>	
+	                                		</td>
 										</tr>
 										{% endfor %}
 									</tbody>
 								</table>
 							</div>
+							<a href="{{ path('session_create', { 'module': module.modId,'type': type.mtyId,'of': of.strId }) }}">
+								<button type="button" class="btn btn-primary btn-lg btn-block btn-square"> Ajouter une session </button>
+							</a>
 						</div>
 						<div class="col-md-8">
 							<div class="jumbotron">

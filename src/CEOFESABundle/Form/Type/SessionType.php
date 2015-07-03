@@ -5,15 +5,33 @@ namespace CEOFESABundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use CEOFESABundle\Repository\StructureRepository;
+use CEOFESABundle\Repository\ModuleRepository;
+use CEOFESABundle\Repository\ModuleTRepository;
 
 class SessionType extends AbstractType
 {
+    protected $idUser;
+
+    public function __construct ($idUser,$module,$modtype,$of)
+    {
+        $this->idUser = $idUser;
+        $this->module = $module;
+        $this->modtype = $modtype;
+        $this->of = $of;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $id = $this->idUser;
+        $module = $this->module;
+        $modtype = $this->modtype;
+        $of = $this->of;
+
         $builder
             ->add('sesDate','date',array(
                 'label' => "Date"
@@ -38,9 +56,30 @@ class SessionType extends AbstractType
                 /*'attr' => array('class' => 'hide'),
                 'label' => false*/
             ))
-            ->add('sesOf')
-            ->add('sesMtype')
-            ->add('sesModule')
+            ->add('sesOf','entity', array(
+                'class' => 'CEOFESABundle\Entity\Structure',
+                'property' => 'strNom',
+                'multiple' => false,
+                'query_builder' => function(StructureRepository $repo) use ($of) {
+                    return $repo->getUserStructure($of);
+                },
+            ))
+            ->add('sesMtype','entity', array(
+                'class' => 'CEOFESABundle\Entity\ModuleT',
+                'property' => 'mtyType',
+                'multiple' => false,
+                'query_builder' => function(ModuleTRepository $repo) use ($modtype) {
+                    return $repo->find($modtype);
+                },
+            ))
+            ->add('sesModule','entity', array(
+                'class' => 'CEOFESABundle\Entity\Module',
+                'property' => 'modCode',
+                'multiple' => false,
+                'query_builder' => function(ModuleRepository $repo) use ($module) {
+                    return $repo->find($module);
+                },
+            ))
             ->add('sesStype')
             ->add('sesFtype')
         ;

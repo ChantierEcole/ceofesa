@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CEOFESABundle\Repository\StructureRepository;
+use CEOFESABundle\Entity\Session;
+use CEOFESABundle\Form\Type\SessionType;
 
 
 /**
@@ -35,6 +37,52 @@ class SessionController extends Controller
         return array(
             'choose_form' => $form->createView(),
         );
+    }
+
+     /**
+     * Creates a new Session entity.
+     *
+     * @Route("/ajout/{module}/{type}/{of}", name="session_create")
+     * @Method({"GET","POST"})
+     * @Template("::Session\new.html.twig")
+     */
+    public function createAction(Request $request,$module,$type,$of)
+    {
+        $entity = new Session();
+        $form = $this->createCreateForm($entity,$module,$type,$of);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('session_index', array('valid' => "ajout")));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+
+    /**
+     * Creates a form to create a Session entity.
+     *
+     * @param Session $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(Session $entity,$module,$type,$of)
+    {
+        $id = $this->get('session')->get('structure');
+
+        $form = $this->createForm(new SessionType($id,$module,$type,$of), $entity, array(
+            'action' => $this->generateUrl('stagiaire_create'),
+            'method' => 'POST',
+        ));
+
+        return $form;
     }
 
    /**
