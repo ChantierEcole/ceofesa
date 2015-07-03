@@ -128,13 +128,14 @@
         $("body").on("click",".btn-refuse", function(){
 
             var entityid = $(this).data("entityid");
+            var raison = window.prompt("Indiquez la raison du refus", "");
             $(this).hide();
             $('.btn-valid').hide();
 
             $.ajax({
                 type: "POST",
                 url: "{{ path('devis_refuse') }}",
-                data: 'id=' + entityid,
+                data: { 'id':entityid , 'raison':raison },
                 timeout: 10000,
                 success: function(data){ 
                     $('.statut').html('Refusé');

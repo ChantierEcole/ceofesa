@@ -128,6 +128,7 @@ class AdminController extends Controller
     public function refuseAjaxAction(Request $request){
 
         $DevisId = $request->request->get('id');
+        $raison = $request->request->get('raison');
 
         $em = $this->getDoctrine()->getManager();
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
@@ -147,7 +148,7 @@ class AdminController extends Controller
             ->setSubject('Votre devis a été refusé')
             ->setFrom($this->container->getParameter('contact_mail1'))
             ->setTo($mails)
-            ->setBody($this->renderView('Mail\refuseDevis.txt.twig',array('devis' => $devis)))
+            ->setBody($this->renderView('Mail\refuseDevis.txt.twig',array('devis' => $devis,'raison' => $raison)))
         ;
         $this->get('mailer')->send($message);
 
