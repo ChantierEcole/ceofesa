@@ -180,3 +180,7 @@
     .detail-session input {
         width: 100%;
     }
+    .detail-session .modifDetailBtn{
+        padding-top: 20px;
+        float: right;
+    }

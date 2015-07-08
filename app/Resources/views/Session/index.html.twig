@@ -93,7 +93,7 @@
 						</div>
 						<div class="col-md-8">
 							<div class="jumbotron">
-								<h3>Détails</h3>
+								<h3>Informations</h3>
 								<div class="row detail-session">
 									<div class="col-md-4">
 										<label>Date :</label>
@@ -119,9 +119,14 @@
 										<label>Type de Formation :</label>
 										<input disabled class="TypeFormation"></input>
 									</div>
-									<div class="modifDetailBtn"></div>
+									<div class="col-md-12">
+										<div class="modifDetailBtn"></div>
+									</div>
 								</div>
-								<div class="presences">
+							</div>
+							<div class="jumbotron">
+								<h3>Formateur</h3>
+								<div class="row">
 									
 								</div>
 							</div>
@@ -190,7 +195,7 @@ $(document).ready(function() {
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
             	var id = data['id'];
-            	var button = '<a href="{{ path("session_edit", { "id":"variable"}) }}"><button type="button" class="btn btn-blue4 btn-xs"><i class="fa fa-pencil"></i> Editer</button></a>';
+            	var button = '<a href="{{ path("session_edit", { "id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
             	button = button.replace("variable", id);
             	$(".modifDetailBtn").html(button);
                 /*alert(JSON.stringify(data));*/
