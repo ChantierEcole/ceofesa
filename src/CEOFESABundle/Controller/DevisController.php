@@ -337,7 +337,7 @@ class DevisController extends Controller
     }
 
     /*
-    * Fonction pour vérifer si l'id d'une structure correspond bien à la structure de la session
+    * Fonction pour vérifer si l'id de la structure du devis correspond bien à la structure de la session
     */
     private function checkStructure($id){
 

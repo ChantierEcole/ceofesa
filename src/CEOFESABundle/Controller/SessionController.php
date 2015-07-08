@@ -57,7 +57,7 @@ class SessionController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('session_index', array('valid' => "ajout")));
+            return $this->redirect($this->generateUrl('session_list2', array('module' => $module,'type' => $type,'of' => $of)));
         }
 
         return array(
@@ -78,7 +78,7 @@ class SessionController extends Controller
         $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new SessionType($id,$module,$type,$of), $entity, array(
-            'action' => $this->generateUrl('stagiaire_create'),
+            'action' => $this->generateUrl('session_create', array('module' => $module,'type' => $type,'of' => $of)),
             'method' => 'POST',
         ));
 
@@ -86,6 +86,8 @@ class SessionController extends Controller
     }
 
    /**
+    * Affiche la liste des sessions en fonction du module/moduleType/OF choisi dans le formulaire
+    *
     * @Route(
     * 	path="/list",
     * 	name="session_list"
@@ -116,6 +118,37 @@ class SessionController extends Controller
 		    'of' => $of,
 		);
 	}
+
+    /**
+    * Affiche la liste des sessions après enregistrement d'une nouvelle session
+    *
+    * @Route(
+    *   path="/list/{module}/{type}/{of}",
+    *   name="session_list2"
+    * )
+    * @Method({"GET"})
+    * @Template("::Session\index.html.twig")
+    */
+    public function validBackListAction($module, $type, $of)
+    {
+        $form = $this->createChooseForm();
+
+        $id = $this->get('session')->get('structure');
+
+        $em = $this->getDoctrine()->getManager();
+        $modentity = $em->getRepository('CEOFESABundle:Module')->find($module);
+        $modtypeentity = $em->getRepository('CEOFESABundle:ModuleT')->find($type);
+        $ofentity = $em->getRepository('CEOFESABundle:Structure')->find($of);
+        $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module,$type,$of,$id)->getQuery()->getResult();
+
+        return array(
+            'choose_form' => $form->createView(),
+            'entities' => $entities,
+            'module' => $modentity,
+            'type' => $modtypeentity,
+            'of' => $ofentity,
+        );
+    }
 
     /**
      * Création d'un formulaire pour choisir les "paramètres" des sessions à afficher
@@ -221,6 +254,7 @@ class SessionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $session = $em->getRepository('CEOFESABundle:Session')->find($sessionId);
         $reponse = array();
+        $reponse['id']= $sessionId;
         $reponse['date']= date_format($session->getSesDate(), 'd-m-Y');
         $reponse['hDebut']= $session->getSesHeuredebut();
         $reponse['hFin']= $session->getSesHeurefin();
@@ -229,5 +263,109 @@ class SessionController extends Controller
         $reponse['formation']= $session->getSesFtype()->getFtyType();
 
         return new JsonResponse($reponse);
+    }
+
+    /**
+     * Displays a form to edit an existing Session entity.
+     *
+     * @Route("/edit/{id}", name="session_edit")
+     * @Method({"GET","POST"})
+     * @Template("::Session\edit.html.twig")
+     */
+    public function editAction(Request $request,$id)
+    {
+        /*$this->checkStructure($id);*/
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('CEOFESABundle:Session')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Impossible de trouver la Session demandée');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {     
+            $em->flush();
+            return $this->redirect($this->generateUrl('session_list2', array('module' => $entity->getSesModule()->getModId(),'type' => $entity->getSesMtype()->getMtyId(),'of' => $entity->getSesOf()->getStrId())));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+    * Creates a form to edit a Session entity.
+    *
+    * @param Session $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(Session $entity)
+    {
+        $idstructure = $this->get('session')->get('structure');
+        $idsession = $entity->getSesId();
+        $module = $entity->getSesModule()->getModId();
+        $type = $entity->getSesMtype()->getMtyId();
+        $of = $entity->getSesOf()->getStrId();
+
+        $form = $this->createForm(new SessionType($idstructure,$module,$type,$of), $entity, array(
+            'action' => $this->generateUrl('session_edit', array('id' => $idsession)),
+            'method' => 'POST',
+        ));
+
+        return $form;
+    }
+    
+    /**
+     * Deletes a Session entity.
+     *
+     * @Route("/{id}/delete", name="session_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        /*$this->checkStructure($id);*/
+
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('CEOFESABundle:Session')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Session entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('session'));
+    }
+
+    /**
+     * Creates a form to delete a Devis entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('devis_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
+            ->getForm()
+        ;
     }
 }

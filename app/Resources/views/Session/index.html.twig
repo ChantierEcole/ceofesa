@@ -119,6 +119,7 @@
 										<label>Type de Formation :</label>
 										<input disabled class="TypeFormation"></input>
 									</div>
+									<div class="modifDetailBtn"></div>
 								</div>
 								<div class="presences">
 									
@@ -188,6 +189,10 @@ $(document).ready(function() {
             	$("input.DureeSession").val(data['duree']);
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
+            	var id = data['id'];
+            	var button = '<a href="{{ path("session_edit", { "id":"variable"}) }}"><button type="button" class="btn btn-blue4 btn-xs"><i class="fa fa-pencil"></i> Editer</button></a>';
+            	button = button.replace("variable", id);
+            	$(".modifDetailBtn").html(button);
                 /*alert(JSON.stringify(data));*/
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -209,7 +214,7 @@ $(document).ready(function() {
     $("body").on("click",".btn-voir", function(){  
     	var entityid = $(this).data("entityid");
     	detailSession(entityid);
-    }); 	
+    });
     
 });
 </script>

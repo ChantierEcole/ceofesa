@@ -13,5 +13,5 @@ class RContRepository extends EntityRepository
             ->where('m.rcnRelation = :relations')
             ->setParameter('relations', $idRelation);
         ;
-    } 
+    }
 }
