@@ -50,6 +50,7 @@ class DevisRepository extends EntityRepository
         $qb ->where($qb->expr()->notIn('s.devId', $qb2->getDQL()))
             ->andWhere('s.devDatedevis > :date')
             ->setParameter('date', $time)
+            ->orderBy('s.devDatedevis','DESC')
         ;
 
         $query  = $qb->getQuery();

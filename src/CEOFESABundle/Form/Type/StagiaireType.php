@@ -31,7 +31,7 @@ class StagiaireType extends AbstractType
             ->add('trsPrenom','text', array('label' => 'Prénom'))
             ->add('trsAdresse1','text', array('label' => 'Adresse'))
             ->add('trsAdresse2','text', array('label' => false,'required' => false))
-            ->add('trsCp', 'number', array('label' => 'Code Postal'))
+            ->add('trsCp', 'text', array('label' => 'Code Postal'))
             ->add('trsVille', 'text', array('label' => 'Ville'))
             ->add('trsTel1', 'text', array('label' => 'Téléphone 1','required' => false))
             ->add('trsTel2', 'text', array('label' => 'Téléphone 2','required' => false))
