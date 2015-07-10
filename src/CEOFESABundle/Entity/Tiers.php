@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="tb_Tiers", indexes={@ORM\Index(name="trs_CP", columns={"trs_CP"}), @ORM\Index(name="trs_Structure", columns={"trs_Structure"}), @ORM\Index(name="trs_Nom", columns={"trs_Nom"}), @ORM\Index(name="trs_Nom_Prenom", columns={"trs_Nom", "trs_Prenom"})})
  * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\TiersRepository")
  * @UniqueEntity(fields="trsNumsecu", message="L'utilisateur avec le numéro de sécurité sociale indiqué est déjà enregistré.")
+ * @UniqueEntity(fields={"trsNom","trsPrenom","trsCp"}, message="L'utilisateur semble déjà enregistré. Si vous souhaitez enregistrer un stagiaire avec le même nom, prénom et CP qu'un autre, merci de nous contacter")
  */
 class Tiers
 {
@@ -159,6 +160,7 @@ class Tiers
      * @var string
      *
      * @ORM\Column(name="trs_NumSecu", type="string", length=45, nullable=true)
+     * @Assert\Regex(pattern="/^[\d ]*$/", message="Ce champ ne doit contenir que des nombres")
      * @Assert\Length(min=13,max=21)
      */
     private $trsNumsecu;
