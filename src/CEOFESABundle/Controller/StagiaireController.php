@@ -29,7 +29,7 @@ class StagiaireController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
-        $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureTiers($id)->getQuery()->getResult();
+        $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureStagiaires($id)->getQuery()->getResult();
         return array(
             'entities' => $entities,
         );

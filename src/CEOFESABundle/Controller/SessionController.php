@@ -108,6 +108,7 @@ class SessionController extends Controller
         $id = $this->get('session')->get('structure');
 
         $em = $this->getDoctrine()->getManager();
+        $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
         $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(),$modType->getMtyId(),$of->getStrId(),$id)->getQuery()->getResult();
 
 		return array(
@@ -116,6 +117,7 @@ class SessionController extends Controller
 		    'module' => $module,
 		    'type' => $modType,
 		    'of' => $of,
+            'formateurs' => $formateurs,
 		);
 	}
 
@@ -136,6 +138,7 @@ class SessionController extends Controller
         $id = $this->get('session')->get('structure');
 
         $em = $this->getDoctrine()->getManager();
+        $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
         $modentity = $em->getRepository('CEOFESABundle:Module')->find($module);
         $modtypeentity = $em->getRepository('CEOFESABundle:ModuleT')->find($type);
         $ofentity = $em->getRepository('CEOFESABundle:Structure')->find($of);
@@ -147,6 +150,7 @@ class SessionController extends Controller
             'module' => $modentity,
             'type' => $modtypeentity,
             'of' => $ofentity,
+            'formateurs' => $formateurs,
         );
     }
 

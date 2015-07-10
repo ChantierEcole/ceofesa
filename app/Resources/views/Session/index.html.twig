@@ -53,37 +53,47 @@
 						<p>Il n'y a pas de données</p>
 					{% else %}
 						<div class="col-md-4">
-							<div class="table-responsive">
-								<table class="table table-striped table-bordered table-hover">
+							<div class="table-responsive list-session">
+								<table class="table">
 									<thead>
 										<tr>
-											<th>ID</th>
-											<th>Date</th>
-											<th>Type</th>
-											<th>Durée</th>
-											<th>Action</th>
+											<th style="width: 15%">ID</th>
+											<th style="width: 23%">Date</th>
+											<th style="width: 21%">Type</th>
+											<th style="width: 15%">Durée</th>
+											<th style="width: 26%">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-										{% for entity in entities %}
 										<tr>
-											<td>{{ entity.sesId }}</td>
-											<td>{{ entity.sesDate|date('d-m-Y') }}</td>
-											<td>{{ entity.sesStype.styType }}</td>
-											<td>
-												{% if entity.sesDuree != "0.00" %}
-													{{ entity.sesDuree }}
-												{% else %}
-													-
-												{% endif %}
+											<td colspan="5">
+												<div class="table-responsive">
+													<table class="table table-striped table-bordered table-hover">
+														<tbody>
+															{% for entity in entities %}
+															<tr>
+																<td>{{ entity.sesId }}</td>
+																<td>{{ entity.sesDate|date('d-m-Y') }}</td>
+																<td>{{ entity.sesStype.styType }}</td>
+																<td>
+																	{% if entity.sesDuree != "0.00" %}
+																		{{ entity.sesDuree }}
+																	{% else %}
+																		-
+																	{% endif %}
+																</td>
+																<td class="text-center">
+					                                    			<button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="{{entity.sesId|default('')}}">
+					                                        			<i class="fa fa-eye"></i> Détails
+					                                    			</button>
+						                                		</td>
+															</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+												</div>
 											</td>
-											<td class="text-center">
-                                    			<button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="{{entity.sesId|default('')}}">
-                                        			<i class="fa fa-eye"></i> Détails
-                                    			</button>
-	                                		</td>
 										</tr>
-										{% endfor %}
 									</tbody>
 								</table>
 							</div>
@@ -126,6 +136,9 @@
 							</div>
 							<div class="jumbotron">
 								<h3>Formateur</h3>
+								{% for formateur in formateurs %}
+									{{ formateur.trsNom }}
+								{% endfor %}
 								<div class="row">
 									
 								</div>
@@ -201,7 +214,7 @@ $(document).ready(function() {
                 /*alert(JSON.stringify(data));*/
             },
             error: function (xhr, ajaxOptions, thrownError) {
-				alert(xhr.responseText); //Ce code affichera le message d'erreur, ici Message d'erreur.
+				alert(xhr.responseText); //Ce code affichera le message d'erreur.
 			}
         });
 	};

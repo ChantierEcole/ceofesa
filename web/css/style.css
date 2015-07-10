@@ -173,6 +173,18 @@
     margin-top: 23px;
 }
 
+.list-session{}
+    .list-session th {
+        text-align: center;
+    }
+    .list-session .table-responsive {
+        max-height: 600px;
+        overflow: auto;
+    }
+    .list-session > table > tbody > tr > td:first-child {
+        padding: 0;
+    }
+
 .detail-session {}
     .detail-session label {
         margin: 10px 0 5px;
