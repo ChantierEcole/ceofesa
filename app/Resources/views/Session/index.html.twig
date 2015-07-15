@@ -135,13 +135,19 @@
 								</div>
 							</div>
 							<div class="jumbotron">
-								<h3>Formateur</h3>
-								{% for formateur in formateurs %}
-									{{ formateur.trsNom }}
-								{% endfor %}
-								<div class="row">
-									
-								</div>
+								<h3>Formateurs</h3>
+								<span class="formateurSsession"></span>
+								<p>
+									Changer de formateur : 
+									<select>
+										{% for formateur in formateurs %}
+											<option value="{{ formateur.trsId }}">{{ formateur.trsNom }} {{ formateur.trsPrenom }}</option>
+										{% endfor %}
+									</select>
+									<button type="button" class="btn btn-blue3 btn-xs btn-add-formateur">
+		                    			Ajouter
+		                			</button>
+	                			</p>
 							</div>
 						</div>
 					{% endif %}
@@ -207,8 +213,8 @@ $(document).ready(function() {
             	$("input.DureeSession").val(data['duree']);
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
+            	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i>Editer</button></a>';
             	var id = data['id'];
-            	var button = '<a href="{{ path("session_edit", { "id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
             	button = button.replace("variable", id);
             	$(".modifDetailBtn").html(button);
                 /*alert(JSON.stringify(data));*/
@@ -218,6 +224,47 @@ $(document).ready(function() {
 			}
         });
 	};
+
+	function formateurSession(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('formateurs_session_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	var noResult = 1;
+        		$("span.formateurSsession").html('<table><tbody>');
+        		$.each(data, function(index){
+        			var id      = data[index].id;
+		            var tiers    = data[index].tiers;
+		            $("span.formateurSsession").append('<tr><td>'+tiers+'</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="'+id+'">Supprimer</button></td></tr>');
+		            noResult = 0;
+		    	});
+		    	$("span.formateurSsession").append('</tbody></table>');
+		    	if(noResult==1){
+		    		$("span.formateurSsession").html('Pas de formateur inscrit pour cette session');
+		    	}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.responseText); //Ce code affichera le message d'erreur.
+			}
+        });
+	};
+
+	function deleteFormateur(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('formateur_delete_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	formateurSession(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
+			}
+        });
+	}
 
 	changeOF(modSelect,typeSelect);
 
@@ -232,6 +279,12 @@ $(document).ready(function() {
     $("body").on("click",".btn-voir", function(){  
     	var entityid = $(this).data("entityid");
     	detailSession(entityid);
+    	formateurSession(entityid);
+    });
+
+    $("body").on("click",".btn-delete-formateur", function(){  
+    	var entityid = $(this).data("animationid");
+    	deleteFormateur(entityid);
     });
     
 });

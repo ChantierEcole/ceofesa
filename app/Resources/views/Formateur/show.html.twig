@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="panel panel-visible">
             <div class="panel-heading">
-                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du stagiaire </div>
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du Formateur </div>
             </div>
             <div class="panel-body">
                 <table class="record_properties table table-bordered">
@@ -71,13 +71,13 @@
 
                 <br/>
 
-                <a href="{{ path('stagiaire_edit', { 'id': entity.trsId }) }}">
+                <a href="{{ path('formateur_edit', { 'id': entity.trsId }) }}">
                     <button type="button" class="btn btn-blue4">
                         Modifier
                     </button>
                 </a>
 
-                <a href="{{ path('stagiaire_list') }}">
+                <a href="{{ path('formateur_list') }}">
                     <button type="button" class="btn btn-light4">
                         Retour à la liste
                     </button>

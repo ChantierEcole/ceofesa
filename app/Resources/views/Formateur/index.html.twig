@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="panel panel-visible">
             <div class="panel-heading">
-                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-list"></span> Liste des Stagiaires </div>
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-list"></span> Liste des Formateurs </div>
             </div>
             <div class="panel-body padding-bottom-none">
                 <div class="clearfix"></div>
@@ -25,13 +25,13 @@
                             <td>{{ entity.trsPrenom }}</td>
                             <td>{{ entity.trsEmail }}</td>
                             <td class="text-center">
-                                <a href="{{ path('stagiaire_show', { 'id': entity.trsId }) }}">
+                                <a href="{{ path('formateur_show', { 'id': entity.trsId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
 
-                                <a href="{{ path('stagiaire_edit', { 'id': entity.trsId }) }}">
+                                <a href="{{ path('formateur_edit', { 'id': entity.trsId }) }}">
                                     <button type="button" class="btn btn-blue4 btn-xs">
                                         <i class="fa fa-pencil"></i> Editer
                                     </button>

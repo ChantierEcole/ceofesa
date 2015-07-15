@@ -270,6 +270,54 @@ class SessionController extends Controller
     }
 
     /**
+     * Traitement backoffice de l'AJAX
+     * -> affichage des formateurs d'une session choisie
+     * 
+     * @Route("/formateur-ajax", name="formateurs_session_ajax")
+     *
+     */
+    public function formateursSessionAjaxAction(Request $request){
+
+        $sessionId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $formateurs = $em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionId)->getQuery()->getResult();
+        $reponse = array();
+        foreach ($formateurs as $formateur) {
+            $p = array();
+            $p['id'] = $formateur->getAniId();
+            $p['tiers'] = $formateur->getAniTiers()->getTrsNom().' '.$formateur->getAniTiers()->getTrsPrenom();
+            $reponse[] = $p;
+        }
+
+        return new JsonResponse($reponse);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> affichage des formateurs d'une session choisie
+     * 
+     * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")
+     *
+     */
+    public function formateursDeleteAjaxAction(Request $request){
+        $animationId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $animation = $em->getRepository('CEOFESABundle:Animation')->find($animationId);
+
+        if (!$animation) {
+            throw $this->createNotFoundException(
+                'Aucun formateur trouvé pour cet session. (id liaison : '.$id.')'
+            );
+        }
+
+        $sessionid = $animation->getAniSession()->getSesId();
+        $em->remove($animation);
+        $em->flush();
+
+        return new JsonResponse($sessionid);
+    }
+
+    /**
      * Displays a form to edit an existing Session entity.
      *
      * @Route("/edit/{id}", name="session_edit")
