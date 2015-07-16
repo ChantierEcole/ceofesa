@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CEOFESABundle\Repository\StructureRepository;
 use CEOFESABundle\Entity\Session;
+use CEOFESABundle\Entity\Animation;
 use CEOFESABundle\Form\Type\SessionType;
 
 
@@ -294,7 +295,7 @@ class SessionController extends Controller
 
     /**
      * Traitement backoffice de l'AJAX
-     * -> affichage des formateurs d'une session choisie
+     * -> suppression du formateur choisi
      * 
      * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")
      *
@@ -312,6 +313,30 @@ class SessionController extends Controller
 
         $sessionid = $animation->getAniSession()->getSesId();
         $em->remove($animation);
+        $em->flush();
+
+        return new JsonResponse($sessionid);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> ajout d'un formateur à la session
+     * 
+     * @Route("/formateur-add-ajax", name="formateur_add_ajax")
+     *
+     */
+    public function formateursAddAjaxAction(Request $request){
+
+        $sessionid = $request->request->get('idsession');
+        $formateurid = $request->request->get('idformateur');
+        $em = $this->getDoctrine()->getManager();
+        $session = $em->getRepository('CEOFESABundle:Session')->find($sessionid);
+        $formateur = $em->getRepository('CEOFESABundle:Tiers')->find($formateurid);
+
+        $animation = new Animation();
+        $animation->setAniTiers($formateur);
+        $animation->setAniSession($session);
+        $em->persist($animation);
         $em->flush();
 
         return new JsonResponse($sessionid);
