@@ -269,18 +269,22 @@ $(document).ready(function() {
 	}
 
 	function addFormateur(idsession,idformateur) {
-		$.ajax({
-            type: "POST",
-            url: "{{ path('formateur_add_ajax') }}",
-            data: {'idsession':idsession,'idformateur':idformateur},
-            timeout: 10000,
-            success: function(data){
-            	formateurSession(data);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-				alert(xhr.responseText); //Ce code affichera le message d'erreur.
-			}
-        });
+		if($("span.formateurSsession").html() != "Pas de formateur inscrit pour cette session"){
+			alert('Il ne peut y avoir qu\'un seul formateur par session. Supprimez le formateur actuel pour en rajouter un nouveau')
+		} else {
+			$.ajax({
+	            type: "POST",
+	            url: "{{ path('formateur_add_ajax') }}",
+	            data: {'idsession':idsession,'idformateur':idformateur},
+	            timeout: 10000,
+	            success: function(data){
+	            	formateurSession(data);
+	            },
+	            error: function (xhr, ajaxOptions, thrownError) {
+					alert(xhr.responseText); //Ce code affichera le message d'erreur.
+				}
+	        });
+	    }	
 	}
 
 	changeOF(modSelect,typeSelect);

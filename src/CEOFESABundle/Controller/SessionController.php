@@ -333,11 +333,13 @@ class SessionController extends Controller
         $session = $em->getRepository('CEOFESABundle:Session')->find($sessionid);
         $formateur = $em->getRepository('CEOFESABundle:Tiers')->find($formateurid);
 
-        $animation = new Animation();
-        $animation->setAniTiers($formateur);
-        $animation->setAniSession($session);
-        $em->persist($animation);
-        $em->flush();
+        if (!$em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionid)->getQuery()->getResult()) {
+            $animation = new Animation();
+            $animation->setAniTiers($formateur);
+            $animation->setAniSession($session);
+            $em->persist($animation);
+            $em->flush();
+        }
 
         return new JsonResponse($sessionid);
     }
