@@ -101,7 +101,7 @@
 								<button type="button" class="btn btn-primary btn-lg btn-block btn-square"> Ajouter une session </button>
 							</a>
 						</div>
-						<div class="col-md-8">
+						<div class="col-md-8 infos-session">
 							<div class="jumbotron">
 								<h3>Informations</h3>
 								<div class="row detail-session">
@@ -135,8 +135,9 @@
 								</div>
 							</div>
 							<div class="jumbotron">
-								<h3>Formateurs</h3>
-								<span class="formateurSsession"></span>
+								<h3>Formateur</h3>
+								<div class="row formateur-session">
+								<div class="listFormateur table-responsive"></div>
 								<p>
 									Changer de formateur : 
 									<select id="nomFormateur">
@@ -168,6 +169,8 @@ $(document).ready(function() {
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
     var OFSelect	= $( "#select_OF select" );
+
+    $(".infos-session").hide();
 
     function changeOF(modSelect,typeSelect) {
     	$(".no-result").hide();
@@ -227,7 +230,7 @@ $(document).ready(function() {
         });
 	};
 
-	function formateurSession(id) {
+	function listFormateur(id) {
 		$.ajax({
             type: "POST",
             url: "{{ path('formateurs_session_ajax') }}",
@@ -235,16 +238,16 @@ $(document).ready(function() {
             timeout: 10000,
             success: function(data){
             	var noResult = 1;
-        		$("span.formateurSsession").html('<table><tbody>');
+        		$("div.listFormateur").html('<table><tbody>');
         		$.each(data, function(index){
         			var id      = data[index].id;
 		            var tiers    = data[index].tiers;
-		            $("span.formateurSsession").append('<tr><td>'+tiers+'</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="'+id+'">Supprimer</button></td></tr>');
+		            $("div.listFormateur").append('<tr><td>'+tiers+'</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="'+id+'">Supprimer</button></td></tr>');
 		            noResult = 0;
 		    	});
-		    	$("span.formateurSsession").append('</tbody></table>');
+		    	$("div.listFormateur").append('</tbody></table>');
 		    	if(noResult==1){
-		    		$("span.formateurSsession").html('Pas de formateur inscrit pour cette session');
+		    		$("div.listFormateur").html('Pas de formateur inscrit pour cette session');
 		    	}
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -260,7 +263,7 @@ $(document).ready(function() {
             data: 'id=' + id,
             timeout: 10000,
             success: function(data){
-            	formateurSession(data);
+            	listFormateur(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
 				alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
@@ -269,7 +272,7 @@ $(document).ready(function() {
 	}
 
 	function addFormateur(idsession,idformateur) {
-		if($("span.formateurSsession").html() != "Pas de formateur inscrit pour cette session"){
+		if($("div.listFormateur").html() != "Pas de formateur inscrit pour cette session"){
 			alert('Il ne peut y avoir qu\'un seul formateur par session. Supprimez le formateur actuel pour en rajouter un nouveau')
 		} else {
 			$.ajax({
@@ -278,7 +281,7 @@ $(document).ready(function() {
 	            data: {'idsession':idsession,'idformateur':idformateur},
 	            timeout: 10000,
 	            success: function(data){
-	            	formateurSession(data);
+	            	listFormateur(data);
 	            },
 	            error: function (xhr, ajaxOptions, thrownError) {
 					alert(xhr.responseText); //Ce code affichera le message d'erreur.
@@ -300,7 +303,8 @@ $(document).ready(function() {
     $("body").on("click",".btn-voir", function(){  
     	var entityid = $(this).data("entityid");
     	detailSession(entityid);
-    	formateurSession(entityid);
+    	listFormateur(entityid);
+    	$(".infos-session").show();
     });
 
     $("body").on("click",".btn-delete-formateur", function(){  
