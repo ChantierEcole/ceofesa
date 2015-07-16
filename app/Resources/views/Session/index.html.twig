@@ -1,0 +1,322 @@
+{% extends '::layout.html.twig' %}
+
+{% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
+
+{% block body %}
+<div class="row select-session-form">
+	<div class="col-md-12">
+		<div class="panel panel-visible">
+			 <div class="panel-body">
+				{{ form_start(choose_form) }}
+                {{ form_errors(choose_form) }}
+
+                <div class="row">
+	                <div class="col-md-3" id="select_module">
+	                	{{ form_label(choose_form.module) }}
+	                    {{ form_widget(choose_form.module) }}
+	                    {{ form_errors(choose_form.module) }}
+	                </div>
+	                <div class="col-md-3" id="select_typemod">
+	                	{{ form_label(choose_form.type) }}
+	                    {{ form_widget(choose_form.type) }}
+	                    {{ form_errors(choose_form.type) }}
+	                </div>
+	                <div class="col-md-3" id="select_OF">
+	                	{{ form_label(choose_form.of) }}
+	                    {{ form_widget(choose_form.of) }}
+	                    {{ form_errors(choose_form.of) }}
+	                </div>
+	                <div class="col-md-3">
+	                	{{ form_row(choose_form.voir) }}
+	                </div>
+                </div>
+
+                {{ form_end(choose_form) }}
+                 <div class="alert alert-warning no-result">
+                 	
+                 </div>
+			</div>
+		</div>
+	</div>	
+</div>
+{% if entities is defined and of is defined and module is defined and type is defined %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-visible margin-bottom-none">
+				<div class="panel-heading">
+	                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Résultats pour le module {{ module.modCode }} avec le type {{ type.mtyType }} pour l'OF {{ of.strNom }} </div>
+	            </div>
+	            <div class="panel-body">
+                <div class="clearfix"></div>
+
+					{% if entities is empty %}
+						<p>Il n'y a pas de données</p>
+					{% else %}
+						<div class="col-md-4">
+							<div class="table-responsive list-session">
+								<table class="table">
+									<thead>
+										<tr>
+											<th style="width: 15%">ID</th>
+											<th style="width: 23%">Date</th>
+											<th style="width: 21%">Type</th>
+											<th style="width: 15%">Durée</th>
+											<th style="width: 26%">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td colspan="5">
+												<div class="table-responsive">
+													<table class="table table-striped table-bordered table-hover">
+														<tbody>
+															{% for entity in entities %}
+															<tr>
+																<td>{{ entity.sesId }}</td>
+																<td>{{ entity.sesDate|date('d-m-Y') }}</td>
+																<td>{{ entity.sesStype.styType }}</td>
+																<td>
+																	{% if entity.sesDuree != "0.00" %}
+																		{{ entity.sesDuree }}
+																	{% else %}
+																		-
+																	{% endif %}
+																</td>
+																<td class="text-center">
+					                                    			<button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="{{entity.sesId|default('')}}">
+					                                        			<i class="fa fa-eye"></i> Détails
+					                                    			</button>
+						                                		</td>
+															</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<a href="{{ path('session_create', { 'module': module.modId,'type': type.mtyId,'of': of.strId }) }}">
+								<button type="button" class="btn btn-primary btn-lg btn-block btn-square"> Ajouter une session </button>
+							</a>
+						</div>
+						<div class="col-md-8 infos-session">
+							<div class="jumbotron">
+								<h3>Informations</h3>
+								<div class="row detail-session">
+									<div class="col-md-4">
+										<label>Date :</label>
+										<input disabled class="dateSession"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Heure de début :</label>
+										<input disabled class="HDebutSession"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Heure de fin :</label>
+										<input disabled class="HFinSession"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Durée :</label>
+										<input disabled class="DureeSession"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Séance :</label>
+										<input disabled class="TypeSeance"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Type de Formation :</label>
+										<input disabled class="TypeFormation"></input>
+									</div>
+									<div class="col-md-12">
+										<div class="modifDetailBtn"></div>
+									</div>
+								</div>
+							</div>
+							<div class="jumbotron">
+								<h3>Formateur</h3>
+								<div class="row formateur-session">
+								<div class="listFormateur table-responsive"></div>
+								<p>
+									Changer de formateur : 
+									<select id="nomFormateur">
+										{% for formateur in formateurs %}
+											<option value="{{ formateur.trsId }}">{{ formateur.trsNom }} {{ formateur.trsPrenom }}</option>
+										{% endfor %}
+									</select>
+									<button type="button" class="btn btn-blue3 btn-xs btn-add-formateur" data-sessionid="">
+		                    			Ajouter
+		                			</button>
+	                			</p>
+							</div>
+						</div>
+					{% endif %}
+
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+	// Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
+    var url = "{{ path('session_ajax') }}";
+    var modSelect  = $( "#select_module select" );
+    var typeSelect	= $( "#select_typemod select" );
+    var OFSelect	= $( "#select_OF select" );
+
+    $(".infos-session").hide();
+
+    function changeOF(modSelect,typeSelect) {
+    	$(".no-result").hide();
+    	var module_id = modSelect.val();
+	    var type_id = typeSelect.val();
+	    /*alert(modSelect.val() + typeSelect.val());*/
+	    $.ajax({  
+	    	type: "POST",
+	    	url: url,
+	    	data: {'module_id':module_id,'type_id':type_id},
+        	dataType: 'json',
+        	timeout: 30000,
+        	success: function (data) {
+     			var noResult = 1;
+        		$(OFSelect).html('');
+        		$.each(data, function(index){
+		        	var id      = data[index].id;
+		            var name    = data[index].nom;
+		            $(OFSelect).append('<option value="'+id+'">'+name+'</option>');
+		            noResult = 0;
+		    	});
+		    	if(noResult==1){
+		    		$(".no-result").html('Pas de Sessions existantes pour le module M'+modSelect.val()+' avec ce type');
+		    		$(".no-result").show();
+		    	}
+        	},
+        	error: function(exception){
+          		alert('Erreur, la connexion au serveur a été interrompue');
+        	}
+        });
+	};
+
+	function detailSession(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('details_session_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	$("input.dateSession").val(data['date']);
+            	$("input.HDebutSession").val(data['hDebut']);
+            	$("input.HFinSession").val(data['hFin']);
+            	$("input.DureeSession").val(data['duree']);
+            	$("input.TypeSeance").val(data['seance']);
+            	$("input.TypeFormation").val(data['formation']);
+            	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i>Editer</button></a>';
+            	var id = data['id'];
+            	button = button.replace("variable", id);
+            	$(".modifDetailBtn").html(button);
+            	$(".btn-add-formateur").attr( "data-sessionid", id );
+            	$(".btn-add-formateur").data( "sessionid", id );
+                /*alert(JSON.stringify(data));*/
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.responseText); //Ce code affichera le message d'erreur.
+			}
+        });
+	};
+
+	function listFormateur(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('formateurs_session_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	var noResult = 1;
+        		$("div.listFormateur").html('<table><tbody>');
+        		$.each(data, function(index){
+        			var id      = data[index].id;
+		            var tiers    = data[index].tiers;
+		            $("div.listFormateur").append('<tr><td>'+tiers+'</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="'+id+'">Supprimer</button></td></tr>');
+		            noResult = 0;
+		    	});
+		    	$("div.listFormateur").append('</tbody></table>');
+		    	if(noResult==1){
+		    		$("div.listFormateur").html('Pas de formateur inscrit pour cette session');
+		    	}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.responseText); //Ce code affichera le message d'erreur.
+			}
+        });
+	};
+
+	function deleteFormateur(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('formateur_delete_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	listFormateur(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
+			}
+        });
+	}
+
+	function addFormateur(idsession,idformateur) {
+		if($("div.listFormateur").html() != "Pas de formateur inscrit pour cette session"){
+			alert('Il ne peut y avoir qu\'un seul formateur par session. Supprimez le formateur actuel pour en rajouter un nouveau')
+		} else {
+			$.ajax({
+	            type: "POST",
+	            url: "{{ path('formateur_add_ajax') }}",
+	            data: {'idsession':idsession,'idformateur':idformateur},
+	            timeout: 10000,
+	            success: function(data){
+	            	listFormateur(data);
+	            },
+	            error: function (xhr, ajaxOptions, thrownError) {
+					alert(xhr.responseText); //Ce code affichera le message d'erreur.
+				}
+	        });
+	    }	
+	}
+
+	changeOF(modSelect,typeSelect);
+
+    typeSelect.change(function(){
+    	changeOF(modSelect,typeSelect); 
+    });
+
+    modSelect.change(function(){
+    	changeOF(modSelect,typeSelect); 
+    });
+        
+    $("body").on("click",".btn-voir", function(){  
+    	var entityid = $(this).data("entityid");
+    	detailSession(entityid);
+    	listFormateur(entityid);
+    	$(".infos-session").show();
+    });
+
+    $("body").on("click",".btn-delete-formateur", function(){  
+    	var entityid = $(this).data("animationid");
+    	deleteFormateur(entityid);
+    });
+    
+    $("body").on("click",".btn-add-formateur", function(){  
+    	var idsession = $(this).data("sessionid");
+    	var idformateur = $('#nomFormateur').val();
+    	addFormateur(idsession,idformateur);
+    });
+});
+</script>
+{% endblock %}

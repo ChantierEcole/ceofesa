@@ -24,7 +24,9 @@
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "knplabs/knp-snappy-bundle": "dev-master",
         "sensio/generator-bundle": "^2.5",
-        "doctrine/doctrine-fixtures-bundle": "dev-master"
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "symfony/serializer": "^2.7",
+        "symfony/var-dumper": "^2.7"
     },
     "require-dev": {
     },

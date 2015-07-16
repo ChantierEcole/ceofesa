@@ -169,3 +169,42 @@
     padding-right: 10px;
 }
 
+.select-session-form #form_voir {
+    margin-top: 23px;
+}
+
+.list-session{}
+    .list-session th {
+        text-align: center;
+    }
+    .list-session .table-responsive {
+        max-height: 600px;
+        overflow: auto;
+    }
+    .list-session > table > tbody > tr > td:first-child {
+        padding: 0;
+    }
+
+.detail-session {}
+    .detail-session label {
+        margin: 10px 0 5px;
+    }
+    .detail-session input {
+        width: 100%;
+    }
+    .detail-session .modifDetailBtn{
+        padding-top: 20px;
+        float: right;
+    }
+
+.listFormateur {
+    margin: 20px 0;
+}
+    .listFormateur td {
+        width: 100%;
+        padding: 5px 0;
+        border-bottom: 1px solid #999;
+    }
+    .formateur-session p {
+        font-size: 12px;
+    }

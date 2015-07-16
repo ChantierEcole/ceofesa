@@ -59,7 +59,6 @@ class DevisType extends AbstractType
                 'query_builder' => function(StructureRepository $repo) use ($id) {
                     return $repo->getUserStructure($id);
                 },
-                'data' => 2,
                 'attr' => array('class' => 'hide'),
                 'label' => false
             ))

@@ -138,6 +138,25 @@
                                 </ul>    
                             </li>
                         </ul>
+                        <ul class="nav sidebar-nav">
+                            <li> 
+                                <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-clock"></span><span class="sidebar-title">Présences</span><span class="caret"></span></a>
+                                <ul id="sideEight" class="nav sub-nav">
+                                    <li>
+                                        <a href="{{ path('session_index') }}"><span class="glyphicons glyphicons-file"></span> Par Sessions </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><span class="glyphicons glyphicons-user"></span> Par Stagiaires </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('formateur_create') }}"><span class="glyphicons glyphicons-user_add"></span> Ajouter un formateur </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('formateur_list') }}"><span class="glyphicons glyphicons-group"></span> Liste des formateurs </a>
+                                    </li>
+                                </ul>    
+                            </li>
+                        </ul>
                         {% endif %}
                     </div>
                 </div>

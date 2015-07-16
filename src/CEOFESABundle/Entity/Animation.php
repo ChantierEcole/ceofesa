@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Animation
  *
  * @ORM\Table(name="tb_Animation", indexes={@ORM\Index(name="unq_animation", columns={"ani_Session", "ani_Tiers"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\AnimationRepository")
  */
 class Animation
 {

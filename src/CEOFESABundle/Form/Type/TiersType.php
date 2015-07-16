@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvents;
 use CEOFESABundle\Repository\TiersTRepository;
 use CEOFESABundle\Repository\StructureRepository;
 
-class StagiaireType extends AbstractType
+class TiersType extends AbstractType
 {
     protected $idUser;
 
@@ -37,7 +37,6 @@ class StagiaireType extends AbstractType
             ->add('trsTel2', 'text', array('label' => 'Téléphone 2','required' => false))
             ->add('trsPortable','text', array('label' => 'Tel. Portable','required' => false))
             ->add('trsEmail', 'email', array('label' => 'Email','required' => false))
-            ->add('trsFonction','text', array('label' => 'Fonction', 'data' => 'Salarié Polyvalent','attr' => array('class' => 'hide'),'label' => false))
             ->add('trsDatenaissance','birthday', array('label' => 'Date de Naissance'))
             ->add('trsLieunaissance','text', array('label' => 'Lieu de Naissance','required' => false))
             ->add('trsNumsecu','text', array('label' => 'Numéro de sécurité sociale','required' => false))
@@ -47,16 +46,6 @@ class StagiaireType extends AbstractType
                                                 'multiple' => false,
                                                 'query_builder' => function(StructureRepository $repo) use($id) {
                                                     return $repo->getUserStructure($id);
-                                                },
-                                                'attr' => array('class' => 'hide'),
-                                                'label' => false
-                                            ))
-            ->add('trsType', 'entity', array(
-                                                'class' => 'CEOFESABundle\Entity\TiersT',
-                                                'property' => 'ttyType',
-                                                'multiple' => false,
-                                                'query_builder' => function(TiersTRepository $repo) {
-                                                    return $repo->getStagiaireTypeBuilder();
                                                 },
                                                 'attr' => array('class' => 'hide'),
                                                 'label' => false
@@ -102,6 +91,6 @@ class StagiaireType extends AbstractType
      */
     public function getName()
     {
-        return 'ceofesabundle_stagiaire';
+        return 'ceofesabundle_tiers';
     }
 }

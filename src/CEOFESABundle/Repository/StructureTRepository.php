@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class StructureTRepository extends EntityRepository
 {
-    public function getSoustraitantTypeBuilder()
+    public function getSoustraitantType()
     {
         return $this
         ->createQueryBuilder('s')

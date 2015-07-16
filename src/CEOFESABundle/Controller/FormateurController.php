@@ -13,23 +13,23 @@ use CEOFESABundle\Form\Type\TiersType;
 /**
  * Tiers controller.
  *
- * @Route("/stagiaire")
+ * @Route("/formateur")
  */
-class StagiaireController extends Controller
+class FormateurController extends Controller
 {
 
     /**
      * Lists all Tiers entities.
      *
-     * @Route("/liste", name="stagiaire_list")
+     * @Route("/liste", name="formateur_list")
      * @Method("GET")
-     * @Template("::Stagiaire\index.html.twig")
+     * @Template("::Formateur\index.html.twig")
      */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
-        $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureStagiaires($id)->getQuery()->getResult();
+        $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
         return array(
             'entities' => $entities,
         );
@@ -37,9 +37,9 @@ class StagiaireController extends Controller
     /**
      * Creates a new Tiers entity.
      *
-     * @Route("/ajout", name="stagiaire_create")
+     * @Route("/ajout", name="formateur_create")
      * @Method({"GET","POST"})
-     * @Template("::Stagiaire\new.html.twig")
+     * @Template("::Formateur\new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -49,15 +49,15 @@ class StagiaireController extends Controller
 
         if ($form->isValid()) {
             
-            $typeStagiaire = $this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:TiersT')->getStagiaireType()->getQuery()->getSingleResult();
-            $entity->setTrsType($typeStagiaire);
-            $entity->setTrsFonction("Salarié Polyvalent");
+            $typeFormateur = $this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:TiersT')->getFormateurType()->getQuery()->getSingleResult();
+            $entity->setTrsType($typeFormateur);
+            $entity->setTrsFonction("Formateur");
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('stagiaire_show', array('id' => $entity->getTrsId())));
+            return $this->redirect($this->generateUrl('formateur_show', array('id' => $entity->getTrsId())));
         }
 
         return array(
@@ -78,7 +78,7 @@ class StagiaireController extends Controller
         $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new TiersType($id), $entity, array(
-            'action' => $this->generateUrl('stagiaire_create'),
+            'action' => $this->generateUrl('formateur_create'),
             'method' => 'POST',
         ));
 
@@ -88,9 +88,9 @@ class StagiaireController extends Controller
     /**
      * Displays a form to create a new Tiers entity.
      *
-     * @Route("/new", name="stagiaire_new")
+     * @Route("/new", name="formateur_new")
      * @Method("GET")
-     * @Template("::Stagiaire\new.html.twig")
+     * @Template("::Formateur\new.html.twig")
      */
     public function newAction()
     {
@@ -106,9 +106,9 @@ class StagiaireController extends Controller
     /**
      * Finds and displays a Tiers entity.
      *
-     * @Route("/{id}", name="stagiaire_show")
+     * @Route("/{id}", name="formateur_show")
      * @Method("GET")
-     * @Template("::Stagiaire\show.html.twig")
+     * @Template("::Formateur\show.html.twig")
      */
     public function showAction($id)
     {
@@ -131,9 +131,9 @@ class StagiaireController extends Controller
     /**
      * Displays a form to edit an existing Tiers entity.
      *
-     * @Route("/{id}/edit", name="stagiaire_edit")
+     * @Route("/{id}/edit", name="formateur_edit")
      * @Method("GET")
-     * @Template("::Stagiaire\edit.html.twig")
+     * @Template("::Formateur\edit.html.twig")
      */
     public function editAction($id)
     {
@@ -167,7 +167,7 @@ class StagiaireController extends Controller
         $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new TiersType($id), $entity, array(
-            'action' => $this->generateUrl('stagiaire_update', array('id' => $entity->getTrsId())),
+            'action' => $this->generateUrl('formateur_update', array('id' => $entity->getTrsId())),
             'method' => 'PUT',
         ));
 
@@ -176,9 +176,9 @@ class StagiaireController extends Controller
     /**
      * Edits an existing Tiers entity.
      *
-     * @Route("/{id}", name="stagiaire_update")
+     * @Route("/{id}", name="formateur_update")
      * @Method("PUT")
-     * @Template("::Stagiaire\edit.html.twig")
+     * @Template("::Formateur\edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -197,7 +197,7 @@ class StagiaireController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('stagiaire_show', array('id' => $id)));
+            return $this->redirect($this->generateUrl('formateur_show', array('id' => $id)));
         }
 
         return array(
@@ -209,7 +209,7 @@ class StagiaireController extends Controller
     /**
      * Deletes a Tiers entity.
      *
-     * @Route("/{id}", name="stagiaire_delete")
+     * @Route("/{id}", name="formateur_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -229,7 +229,7 @@ class StagiaireController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('stagiaire'));
+        return $this->redirect($this->generateUrl('formateur'));
     }
 
     /**
@@ -242,7 +242,7 @@ class StagiaireController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('stagiaire_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('formateur_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'confirmjq')))
             ->getForm()

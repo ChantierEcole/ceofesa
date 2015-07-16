@@ -1,0 +1,18 @@
+{% extends '::layout.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-user"></span>Ajout d'une Session</div>
+            </div>
+            <div class="panel-body padding-bottom-none">
+                {{ form(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

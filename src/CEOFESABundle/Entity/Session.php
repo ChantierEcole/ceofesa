@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Session
  *
  * @ORM\Table(name="tb_Session")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\SessionRepository")
  */
 class Session
 {
