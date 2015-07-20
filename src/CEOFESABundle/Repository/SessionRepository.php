@@ -29,4 +29,15 @@ class SessionRepository extends EntityRepository
         ->setParameters(array('idStructure' => $idStructure, 'idModule' => $idModule, 'idType' => $idType, 'idOf' => $idOf))
         ;
     }
+
+    public function getStructureSession($idSession)
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->select('IDENTITY(s.sesStructure)')
+        ->where('s.sesId = :id')
+        ->setParameter('id', $idSession)
+        ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

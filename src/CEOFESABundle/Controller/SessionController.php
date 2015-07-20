@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -123,7 +124,7 @@ class SessionController extends Controller
 	}
 
     /**
-    * Affiche la liste des sessions après enregistrement d'une nouvelle session
+    * Affiche la liste des sessions après ajout ou modification d'une session
     *
     * @Route(
     *   path="/list/{module}/{type}/{of}",
@@ -140,17 +141,17 @@ class SessionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
-        $modentity = $em->getRepository('CEOFESABundle:Module')->find($module);
-        $modtypeentity = $em->getRepository('CEOFESABundle:ModuleT')->find($type);
-        $ofentity = $em->getRepository('CEOFESABundle:Structure')->find($of);
-        $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module,$type,$of,$id)->getQuery()->getResult();
+        $moduleEntity = $em->getRepository('CEOFESABundle:Module')->find($module);
+        $modtypeEntity = $em->getRepository('CEOFESABundle:ModuleT')->find($type);
+        $ofEntity = $em->getRepository('CEOFESABundle:Structure')->find($of);
+        $sessions = $em->getRepository('CEOFESABundle:Session')->getSessions($module,$type,$of,$id)->getQuery()->getResult();
 
         return array(
             'choose_form' => $form->createView(),
-            'entities' => $entities,
-            'module' => $modentity,
-            'type' => $modtypeentity,
-            'of' => $ofentity,
+            'entities' => $sessions,
+            'module' => $moduleEntity,
+            'type' => $modtypeEntity,
+            'of' => $ofEntity,
             'formateurs' => $formateurs,
         );
     }
@@ -353,7 +354,7 @@ class SessionController extends Controller
      */
     public function editAction(Request $request,$id)
     {
-        /*$this->checkStructure($id);*/
+        $this->checkStructure($id);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -411,7 +412,7 @@ class SessionController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        /*$this->checkStructure($id);*/
+        $this->checkStructure($id);
 
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
@@ -446,5 +447,18 @@ class SessionController extends Controller
             ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
             ->getForm()
         ;
+    }
+
+    /*
+    * Fonction pour vérifer si l'id de la structure de la session correspond bien à la structure de la session
+    */
+    private function checkStructure($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $structure = $em->getRepository('CEOFESABundle:Session')->getStructureSession($id);
+
+         if ($structure != $this->get('session')->get('structure')) {
+            throw new NotFoundHttpException("Vous n'avez pas les droits nécessaires pour accéder à la page demandée");
+        }
     }
 }
