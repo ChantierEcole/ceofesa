@@ -103,7 +103,7 @@
 						</div>
 						<div class="col-md-8 infos-session">
 							<div class="jumbotron">
-								<h3>Informations</h3>
+								<h3>Informations de la session n°<span class="idSession"></span></h3>
 								<div class="row detail-session">
 									<div class="col-md-4">
 										<label>Date :</label>
@@ -168,9 +168,14 @@ $(document).ready(function() {
     var url = "{{ path('session_ajax') }}";
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
-    var OFSelect	= $( "#select_OF select" );
-
+    var OFSelect	= $( "#select_OF select" );	
     $(".infos-session").hide();
+    {% if session is defined %}
+    	var idSession = "{{ session }}";
+    	detailSession(idSession);
+    	listFormateur(idSession);
+    	$(".infos-session").show();
+    {% endif %}
 
     function changeOF(modSelect,typeSelect) {
     	$(".no-result").hide();
@@ -210,6 +215,8 @@ $(document).ready(function() {
             data: 'id=' + id,
             timeout: 10000,
             success: function(data){
+            	var id = data['id'];
+            	$("span.idSession").html(id);
             	$("input.dateSession").val(data['date']);
             	$("input.HDebutSession").val(data['hDebut']);
             	$("input.HFinSession").val(data['hFin']);
@@ -217,7 +224,6 @@ $(document).ready(function() {
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
             	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i>Editer</button></a>';
-            	var id = data['id'];
             	button = button.replace("variable", id);
             	$(".modifDetailBtn").html(button);
             	$(".btn-add-formateur").attr( "data-sessionid", id );
