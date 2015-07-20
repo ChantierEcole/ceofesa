@@ -59,7 +59,9 @@ class SessionController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('session_list2', array('module' => $module,'type' => $type,'of' => $of)));
+            $id = $entity->getSesId();
+
+            return $this->redirect($this->generateUrl('session_list2', array('module' => $module,'type' => $type,'of' => $of, 'session' => $id)));
         }
 
         return array(
@@ -127,15 +129,17 @@ class SessionController extends Controller
     * Affiche la liste des sessions après ajout ou modification d'une session
     *
     * @Route(
-    *   path="/list/{module}/{type}/{of}",
+    *   path="/list/{module}/{type}/{of}/{session}",
     *   name="session_list2"
     * )
     * @Method({"GET"})
     * @Template("::Session\index.html.twig")
     */
-    public function validBackListAction($module, $type, $of)
+    public function validBackListAction($module, $type, $of, $session)
     {
         $form = $this->createChooseForm();
+
+        $this->checkStructure($session);
 
         $id = $this->get('session')->get('structure');
 
@@ -153,6 +157,7 @@ class SessionController extends Controller
             'type' => $modtypeEntity,
             'of' => $ofEntity,
             'formateurs' => $formateurs,
+            'session' => $session,
         );
     }
 
@@ -371,7 +376,12 @@ class SessionController extends Controller
 
         if ($editForm->isValid()) {     
             $em->flush();
-            return $this->redirect($this->generateUrl('session_list2', array('module' => $entity->getSesModule()->getModId(),'type' => $entity->getSesMtype()->getMtyId(),'of' => $entity->getSesOf()->getStrId())));
+            return $this->redirect($this->generateUrl('session_list2', array(
+                'module' => $entity->getSesModule()->getModId(),
+                'type' => $entity->getSesMtype()->getMtyId(),
+                'of' => $entity->getSesOf()->getStrId(), 
+                'session' => $entity->getSesId(),
+            )));
         }
 
         return array(
@@ -450,7 +460,7 @@ class SessionController extends Controller
     }
 
     /*
-    * Fonction pour vérifer si l'id de la structure de la session correspond bien à la structure de la session
+    * Fonction pour vérifer si l'id de la structure de la session de formation correspond bien à la structure de la session en cours
     */
     private function checkStructure($id){
 

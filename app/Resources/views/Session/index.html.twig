@@ -168,7 +168,14 @@ $(document).ready(function() {
     var url = "{{ path('session_ajax') }}";
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
-    var OFSelect	= $( "#select_OF select" );
+    var OFSelect	= $( "#select_OF select" );	
+    $(".infos-session").hide();
+    {% if session is defined %}
+    	var idSession = "{{ session }}";
+    	detailSession(idSession);
+    	listFormateur(idSession);
+    	$(".infos-session").show();
+    {% endif %}
 
     function changeOF(modSelect,typeSelect) {
     	$(".no-result").hide();
