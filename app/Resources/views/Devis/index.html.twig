@@ -44,9 +44,14 @@
                                         </button>
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('devis_print', { 'id': entity.devId }) }}">
+                                    <a href="{{ path('devis_print', { 'id': entity.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue4 btn-xs">
-                                            <i class="fa fa-pencil"></i> Imprimer
+                                            <i class="fa fa-print"></i> Imprimer Devis
+                                        </button>
+                                    </a>
+                                     <a href="{{ path('attestation_print', { 'id': entity.devId }) }}" target="_blank">
+                                        <button type="button" class="btn btn-blue2 btn-xs">
+                                            <i class="fa fa-print"></i> Imprimer Attestation
                                         </button>
                                     </a>
                                 {% endif %}
