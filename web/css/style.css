@@ -32,7 +32,7 @@
 .panel hr {
     margin-top: 0px;
     margin-bottom: 20px;
-}    
+}
 
 #fos_user_registration_form td {
     padding: 5px 10px;
@@ -208,3 +208,8 @@
     .formateur-session p {
         font-size: 12px;
     }
+
+.info-accueil .alert {
+    margin: 0;
+}
+

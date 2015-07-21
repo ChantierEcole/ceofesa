@@ -16,9 +16,9 @@
 }
 
 #print .page {
-    width: 200mm;
+    width: 210mm;
     height: 297mm;
-    padding: 5mm 5mm;
+    padding: 5mm;
     position: relative;
 }
 
@@ -30,6 +30,15 @@
 #print .page .devis_logo {
     max-height: 19.3mm;
     max-width: 55mm;
+    float: left;
+}
+#print .page .attestation_logo {
+    max-height: 19.3mm;
+    max-width: 55mm;
+    float: right;
+}
+#print .page .attestation_logo:first-child {
+    float: left;
 }
 
 #print .page .adresse{
@@ -91,4 +100,46 @@
     float: right;
     text-align: right;
     width: 50%;
+}
+
+#print .attestation .titre{
+    text-decoration: none;
+    font-size: 8pt;
+}
+
+#print .attestation .infos{
+    font-weight: bold;
+    line-height: 21pt;
+}
+
+#print .attestation .modules{
+    line-height: 21pt;
+    margin-bottom: 10pt;
+}
+
+#print .attestation .modules table th{
+    text-transform: none;
+}
+
+
+#print .attestation .modules table tr td, #print .attestation .modules table tr td:nth-child(even){
+    text-align: center;
+}
+
+#print .attestation .modules table tr td:first-child{
+    text-align: left;
+}
+#print .attestation .modules table tr td:last-child{
+    max-width: 300px;
+}
+
+#print .attestation .signature{
+    float: right;
+    text-align: right;
+}
+
+#print .attestation .signature img{
+    height: 35mm;
+    width: auto;
+    padding-right: 5mm;
 }

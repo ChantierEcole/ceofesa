@@ -39,6 +39,28 @@ class DevisController extends Controller
             'entities' => $entities,
         );
     }
+
+    /**
+     * Route pour tester le template pdf de devis
+     *
+     * @Route("/template/{id}", name="devis_template")
+     * @Method("GET")
+     */
+    public function templateAction($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $stagiaires = $em->getRepository('CEOFESABundle:DParcours')->getStagiairesDevis($id)->getQuery()->getResult();
+        $parcours = $em->getRepository('CEOFESABundle:DParcours')->getParcoursDevis($id)->getQuery()->getResult();
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
+
+        return $this->render('::Templates\devis.html.twig', array(
+            'id' => $id,
+            'stagiaires' => $stagiaires,
+            'parcours' => $parcours,
+            'devis' => $devis,
+        ));
+    }
+
     /**
      * Creates a new Devis entity.
      *
@@ -346,7 +368,7 @@ class DevisController extends Controller
      *
      * @Route("/{id}/pdf", name="devis_print")
      */
-    public function printAction($id)
+    public function printDevisAction($id)
     {   
         $em = $this->getDoctrine()->getManager();
         $stagiaires = $em->getRepository('CEOFESABundle:DParcours')->getStagiairesDevis($id)->getQuery()->getResult();
@@ -364,6 +386,33 @@ class DevisController extends Controller
         $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait')));
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-disposition', 'filename=devis.pdf');
+
+        return $response;
+    }
+
+    /**
+     * Render a pdf document as response Route
+     *
+     * @Route("/{id}/pdf/attestation", name="attestation_print")
+     */
+    public function printAttestationAction($id)
+    {   
+        $em = $this->getDoctrine()->getManager();
+        $stagiaires = $em->getRepository('CEOFESABundle:DParcours')->getStagiairesDevis($id)->getQuery()->getResult();
+        $parcours = $em->getRepository('CEOFESABundle:DParcours')->getParcoursDevis($id)->getQuery()->getResult();
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
+
+        $html = $this->renderView('::Templates\attestation-inscription.html.twig', array(
+            'id' => $id,
+            'stagiaires' => $stagiaires,
+            'parcours' => $parcours,
+            'devis' => $devis,
+        ));
+
+        $response= new Response();
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait')));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-disposition', 'filename=attestation.pdf');
 
         return $response;
     }

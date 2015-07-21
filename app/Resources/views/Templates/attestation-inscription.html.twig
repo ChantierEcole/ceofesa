@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset="utf-8">
+        <title>Attestation d'inscription des salariés</title>
+		<link rel="stylesheet" type="text/css" href="{{ asset('css/devis.css', absolute=true ) }}">
+	</head>
+	<body id="print">
+		<div class="page attestation">
+			{% include '::Templates/attestation-header.html.twig' %}
+
+			<div class="infos">
+				Objet : Attestation d’inscription des salariés auprès de l’organisme certificateur<br/>
+				<br/>
+				Structure présentant des salariés au jury : {{devis.devStructure.strNom}}<br/>
+				Adresse : 
+				{{devis.devStructure.strAdresse1}}
+				{% if(devis.devStructure.strAdresse2) %} 
+					{{devis.devStructure.strAdresse2}}
+				{% endif %} 
+				- {{devis.devStructure.strCP}} {{devis.devStructure.strVille}}
+				<br/>
+				N°ICOM : {{devis.devStructure.strIncom}}<br/>
+				Date d’obtention de l’agrément : {{devis.devStructure.strDateagrement|date('d/m/Y')}}<br/>
+				<br/>
+				Organisme de formation référent : OF’ESA<br/>
+				Adresse : 119-121 rue Damrémont - 75018 PARIS<br/>
+				N° de déclaration d’activité : 11 755141 875<br/>
+			</div>
+			<br/>
+			<div class="modules">
+				Liste des salariés faisant l’objet d’une demande d’inscription au CQP « salarié polyvalent » de la branche des ACI
+				<table>
+					<thead>
+						<tr>
+							<th>Nom et prénom</th>
+							<th>Date de naissance</th>
+							<th>Adresse postale</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% set nbStagiaires = 0 %}
+						{% for stagiaire in stagiaires %}
+							<tr>
+								<td>{{stagiaire.dprTiers.trsNom}} {{stagiaire.dprTiers.trsPrenom}}</td>
+								<td>{{stagiaire.dprTiers.trsDateNaissance|date('d/m/Y')}}</td>
+								<td>
+									{{stagiaire.dprTiers.trsAdresse1}}
+									{% if(stagiaire.dprTiers.trsAdresse2) %} 
+										{{stagiaire.dprTiers.trsAdresse2}}
+									{% endif %}
+									- {{stagiaire.dprTiers.trsCP}} {{stagiaire.dprTiers.trsVille}}
+								</td>
+							</tr>
+							{% set nbStagiaires = nbStagiaires + 1 %}
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			<br/>
+
+			{% if( nbStagiaires >= 5) %}
+				{% include '::Templates/attestation-footer.html.twig' %}
+				</div>
+				<div class="page attestation">
+				{% include '::Templates/attestation-header.html.twig' %}
+			{% endif %}
+
+			<div class="infos2">
+				Je soussigné, Luis SEMEDO, délégué national de CHANTIER école, certifie par la présente que la structure {{devis.devStructure.strNom}} est bien agréée au titre du dispositif de formation CQP « salarié polyvalent » et a régulièrement inscrit les salariés ci-dessus dans le parcours de formation visant l’obtention du certificat. <br/>
+				<br/><br/>
+				<div class="signature">
+				A Paris le, le <b>{{ 'now' | localizeddate('full', 'none') }}</b><br/>
+				<img src="{{ asset('img/signature_luis.jpg', absolute=true ) }}" alt="signature délégué national"/>
+				</div>
+			</div>
+
+			{% include '::Templates/attestation-footer.html.twig' %}
+
+		</div>
+	</body>
+</html>
