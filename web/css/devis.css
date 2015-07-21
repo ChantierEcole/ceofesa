@@ -102,6 +102,11 @@
     width: 50%;
 }
 
+#print .page .footer img{
+    height: 50px;
+    width: auto;
+}
+
 #print .attestation .titre{
     text-decoration: none;
     font-size: 8pt;
@@ -142,4 +147,8 @@
     height: 35mm;
     width: auto;
     padding-right: 5mm;
+}
+
+#print .attestation .footer .milieu{
+    bottom: 11mm;
 }
