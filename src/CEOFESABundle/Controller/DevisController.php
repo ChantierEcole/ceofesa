@@ -39,6 +39,28 @@ class DevisController extends Controller
             'entities' => $entities,
         );
     }
+
+    /**
+     * Route pour tester le template pdf de devis
+     *
+     * @Route("/template/{id}", name="devis_template")
+     * @Method("GET")
+     */
+    public function templateAction($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $stagiaires = $em->getRepository('CEOFESABundle:DParcours')->getStagiairesDevis($id)->getQuery()->getResult();
+        $parcours = $em->getRepository('CEOFESABundle:DParcours')->getParcoursDevis($id)->getQuery()->getResult();
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
+
+        return $this->render('::Templates\devis.html.twig', array(
+            'id' => $id,
+            'stagiaires' => $stagiaires,
+            'parcours' => $parcours,
+            'devis' => $devis,
+        ));
+    }
+
     /**
      * Creates a new Devis entity.
      *

@@ -7,16 +7,7 @@
 	</head>
 	<body id="print">
 		<div class="page attestation">
-			<div class="logo">
-				<img src="{{ asset('img/logos/logo-ACI.jpg', absolute=true ) }}" class="attestation_logo" alt="logo atelier chantier insertion"/>
-				<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="attestation_logo" alt="logo chantier école national"/>	
-			</div>
-
-			<div class="titre">
-				<h2>CERTIFICATION DE QUALIFICATION PROFESSIONNELLE ( C.Q.P.) <br/> SALARIE POLYVALENT DE LA BRANCHE PROFESSIONNELLE DES A.C.I.</h2>
-			</div>
-
-			<br/><br/>
+			{% include '::Templates/attestation-header.html.twig' %}
 
 			<div class="infos">
 				Objet : Attestation d’inscription des salariés auprès de l’organisme certificateur<br/>
@@ -48,6 +39,7 @@
 						</tr>
 					</thead>
 					<tbody>
+						{% set nbStagiaires = 0 %}
 						{% for stagiaire in stagiaires %}
 							<tr>
 								<td>{{stagiaire.dprTiers.trsNom}} {{stagiaire.dprTiers.trsPrenom}}</td>
@@ -60,12 +52,20 @@
 									- {{stagiaire.dprTiers.trsCP}} {{stagiaire.dprTiers.trsVille}}
 								</td>
 							</tr>
+							{% set nbStagiaires = nbStagiaires + 1 %}
 						{% endfor %}
 					</tbody>
 				</table>
 			</div>
 
 			<br/>
+
+			{% if( nbStagiaires >= 5) %}
+				{% include '::Templates/attestation-footer.html.twig' %}
+				</div>
+				<div class="page attestation">
+				{% include '::Templates/attestation-header.html.twig' %}
+			{% endif %}
 
 			<div class="infos2">
 				Je soussigné, Luis SEMEDO, délégué national de CHANTIER école, certifie par la présente que la structure {{devis.devStructure.strNom}} est bien agréée au titre du dispositif de formation CQP « salarié polyvalent » et a régulièrement inscrit les salariés ci-dessus dans le parcours de formation visant l’obtention du certificat. <br/>
@@ -76,21 +76,7 @@
 				</div>
 			</div>
 
-			<div class="footer">
-				<div class="gauche">
-					CHANTIER école<br/>
-					courriel : <a href="mailto:contact.national@chantierecole.org">contact.national@chantierecole.org</a><br/>
-					Tél. : 01 48 07 52 10
-				</div>
-				<div class="droite">
-					75018 PARIS<br/>
-					site internet : <a href="http://www.chantierecole.org ">www.chantierecole.org</a><br/>
-					Fax : 01 48 07 52 11
-				</div>
-				<div class="milieu">
-					119-121 rue Damrémont
-				</div>
-			</div>
+			{% include '::Templates/attestation-footer.html.twig' %}
 
 		</div>
 	</body>

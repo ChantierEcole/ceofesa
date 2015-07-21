@@ -16,9 +16,9 @@
 }
 
 #print .page {
-    width: 200mm;
+    width: 210mm;
     height: 297mm;
-    padding: 5mm 5mm;
+    padding: 5mm;
     position: relative;
 }
 
@@ -30,6 +30,7 @@
 #print .page .devis_logo {
     max-height: 19.3mm;
     max-width: 55mm;
+    float: left;
 }
 #print .page .attestation_logo {
     max-height: 19.3mm;
@@ -141,9 +142,4 @@
     height: 35mm;
     width: auto;
     padding-right: 5mm;
-}
-
-#print .attestation .footer a{
-    padding: 0;
-    margin: 0;
 }
