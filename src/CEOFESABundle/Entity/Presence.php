@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Presence
  *
  * @ORM\Table(name="tb_Presence", uniqueConstraints={@ORM\UniqueConstraint(name="unq_presence", columns={"psc_Session", "psc_Parcours"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\PresenceRepository")
  */
 class Presence
 {

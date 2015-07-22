@@ -213,3 +213,8 @@
     margin: 0;
 }
 
+.participant-session {}
+.participant-session td {
+    padding: 5px 0px;
+}
+

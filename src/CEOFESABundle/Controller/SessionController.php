@@ -301,6 +301,32 @@ class SessionController extends Controller
 
     /**
      * Traitement backoffice de l'AJAX
+     * -> affichage des participants d'une session choisie
+     * 
+     * @Route("/participants-ajax", name="participants_session_ajax")
+     *
+     */
+    public function participantsSessionAjaxAction(Request $request){
+
+        $sessionId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $participants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($sessionId)->getQuery()->getResult();
+        $reponse = array();
+        foreach ($participants as $participant) {
+            $p = array();
+            $p['id'] = $participant->getPscId();
+            $stagiaire = $participant->getPscParcours()->getPrcDcont()->getCntTiers();
+            $p['stagiaire'] = $stagiaire->getTrsNom().' '.$stagiaire->getTrsPrenom();
+            $p['nbheures'] = $participant->getPscDuree();
+            $p['daf'] = $participant->getPscParcours()->getPrcDcont()->getCntDaf()->getDafDossier();
+            $reponse[] = $p;
+        }
+
+        return new JsonResponse($reponse);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
      * -> suppression du formateur choisi
      * 
      * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")

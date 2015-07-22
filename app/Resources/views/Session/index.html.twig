@@ -137,18 +137,34 @@
 							<div class="jumbotron">
 								<h3>Formateur</h3>
 								<div class="row formateur-session">
-								<div class="listFormateur table-responsive"></div>
-								<p>
-									Changer de formateur : 
-									<select id="nomFormateur">
-										{% for formateur in formateurs %}
-											<option value="{{ formateur.trsId }}">{{ formateur.trsNom }} {{ formateur.trsPrenom }}</option>
-										{% endfor %}
-									</select>
-									<button type="button" class="btn btn-blue3 btn-xs btn-add-formateur" data-sessionid="">
-		                    			Ajouter
-		                			</button>
-	                			</p>
+									<div class="listFormateur table-responsive"></div>
+									<p>
+										Changer de formateur : 
+										<select id="nomFormateur">
+											{% for formateur in formateurs %}
+												<option value="{{ formateur.trsId }}">{{ formateur.trsNom }} {{ formateur.trsPrenom }}</option>
+											{% endfor %}
+										</select>
+										<button type="button" class="btn btn-blue3 btn-xs btn-add-formateur" data-sessionid="">
+			                    			Ajouter
+			                			</button>
+		                			</p>
+		                		</div>
+							</div>
+							<div class="jumbotron">
+								<h3>Participants</h3>
+								<table class="table table-responsive table-hover participant-session">
+									<thead>
+										<tr>
+											<th>Stagiaire</th>
+											<th>Nombre d'heures effectuées</th>
+											<th>DAF</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody class="listParticipant">
+									</tbody>
+								</table>
 							</div>
 						</div>
 					{% endif %}
@@ -170,10 +186,13 @@ $(document).ready(function() {
     var typeSelect	= $( "#select_typemod select" );
     var OFSelect	= $( "#select_OF select" );	
     $(".infos-session").hide();
+
+    //affichage du détail si une session est indiquée dans l'URL
     {% if session is defined %}
     	var idSession = "{{ session }}";
     	detailSession(idSession);
     	listFormateur(idSession);
+    	listParticipant(idSession);
     	$(".infos-session").show();
     {% endif %}
 
@@ -277,6 +296,30 @@ $(document).ready(function() {
         });
 	}
 
+	function listParticipant(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('participants_session_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	$("tbody.listParticipant").html("");
+            	$.each(data, function(index){
+            		var id = data[index].id;
+            		$("tbody.listParticipant").append('<tr>');
+            		$("tbody.listParticipant").append('<td>'+data[index].stagiaire+'</td>');
+            		$("tbody.listParticipant").append('<td>'+data[index].nbheures+'</td>');
+            		$("tbody.listParticipant").append('<td>'+data[index].daf+'</td>');
+            		$("tbody.listParticipant").append('<td><button type="button" class="btn btn-red3 btn-xs btn-delete-participant" data-presenceid="'+id+'">Supprimer</button></td>');
+            		$("tbody.listParticipant").append('</tr>');
+            	});
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert('FATAL ERROR TAVU'); //Ce code affichera le message d'erreur.
+			}
+        });
+	}
+
 	function addFormateur(idsession,idformateur) {
 		if($("div.listFormateur").html() != "Pas de formateur inscrit pour cette session"){
 			alert('Il ne peut y avoir qu\'un seul formateur par session. Supprimez le formateur actuel pour en rajouter un nouveau')
@@ -310,6 +353,7 @@ $(document).ready(function() {
     	var entityid = $(this).data("entityid");
     	detailSession(entityid);
     	listFormateur(entityid);
+    	listParticipant(entityid);
     	$(".infos-session").show();
     });
 
