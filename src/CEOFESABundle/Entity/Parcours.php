@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Parcours
  *
  * @ORM\Table(name="tb_Parcours", uniqueConstraints={@ORM\UniqueConstraint(name="unq_parcours", columns={"prc_DCont", "prc_Module", "prc_Type", "prc_Structure"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\ParcoursRepository")
  */
 class Parcours
 {
@@ -226,5 +226,15 @@ class Parcours
     public function getPrcImpdevis()
     {
         return $this->prcImpdevis;
+    }
+
+    /**
+     * Get prctiersdaf
+     *
+     * @return string
+     */
+    public function getPrctiersdaf()
+    {
+        return $this->prcDcont->getCntTiers()->getTrsNom().' '.$this->prcDcont->getCntTiers()->getTrsPrenom().' '.$this->prcDcont->getCntDaf()->getDafDossier();
     }
 }

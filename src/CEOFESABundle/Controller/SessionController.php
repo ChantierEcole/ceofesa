@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CEOFESABundle\Repository\StructureRepository;
 use CEOFESABundle\Entity\Session;
 use CEOFESABundle\Entity\Animation;
+use CEOFESABundle\Repository\ParcoursRepository;
 use CEOFESABundle\Form\Type\SessionType;
 
 
@@ -115,8 +116,11 @@ class SessionController extends Controller
         $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
         $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(),$modType->getMtyId(),$of->getStrId(),$id)->getQuery()->getResult();
 
+        $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
+
 		return array(
 		    'choose_form' => $form->createView(),
+            'participant_form' => $form2->createView(),
 		    'entities' => $entities,
 		    'module' => $module,
 		    'type' => $modType,
@@ -150,8 +154,11 @@ class SessionController extends Controller
         $ofEntity = $em->getRepository('CEOFESABundle:Structure')->find($of);
         $sessions = $em->getRepository('CEOFESABundle:Session')->getSessions($module,$type,$of,$id)->getQuery()->getResult();
 
+        $form2 = $this->createParticipantForm($of,$module,$type);
+
         return array(
             'choose_form' => $form->createView(),
+            'participant_form' => $form2->createView(),
             'entities' => $sessions,
             'module' => $moduleEntity,
             'type' => $modtypeEntity,
@@ -216,6 +223,45 @@ class SessionController extends Controller
 	        }
 
         });
+
+        $form = $formBuilder->getForm();
+
+        return $form;
+    }
+
+    /**
+     * Création d'un formulaire pour choisir les participants d'une session
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createParticipantForm($of,$module,$moduletype)
+    {
+        $id = $this->get('session')->get('structure');
+        $em = $this->getDoctrine()->getManager();
+        //$parcours = $em->getRepository('CEOFESABundle:Parcours')->getParcours($id,$of,$module,$moduletype)->getQuery()->getResult();
+
+
+        $data = array();
+        $formBuilder = $this->createFormBuilder($data)
+            ->add('participant','entity',array(
+                'class' => 'CEOFESABundle\Entity\Parcours',
+                'property' => 'prctiersdaf',
+                'label' => 'Participant',
+                'multiple' => false,
+                'query_builder' => function(ParcoursRepository $repo) use ($id,$of,$module,$moduletype) {
+                    return $repo->getParcours($id,$of,$module,$moduletype);
+                },
+            ))
+            ->add('nbHeures','time',array(
+                'label' => "Nombre d'heures",
+                'widget' => 'text',
+                'input'  => 'string',
+            ))
+        ;
+        $formBuilder
+            ->setAction($this->generateUrl('session_list'))
+            ->setMethod('POST')
+        ;
 
         $form = $formBuilder->getForm();
 

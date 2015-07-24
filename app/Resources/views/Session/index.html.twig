@@ -1,6 +1,9 @@
 {% extends '::layout.html.twig' %}
 
 {% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
+{% if participant_form is defined %}
+	{% form_theme participant_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
 
 {% block body %}
 <div class="row select-session-form">
@@ -165,6 +168,13 @@
 									<tbody class="listParticipant">
 									</tbody>
 								</table>
+								<div class="ajout-participant">
+									<h4>Ajouter un participant : </h4>
+									{{ form(participant_form) }}
+									<button type="button" class="btn btn-blue3 btn-xs btn-add-formateur" data-sessionid="">
+		                    			Ajouter
+		                			</button>
+	                			</div>
 							</div>
 						</div>
 					{% endif %}

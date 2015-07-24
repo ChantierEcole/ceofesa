@@ -218,3 +218,23 @@
     padding: 5px 0px;
 }
 
+.ajout-participant {
+    background: #fff;
+    border: #999 solid 0.5px;
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.ajout-participant #form_nbHeures {
+    float:left;
+    width: 15%;
+}
+.ajout-participant #form_nbHeures input {
+    width: 48%;
+}
+.ajout-participant button {
+    width: 100%;
+}
