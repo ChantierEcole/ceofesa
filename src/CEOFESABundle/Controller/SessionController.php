@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CEOFESABundle\Repository\StructureRepository;
 use CEOFESABundle\Entity\Session;
 use CEOFESABundle\Entity\Animation;
+use CEOFESABundle\Entity\Presence;
 use CEOFESABundle\Repository\ParcoursRepository;
 use CEOFESABundle\Form\Type\SessionType;
 
@@ -403,7 +404,7 @@ class SessionController extends Controller
      * @Route("/formateur-add-ajax", name="formateur_add_ajax")
      *
      */
-    public function formateursAddAjaxAction(Request $request){
+    public function formateurAddAjaxAction(Request $request){
 
         $sessionid = $request->request->get('idsession');
         $formateurid = $request->request->get('idformateur');
@@ -420,6 +421,41 @@ class SessionController extends Controller
         }
 
         return new JsonResponse($sessionid);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> ajout d'un participant à la session
+     * 
+     * @Route("/participant-add-ajax", name="participant_add_ajax")
+     *
+     */
+    public function participantAddAjaxAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $duree = $request->request->get('duree');
+        $idsession = $request->request->get('idsession');
+        $idparcours = $request->request->get('idparcours');
+        $dureeOK = preg_match("/(2[0-3]|[01][0-9]|[0-9])\.([0-5][0-9])/", $duree);
+        $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$idparcours)->getQuery()->getResult();
+
+        if(!$dureeOK){
+            $response = new JsonResponse('duree', 419);
+        }elseif ($presenceExist) {
+           $response = new JsonResponse('doublon', 419);
+        }else{
+            $session = $em->getRepository('CEOFESABundle:Session')->find($idsession);
+            $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
+            $presence = new Presence();
+            $presence->setPscDuree($duree);
+            $presence->setPscFacture(0);
+            $presence->setPscSession($session);
+            $presence->setPscParcours($parcours);
+            $em->persist($presence);
+            $em->flush();
+            $response = new JsonResponse($idsession); 
+        }
+
+        return $response;
     }
 
     /**

@@ -171,7 +171,7 @@
 								<div class="ajout-participant">
 									<h4>Ajouter un participant : </h4>
 									{{ form(participant_form) }}
-									<button type="button" class="btn btn-blue3 btn-xs btn-add-formateur" data-sessionid="">
+									<button type="button" class="btn btn-blue3 btn-xs btn-add-participant" data-sessionid="">
 		                    			Ajouter
 		                			</button>
 	                			</div>
@@ -257,6 +257,8 @@ $(document).ready(function() {
             	$(".modifDetailBtn").html(button);
             	$(".btn-add-formateur").attr( "data-sessionid", id );
             	$(".btn-add-formateur").data( "sessionid", id );
+            	$(".btn-add-participant").attr( "data-sessionid", id );
+            	$(".btn-add-participant").data( "sessionid", id );
                 /*alert(JSON.stringify(data));*/
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -346,7 +348,27 @@ $(document).ready(function() {
 					alert(xhr.responseText); //Ce code affichera le message d'erreur.
 				}
 	        });
-	    }	
+	    }
+	}
+
+	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
+		if(isNaN(nbHeures) == true || isNaN(nbMinutes) == true ){
+			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
+		} else {
+			var duree = nbHeures+'.'+nbMinutes;
+			$.ajax({
+	            type: "POST",
+	            url: "{{ path('participant_add_ajax') }}",
+	            data: {'idsession':idsession,'idparcours':idparcours,'duree':duree},
+	            timeout: 10000,
+	            success: function(data){
+	            	listParticipant(data);
+	            },
+	            error: function (request, status, error) {
+	            	alert(request.responseJSON);
+				}
+	        });
+		}
 	}
 
 	changeOF(modSelect,typeSelect);
@@ -376,6 +398,14 @@ $(document).ready(function() {
     	var idsession = $(this).data("sessionid");
     	var idformateur = $('#nomFormateur').val();
     	addFormateur(idsession,idformateur);
+    });
+
+    $("body").on("click",".btn-add-participant", function(){  
+    	var idsession = $(this).data("sessionid");
+    	var idparcours = $('#form_participant').val();
+    	var nbHeures = $('#form_nbHeures_hour').val();
+    	var nbMinutes = $('#form_nbHeures_minute').val();
+    	addParticipant(idsession,idparcours,nbHeures,nbMinutes);
     });
 });
 </script>

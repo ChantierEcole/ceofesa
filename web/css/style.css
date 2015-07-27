@@ -230,10 +230,10 @@
 }
 .ajout-participant #form_nbHeures {
     float:left;
-    width: 15%;
+    width: 120px;
 }
 .ajout-participant #form_nbHeures input {
-    width: 48%;
+    width: 50px;
 }
 .ajout-participant button {
     width: 100%;

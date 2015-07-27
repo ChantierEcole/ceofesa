@@ -14,4 +14,14 @@ class PresenceRepository extends EntityRepository
         ->setParameter('SessionId',$id)
         ;
     }
+
+    public function getPresence($idsession,$idparcours)
+    {
+        return $this
+        ->createQueryBuilder('p')
+        ->where('p.pscSession = :SessionId')
+        ->andWhere('p.pscParcours = :ParcoursId')
+        ->setParameters(array('SessionId' => $idsession, 'ParcoursId' => $idparcours))
+        ;
+    }
 }
