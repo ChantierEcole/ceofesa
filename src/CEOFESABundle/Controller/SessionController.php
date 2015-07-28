@@ -386,7 +386,7 @@ class SessionController extends Controller
 
         if (!$animation) {
             throw $this->createNotFoundException(
-                'Aucun formateur trouvé pour cet session. (id liaison : '.$id.')'
+                'Aucun formateur trouvé pour cette session. (id liaison : '.$id.')'
             );
         }
 
@@ -425,6 +425,31 @@ class SessionController extends Controller
 
     /**
      * Traitement backoffice de l'AJAX
+     * -> suppression du participant choisi
+     * 
+     * @Route("/participant-delete-ajax", name="participant_delete_ajax")
+     *
+     */
+    public function participantDeleteAjaxAction(Request $request){
+        $presenceId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $presence = $em->getRepository('CEOFESABundle:Presence')->find($presenceId);
+
+        if (!$presence) {
+            throw $this->createNotFoundException(
+                'Aucun participant trouvé pour cette session. (id liaison : '.$id.')'
+            );
+        }
+
+        $sessionid = $presence->getPscSession()->getSesId();
+        $em->remove($presence);
+        $em->flush();
+
+        return new JsonResponse($sessionid);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
      * -> ajout d'un participant à la session
      * 
      * @Route("/participant-add-ajax", name="participant_add_ajax")
@@ -435,7 +460,7 @@ class SessionController extends Controller
         $duree = $request->request->get('duree');
         $idsession = $request->request->get('idsession');
         $idparcours = $request->request->get('idparcours');
-        $dureeOK = preg_match("/(2[0-3]|[01][0-9]|[0-9])\.([0-5][0-9])/", $duree);
+        $dureeOK = preg_match("/(^[01]?[0-9]|2[0-3])\.[0-5][0-9]/", $duree);
         $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$idparcours)->getQuery()->getResult();
 
         if(!$dureeOK){

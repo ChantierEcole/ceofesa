@@ -293,21 +293,6 @@ $(document).ready(function() {
         });
 	};
 
-	function deleteFormateur(id) {
-		$.ajax({
-            type: "POST",
-            url: "{{ path('formateur_delete_ajax') }}",
-            data: 'id=' + id,
-            timeout: 10000,
-            success: function(data){
-            	listFormateur(data);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-				alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
-			}
-        });
-	}
-
 	function listParticipant(id) {
 		$.ajax({
             type: "POST",
@@ -351,6 +336,21 @@ $(document).ready(function() {
 	    }
 	}
 
+	function deleteFormateur(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('formateur_delete_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	listFormateur(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
+			}
+        });
+	}
+
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
 		if(isNaN(nbHeures) == true || isNaN(nbMinutes) == true ){
 			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
@@ -365,10 +365,33 @@ $(document).ready(function() {
 	            	listParticipant(data);
 	            },
 	            error: function (request, status, error) {
-	            	alert(request.responseJSON);
+	            	var erreur = request.responseJSON;
+	            	if(erreur == 'duree'){
+	            		alert('La durée doit etre au format HH:MM');
+	            	} else if (erreur == 'doublon'){
+	            		alert('Ce stagiaire est déjà inscrit dans cette session');
+	            	} else {
+	            		//alert('Un erreur est survenue lors de l\'enregistrement');
+	            		alert(request.responseText);
+	            	}
 				}
 	        });
 		}
+	}
+
+	function deleteParticipant(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('participant_delete_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	listParticipant(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert('Le participant ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
+			}
+        });
 	}
 
 	changeOF(modSelect,typeSelect);
@@ -392,6 +415,11 @@ $(document).ready(function() {
     $("body").on("click",".btn-delete-formateur", function(){  
     	var entityid = $(this).data("animationid");
     	deleteFormateur(entityid);
+    });
+
+    $("body").on("click",".btn-delete-participant", function(){  
+    	var entityid = $(this).data("presenceid");
+    	deleteParticipant(entityid);
     });
     
     $("body").on("click",".btn-add-formateur", function(){  
