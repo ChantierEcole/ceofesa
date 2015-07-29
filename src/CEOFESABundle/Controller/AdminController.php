@@ -117,6 +117,34 @@ class AdminController extends Controller
     }
 
     /**
+    * Traitement ajax invalidation devis
+    *
+    * @Route(
+    *   path="/devis/unvalid",
+    *   name="devis_unvalid"
+    * )
+    * @Method("POST")
+    */
+    public function unvalidAjaxAction(Request $request){
+
+        $DevisId = $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+
+        if (!$devis) {
+            throw $this->createNotFoundException(
+                'Aucun devis trouvé pour cet id : '.$id
+            );
+        }
+
+        $devis->setDevStatut('en cours');
+        $em->flush();
+
+        return new Response($DevisId);
+    }
+
+    /**
 	* Traitement ajax refus devis
     *
     * @Route(
