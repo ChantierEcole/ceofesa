@@ -24,4 +24,16 @@ class PresenceRepository extends EntityRepository
         ->setParameters(array('SessionId' => $idsession, 'ParcoursId' => $idparcours))
         ;
     }
+
+    public function getDcontTotalDurees($dcont)
+    {
+    	$qb = $this->createQueryBuilder('t');
+    	$qb->select('sum(t.pscDuree as total')
+    	->innerJoin('t.pscParcours','par')
+        ->where('par.prcDcont = :dcont')
+        ->setParameter('dcont', $dcont)
+        ;
+        $result = $qb->getQuery()->getSingleScalarResult();
+        return $result;
+    }
 }

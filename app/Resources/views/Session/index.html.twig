@@ -367,9 +367,11 @@ $(document).ready(function() {
 	            error: function (request, status, error) {
 	            	var erreur = request.responseJSON;
 	            	if(erreur == 'duree'){
-	            		alert('La durée doit etre au format HH:MM');
+	            		alert('Erreur : La durée doit etre au format HH:MM');
 	            	} else if (erreur == 'doublon'){
-	            		alert('Ce stagiaire est déjà inscrit dans cette session');
+	            		alert('Erreur : Ce stagiaire est déjà inscrit dans cette session');
+	            	} else if (erreur == 'limite'){
+	            		alert('Erreur : Ce stagiaire a atteint sa limite d\'heures prises en charge pour cette DAF);
 	            	} else {
 	            		//alert('Un erreur est survenue lors de l\'enregistrement');
 	            		alert(request.responseText);

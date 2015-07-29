@@ -459,17 +459,21 @@ class SessionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $duree = $request->request->get('duree');
         $idsession = $request->request->get('idsession');
+        $session = $em->getRepository('CEOFESABundle:Session')->find($idsession);
         $idparcours = $request->request->get('idparcours');
+        $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
+        $dcont = $parcours->getPrcDcont()->getCntId();
         $dureeOK = preg_match("/(^[01]?[0-9]|2[0-3])\.[0-5][0-9]/", $duree);
         $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$idparcours)->getQuery()->getResult();
+        $limiteOK = $this->checkTotalHeures($dcont,$duree);
 
         if(!$dureeOK){
             $response = new JsonResponse('duree', 419);
-        }elseif ($presenceExist) {
-           $response = new JsonResponse('doublon', 419);
+        }elseif($presenceExist) {
+            $response = new JsonResponse('doublon', 419);
+        }elseif(!$limiteOK) {
+            $response = new JsonResponse('limite', 419);
         }else{
-            $session = $em->getRepository('CEOFESABundle:Session')->find($idsession);
-            $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
             $presence = new Presence();
             $presence->setPscDuree($duree);
             $presence->setPscFacture(0);
@@ -602,6 +606,24 @@ class SessionController extends Controller
 
          if ($structure != $this->get('session')->get('structure')) {
             throw new NotFoundHttpException("Vous n'avez pas les droits nécessaires pour accéder à la page demandée");
+        }
+    }
+
+    /*
+    * Fonction pour vérifer si la somme des durées saisies pour une DAF pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cette DAF/stagiaire (DCont)
+    */
+    private function checkTotalHeures($dcont,$nextDuree=0){
+
+        $em = $this->getDoctrine()->getManager();
+        $nbHeuresRealisees = $em->getRepository('CEOFESABundle:Presence')->getDcontTotalDurees($dcont);
+        $nbHeuresPrevues = $em->getRepository('CEOFESABundle:Parcours')->getDcontTotalHeures($dcont);
+        
+        $nbHeuresRealisees += $nextDuree;
+
+        if($nbHeuresRealisees <= $nbHeuresPrevues){
+            return true;
+        } else {
+            return false;
         }
     }
 }
