@@ -35,18 +35,21 @@
                                     </button>
                                 </a>
 
-                                {% if entity.devStatut == "en cours" %}
-	                                
-	                                    <button type="button" class="btn btn-green3 btn-xs btn-valid" data-entityid="{{entity.devId|default('')}}">
-	                                        <i class="fa fa-check"></i> Valider
-	                                    </button>
-	                                
-	                                    <button type="button" class="btn btn-red3 btn-xs btn-refuse" data-entityid="{{entity.devId|default('')}}">
-	                                        <i class="fa fa-times"></i> Refuser
-	                                    </button>
-
+                                {% if entity.devStatut == "en cours" %}      
+                                    <button type="button" class="btn btn-green3 btn-xs btn-valid" data-entityid="{{entity.devId|default('')}}">
+                                        <i class="fa fa-check"></i> Valider
+                                    </button>
+                                
+                                    <button type="button" class="btn btn-red3 btn-xs btn-refuse" data-entityid="{{entity.devId|default('')}}">
+                                        <i class="fa fa-times"></i> Refuser
+                                    </button>
 	                            {% endif %}
 
+                                {% if entity.devStatut == "Validé" %}
+                                    <button type="button" class="btn btn-purple3 btn-xs btn-unvalid" data-entityid="{{entity.devId|default('')}}">
+                                        <i class="fa fa-times"></i> Invalider
+                                    </button>
+                                {% endif %}
                             </td>
                         </tr>
                        {% endfor %}
@@ -99,6 +102,28 @@
                 timeout: 10000,
                 success: function(data){ 
                     alert("Devis refusé :" + data);
+                },
+                error: function(){
+                    alert("Erreur : l'opération ne s'est pas enregistrée dans la base de données")
+                }
+            }); 
+        });
+
+        $("body").on("click",".btn-unvalid", function(){
+
+            var entityid = $(this).data("entityid");
+            $(this).hide();
+            $(this).prev('.btn-valid').hide();
+            $(this).parent().prev('td.statut').html('Refusé');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('devis_unvalid') }}",
+                data: { 'id':entityid },
+                timeout: 10000,
+                success: function(data){ 
+                    alert("Le Devis suivant a été invalidé :" + data);
+                    window.location.reload();
                 },
                 error: function(){
                     alert("Erreur : l'opération ne s'est pas enregistrée dans la base de données")
