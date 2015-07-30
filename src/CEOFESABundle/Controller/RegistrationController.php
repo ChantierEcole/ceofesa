@@ -93,7 +93,7 @@ class RegistrationController extends BaseController
             ;
             $this->get('mailer')->send($message);
 
-            echo 'le formulaire est valide et un mail a été envoyé';
+            return $this->render('FOSUserBundle:Registration:request_confirmed.html.twig');
         }
 
         return $this->render("User/loginnew.html.twig",array('form' => $form->createView()));
