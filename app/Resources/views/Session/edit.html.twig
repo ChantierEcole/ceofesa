@@ -15,4 +15,31 @@
 </div>
 {% endblock %}
 {% block javascripts %}
+<script type="text/javascript">  
+
+    $(document).ready(function() {
+        $('body').on('change','#ceofesabundle_session_sesHeuredebut input, #ceofesabundle_session_sesHeurefin input',function(){
+
+            var heureDebut = $("#ceofesabundle_session_sesHeuredebut_hour").val();
+            var heureFin = $("#ceofesabundle_session_sesHeurefin_hour").val();
+            var minuteDebut = $("#ceofesabundle_session_sesHeuredebut_minute").val();
+            var minuteFin = $("#ceofesabundle_session_sesHeurefin_minute").val();
+            var url = "{{ path('auto_heure_ajax') }}";
+            $.ajax({  
+            type: "POST",
+            url: url,
+            data: {'heureDebut':heureDebut,'heureFin':heureFin,'minuteDebut':minuteDebut,'minuteFin':minuteFin},
+            dataType: 'json',
+            timeout: 30000,
+            success: function (data) {
+               $("#ceofesabundle_session_sesDuree").val(data);
+            },
+            error: function(exception){
+                alert(exception.responseText);
+            }
+        });
+        });
+    });
+
+</script>
 {% endblock %}

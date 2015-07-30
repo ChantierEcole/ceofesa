@@ -325,6 +325,32 @@ class SessionController extends Controller
 
     /**
      * Traitement backoffice de l'AJAX
+     * -> recalcule la durée de la session en fonction de l'heure de début et de l'heure de fin
+     * 
+     * @Route("/auto-heure-ajax", name="auto_heure_ajax")
+     *
+     */
+    public function calculDureeAjaxAction(Request $request){
+
+        $heureDebut = $request->request->get('heureDebut');
+        $heureFin = $request->request->get('heureFin');
+        $minuteDebut = $request->request->get('minuteDebut');
+        $minuteFin = $request->request->get('minuteFin');
+
+        if(!empty($heureDebut) && !empty($heureFin) && !empty($minuteDebut) && !empty($minuteFin)){
+            $dateDebut = new \DateTime($heureDebut.':'.$minuteDebut.':00');
+            $dateFin = new \DateTime($heureFin.':'.$minuteFin.':00');
+            $interval = $dateFin->diff($dateDebut);
+            $result = $interval->format('%h,%i');
+        } else {
+            $result = "0,00";
+        }
+
+        return new JsonResponse($result);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
      * -> affichage des formateurs d'une session choisie
      * 
      * @Route("/formateur-ajax", name="formateurs_session_ajax")
