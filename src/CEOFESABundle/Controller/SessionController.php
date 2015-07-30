@@ -270,6 +270,127 @@ class SessionController extends Controller
     }
 
     /**
+     * Displays a form to edit an existing Session entity.
+     *
+     * @Route("/edit/{id}", name="session_edit")
+     * @Method({"GET","POST"})
+     * @Template("::Session\edit.html.twig")
+     */
+    public function editAction(Request $request,$id)
+    {
+        $this->checkStructure($id);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('CEOFESABundle:Session')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Impossible de trouver la Session demandée');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {     
+            $em->flush();
+            return $this->redirect($this->generateUrl('session_list2', array(
+                'module' => $entity->getSesModule()->getModId(),
+                'type' => $entity->getSesMtype()->getMtyId(),
+                'of' => $entity->getSesOf()->getStrId(), 
+                'session' => $entity->getSesId(),
+            )));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+    * Creates a form to edit a Session entity.
+    *
+    * @param Session $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(Session $entity)
+    {
+        $idstructure = $this->get('session')->get('structure');
+        $idsession = $entity->getSesId();
+        $module = $entity->getSesModule()->getModId();
+        $type = $entity->getSesMtype()->getMtyId();
+        $of = $entity->getSesOf()->getStrId();
+
+        $form = $this->createForm(new SessionType($idstructure,$module,$type,$of), $entity, array(
+            'action' => $this->generateUrl('session_edit', array('id' => $idsession)),
+            'method' => 'POST',
+        ));
+
+        return $form;
+    }
+    
+    /**
+     * Deletes a Session entity.
+     *
+     * @Route("/{id}/delete", name="session_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $this->checkStructure($id);
+
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('CEOFESABundle:Session')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Session entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('session'));
+    }
+
+    /**
+     * Creates a form to delete a Devis entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('devis_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
+            ->getForm()
+        ;
+    }
+
+    /**
+     * Page sélection par stagiaires
+     *
+     * @Route("/stagiaires", name="session_stagiaires")
+     * @Method({"GET","POST"})
+     * @Template("::Session\index_stagiaires.html.twig")
+     */
+    public function indexStagiairesAction(Request $request)
+    {
+        return;
+    }
+
+    /**
      * Traitement backoffice de l'AJAX
      * -> affichage de la listes des OF en fonction du module et du type
      * 
@@ -511,115 +632,6 @@ class SessionController extends Controller
         }
 
         return $response;
-    }
-
-    /**
-     * Displays a form to edit an existing Session entity.
-     *
-     * @Route("/edit/{id}", name="session_edit")
-     * @Method({"GET","POST"})
-     * @Template("::Session\edit.html.twig")
-     */
-    public function editAction(Request $request,$id)
-    {
-        $this->checkStructure($id);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('CEOFESABundle:Session')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Impossible de trouver la Session demandée');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {     
-            $em->flush();
-            return $this->redirect($this->generateUrl('session_list2', array(
-                'module' => $entity->getSesModule()->getModId(),
-                'type' => $entity->getSesMtype()->getMtyId(),
-                'of' => $entity->getSesOf()->getStrId(), 
-                'session' => $entity->getSesId(),
-            )));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to edit a Session entity.
-    *
-    * @param Session $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Session $entity)
-    {
-        $idstructure = $this->get('session')->get('structure');
-        $idsession = $entity->getSesId();
-        $module = $entity->getSesModule()->getModId();
-        $type = $entity->getSesMtype()->getMtyId();
-        $of = $entity->getSesOf()->getStrId();
-
-        $form = $this->createForm(new SessionType($idstructure,$module,$type,$of), $entity, array(
-            'action' => $this->generateUrl('session_edit', array('id' => $idsession)),
-            'method' => 'POST',
-        ));
-
-        return $form;
-    }
-    
-    /**
-     * Deletes a Session entity.
-     *
-     * @Route("/{id}/delete", name="session_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $this->checkStructure($id);
-
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('CEOFESABundle:Session')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Session entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('session'));
-    }
-
-    /**
-     * Creates a form to delete a Devis entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('devis_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
-            ->getForm()
-        ;
     }
 
     /*
