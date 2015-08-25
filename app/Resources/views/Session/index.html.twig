@@ -313,7 +313,7 @@ $(document).ready(function() {
 				alert('FATAL ERROR TAVU'); //Ce code affichera le message d'erreur.
 			}
         });
-	}
+	};
 
 	function addFormateur(idsession,idformateur) {
 		if($("div.listFormateur").html() != "Pas de formateur inscrit pour cette session"){
@@ -332,7 +332,7 @@ $(document).ready(function() {
 				}
 	        });
 	    }
-	}
+	};
 
 	function deleteFormateur(id) {
 		$.ajax({
@@ -347,7 +347,7 @@ $(document).ready(function() {
 				alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
 			}
         });
-	}
+	};
 
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
 		if(isNaN(nbHeures) == true || isNaN(nbMinutes) == true ){
@@ -377,7 +377,7 @@ $(document).ready(function() {
 				}
 	        });
 		}
-	}
+	};
 
 	function deleteParticipant(id) {
 		$.ajax({
@@ -392,7 +392,7 @@ $(document).ready(function() {
 				alert('Le participant ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
 			}
         });
-	}
+	};
 
 	changeOF(modSelect,typeSelect);
 

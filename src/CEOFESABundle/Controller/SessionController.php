@@ -36,7 +36,7 @@ class SessionController extends Controller
     */
     public function indexAction(Request $request)
     {
-       	$form = $this->createChooseForm();
+       	$form = $this->createChooseForm('session_list');
 
         return array(
             'choose_form' => $form->createView(),
@@ -103,7 +103,7 @@ class SessionController extends Controller
     */
     public function listAction(Request $request)
     {
-    	$form = $this->createChooseForm();
+    	$form = $this->createChooseForm('session_list');
 
     	$form->handleRequest($request);
         // data is an array
@@ -142,7 +142,7 @@ class SessionController extends Controller
     */
     public function validBackListAction($module, $type, $of, $session)
     {
-        $form = $this->createChooseForm();
+        $form = $this->createChooseForm('session_list');
 
         $this->checkStructure($session);
 
@@ -174,7 +174,7 @@ class SessionController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createChooseForm()
+    private function createChooseForm($actionURL)
     {
         $id = $this->get('session')->get('structure');
         $em = $this->getDoctrine()->getManager();
@@ -201,7 +201,7 @@ class SessionController extends Controller
             ))
         ;
         $formBuilder
-        	->setAction($this->generateUrl('session_list'))
+        	->setAction($this->generateUrl($actionURL))
 			->setMethod('POST')
 		;
 
@@ -224,47 +224,6 @@ class SessionController extends Controller
 	        }
 
         });
-
-        $form = $formBuilder->getForm();
-
-        return $form;
-    }
-
-    /**
-     * Création d'un formulaire pour choisir les "paramètres" des sessions à afficher en fonction d'un stagiaire
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createChooseStagiaireForm()
-    {
-        $id = $this->get('session')->get('structure');
-        $em = $this->getDoctrine()->getManager();
-
-        $data = array();
-        $formBuilder = $this->createFormBuilder($data)
-            ->add('module','entity',array(
-                'class' => 'CEOFESABundle\Entity\Module',
-                'property' => 'modCode',
-                'multiple' => false,
-            ))
-            ->add('type','entity',array(
-                'class' => 'CEOFESABundle\Entity\ModuleT',
-                'property' => 'mtyType',
-                'multiple' => false,
-            ))
-            ->add('of','choice',array(
-                'required'  => true,
-                'multiple'  => false,
-                'empty_value' => '',
-            ))
-            ->add('voir','submit', array(
-                'attr' => array('class' => 'btn-primary')
-            ))
-        ;
-        $formBuilder
-            ->setAction($this->generateUrl('session_list'))
-            ->setMethod('POST')
-        ;
 
         $form = $formBuilder->getForm();
 
@@ -428,7 +387,7 @@ class SessionController extends Controller
      */
     public function indexStagiairesAction(Request $request)
     {
-        $form = $this->createChooseStagiaireForm();
+        $form = $this->createChooseForm('session_stagiaires');
         
         return array(
             'choose_form' => $form->createView(),

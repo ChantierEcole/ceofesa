@@ -1,17 +1,93 @@
 {% extends '::layout.html.twig' %}
+
 {% block body %}
-	<div class="row">
+	<div class="row select-session-form">
 		<div class="col-md-12">
 			<div class="panel panel-visible">
 				 <div class="panel-body">
 					{% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
 					{{ form_start(choose_form) }}
 	                {{ form_errors(choose_form) }}
+
+	                <div class="row">
+		                <div class="col-md-3" id="select_module">
+		                	{{ form_label(choose_form.module) }}
+		                    {{ form_widget(choose_form.module) }}
+		                    {{ form_errors(choose_form.module) }}
+		                </div>
+		                <div class="col-md-3" id="select_typemod">
+		                	{{ form_label(choose_form.type) }}
+		                    {{ form_widget(choose_form.type) }}
+		                    {{ form_errors(choose_form.type) }}
+		                </div>
+		                <div class="col-md-3" id="select_OF">
+		                	{{ form_label(choose_form.of) }}
+		                    {{ form_widget(choose_form.of) }}
+		                    {{ form_errors(choose_form.of) }}
+		                </div>
+		                <div class="col-md-3">
+		                	{{ form_row(choose_form.voir) }}
+		                </div>
+	                </div>
+
 	                {{ form_end(choose_form) }}
+	                 <div class="alert alert-warning no-result">
 				</div>
 			</div>
 		</div>
 	</div>
 {% endblock %}
 {% block javascripts %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+	// Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
+    var url = "{{ path('session_ajax') }}";
+    var modSelect  = $( "#select_module select" );
+    var typeSelect	= $( "#select_typemod select" );
+    var OFSelect	= $( "#select_OF select" );	
+
+    function changeOF(modSelect,typeSelect) {
+    	$(".no-result").hide();
+    	var module_id = modSelect.val();
+	    var type_id = typeSelect.val();
+
+	    $.ajax({  
+	    	type: "POST",
+	    	url: url,
+	    	data: {'module_id':module_id,'type_id':type_id},
+        	dataType: 'json',
+        	timeout: 30000,
+        	success: function (data) {
+     			var noResult = 1;
+        		$(OFSelect).html('');
+        		$.each(data, function(index){
+		        	var id      = data[index].id;
+		            var name    = data[index].nom;
+		            $(OFSelect).append('<option value="'+id+'">'+name+'</option>');
+		            noResult = 0;
+		    	});
+		    	if(noResult==1){
+		    		$(".no-result").html('Pas de Sessions existantes pour le module M'+modSelect.val()+' avec ce type');
+		    		$(".no-result").show();
+		    	}
+        	},
+        	error: function(exception){
+          		alert('Erreur, la connexion au serveur a été interrompue');
+        	}
+        });
+	};
+
+	changeOF(modSelect,typeSelect);
+
+    typeSelect.change(function(){
+    	changeOF(modSelect,typeSelect); 
+    });
+
+    modSelect.change(function(){
+    	changeOF(modSelect,typeSelect);
+    });
+
+});
+</script>
 {% endblock %}
