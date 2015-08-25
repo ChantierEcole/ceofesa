@@ -80,12 +80,13 @@ class DParcoursType extends AbstractType
                         }
                     ));
                 } elseif($type == "EXTERNE") {
+                    $id = $this->idStructure;
                     $form->add('dprStructure','entity',array(
                         'class' => 'CEOFESABundle\Entity\Structure',
                         'property' => 'strNom',
                         'label' => 'OF',
                         'multiple' => false,
-                        'query_builder' => function(StructureRepository $repo){
+                        'query_builder' => function(StructureRepository $repo) use ($id){
                             return $repo->getSoustraitants($id);
                         }
                     ));
