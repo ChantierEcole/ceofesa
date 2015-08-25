@@ -172,6 +172,10 @@
 .select-session-form #form_voir {
     margin-top: 23px;
 }
+.select-session-form .panel .form-horizontal .control-label {
+    margin: 5px 0;
+    text-align: left;
+}
 
 .list-session{}
     .list-session th {

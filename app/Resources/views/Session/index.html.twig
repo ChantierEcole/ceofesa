@@ -1,15 +1,12 @@
 {% extends '::layout.html.twig' %}
 
-{% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
-{% if participant_form is defined %}
-	{% form_theme participant_form 'bootstrap_3_horizontal_layout.html.twig' %}
-{% endif %}
-
 {% block body %}
 <div class="row select-session-form">
 	<div class="col-md-12">
 		<div class="panel panel-visible">
 			 <div class="panel-body">
+
+			 	{% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
 				{{ form_start(choose_form) }}
                 {{ form_errors(choose_form) }}
 
@@ -170,6 +167,7 @@
 								</table>
 								<div class="ajout-participant">
 									<h4>Ajouter un participant : </h4>
+									{% form_theme participant_form 'bootstrap_3_horizontal_layout.html.twig' %}
 									{{ form(participant_form) }}
 									<button type="button" class="btn btn-blue3 btn-xs btn-add-participant" data-sessionid="">
 		                    			Ajouter
@@ -252,7 +250,7 @@ $(document).ready(function() {
             	$("input.DureeSession").val(data['duree']);
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
-            	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i>Editer</button></a>';
+            	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
             	button = button.replace("variable", id);
             	$(".modifDetailBtn").html(button);
             	$(".btn-add-formateur").attr( "data-sessionid", id );

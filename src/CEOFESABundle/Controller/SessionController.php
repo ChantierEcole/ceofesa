@@ -231,6 +231,47 @@ class SessionController extends Controller
     }
 
     /**
+     * Création d'un formulaire pour choisir les "paramètres" des sessions à afficher en fonction d'un stagiaire
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createChooseStagiaireForm()
+    {
+        $id = $this->get('session')->get('structure');
+        $em = $this->getDoctrine()->getManager();
+
+        $data = array();
+        $formBuilder = $this->createFormBuilder($data)
+            ->add('module','entity',array(
+                'class' => 'CEOFESABundle\Entity\Module',
+                'property' => 'modCode',
+                'multiple' => false,
+            ))
+            ->add('type','entity',array(
+                'class' => 'CEOFESABundle\Entity\ModuleT',
+                'property' => 'mtyType',
+                'multiple' => false,
+            ))
+            ->add('of','choice',array(
+                'required'  => true,
+                'multiple'  => false,
+                'empty_value' => '',
+            ))
+            ->add('voir','submit', array(
+                'attr' => array('class' => 'btn-primary')
+            ))
+        ;
+        $formBuilder
+            ->setAction($this->generateUrl('session_list'))
+            ->setMethod('POST')
+        ;
+
+        $form = $formBuilder->getForm();
+
+        return $form;
+    }
+
+    /**
      * Création d'un formulaire pour choisir les participants d'une session
      *
      * @return \Symfony\Component\Form\Form The form
@@ -387,7 +428,11 @@ class SessionController extends Controller
      */
     public function indexStagiairesAction(Request $request)
     {
-        return;
+        $form = $this->createChooseStagiaireForm();
+        
+        return array(
+            'choose_form' => $form->createView(),
+        );
     }
 
     /**
