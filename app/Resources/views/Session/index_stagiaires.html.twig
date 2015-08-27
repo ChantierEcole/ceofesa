@@ -47,11 +47,43 @@
 	            </div>
 	            <div class="panel-body">
 	                <div class="clearfix"></div>
-	                <select name="stagiaires">
-	                {% for participant in participants %}
-	                	<option value="value1">{{ participant.prctiersdaf }}</option> 
-	                {% endfor %}
-	            	</select>
+	                <div class="col-md-4">
+		                <p>Choisissez un stagiaire :</p>
+		                <select name="stagiaires" id="select_stagiaires">
+		                {% for participant in participants %}
+		                	<option value="{{ participant.prcid }}">{{ participant.prctiersdaf }}</option> 
+		                {% endfor %}
+		            	</select>
+		            </div>
+		            <div class="col-md-8">
+		            </div>
+		            <div class="col-md-4">
+						<div class="table-responsive list-session">
+							<table class="table">
+								<thead>
+									<tr>
+										<th style="width: 15%">ID</th>
+										<th style="width: 23%">Date</th>
+										<th style="width: 21%">Type</th>
+										<th style="width: 15%">Durée</th>
+										<th style="width: 26%">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="5">
+											<div class="table-responsive">
+												<table class="table table-striped table-bordered table-hover" id="table_sessions">
+													<tbody>
+													</tbody>
+												</table>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>	
+		            </div>
 	            </div>
             </div>
         </div>
@@ -63,7 +95,6 @@
 
 $(document).ready(function() {
 	// Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
-    var url = "{{ path('session_ajax') }}";
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
     var OFSelect	= $( "#select_OF select" );	
@@ -75,7 +106,7 @@ $(document).ready(function() {
 
 	    $.ajax({  
 	    	type: "POST",
-	    	url: url,
+	    	url: "{{ path('session_ajax') }}",
 	    	data: {'module_id':module_id,'type_id':type_id},
         	dataType: 'json',
         	timeout: 30000,
@@ -99,6 +130,25 @@ $(document).ready(function() {
         });
 	};
 
+	function listSessions(idParcours) {
+		$.ajax({  
+	    	type: "POST",
+	    	url: "{{ path('stagiaire_list_ajax') }}",
+	    	data: 'idParcours=' + idParcours,
+        	dataType: 'json',
+        	timeout: 30000,
+        	success: function (data) {
+        		$( "#table_sessions tbody" ).html('');
+     			$.each(data, function(index){
+     				$( "#table_sessions tbody" ).append('<tr><td>'+data[index].id+'</td><td>'+data[index].date+'</td><td>'+data[index].type+'</td><td>'+data[index].duree+'</td><td class="text-center"><button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="'+data[index].id+'"><i class="fa fa-eye"></i> Détails</button></td></tr>');
+     			});
+        	},
+        	error: function(exception){
+          		alert(exception.responseText);
+        	}
+        });
+	};
+
 	changeOF(modSelect,typeSelect);
 
     typeSelect.change(function(){
@@ -107,6 +157,11 @@ $(document).ready(function() {
 
     modSelect.change(function(){
     	changeOF(modSelect,typeSelect);
+    });
+
+    $( "#select_stagiaires" ).change(function(){
+    	var idParcours = $( "#select_stagiaires" ).val();
+    	listSessions(idParcours);
     });
 
 });

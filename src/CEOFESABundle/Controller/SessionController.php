@@ -678,6 +678,32 @@ class SessionController extends Controller
         return $response;
     }
 
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> affichage liste de session en fonction du stagiaire choisi
+     * 
+     * @Route("/stagiaire-list-ajax", name="stagiaire_list_ajax")
+     *
+     */
+    public function stagiaireListAjaxAction(Request $request){
+
+        $parcoursId = $request->request->get('idParcours');
+        $em = $this->getDoctrine()->getManager();
+        $presences = $em->getRepository('CEOFESABundle:Presence')->getPresencesParcours($parcoursId)->getQuery()->getResult();
+        $reponse = array();
+        foreach ($presences as $presence) {
+            $p = array();
+            $session = $presence->getPscSession();
+            $p['id'] = $session->getSesId();
+            $p['date']= $session->getSesDate()->format('d-m-Y');
+            $p['type']= $session->getSesStype()->getStyType();
+            $p['duree']= $session->getSesDuree();
+            $reponse[] = $p;
+        }
+
+        return new JsonResponse($reponse);
+    }
+
     /*
     * Fonction pour vérifer si l'id de la structure de la session de formation correspond bien à la structure de la session en cours
     */

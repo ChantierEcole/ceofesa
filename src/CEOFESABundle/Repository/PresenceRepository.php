@@ -36,4 +36,13 @@ class PresenceRepository extends EntityRepository
         $result = $qb->getQuery()->getSingleScalarResult();
         return $result;
     }
+
+    public function getPresencesParcours($idparcours)
+    {
+        return $this
+        ->createQueryBuilder('s')
+        ->where('s.pscParcours = :idparcours')
+        ->setParameter('idparcours', $idparcours)
+        ;
+    }
 }

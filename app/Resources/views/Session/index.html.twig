@@ -189,7 +189,6 @@
 
 $(document).ready(function() {
 	// Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
-    var url = "{{ path('session_ajax') }}";
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
     var OFSelect	= $( "#select_OF select" );	
@@ -211,7 +210,7 @@ $(document).ready(function() {
 	    /*alert(modSelect.val() + typeSelect.val());*/
 	    $.ajax({  
 	    	type: "POST",
-	    	url: url,
+	    	url: "{{ path('session_ajax') }}",
 	    	data: {'module_id':module_id,'type_id':type_id},
         	dataType: 'json',
         	timeout: 30000,
