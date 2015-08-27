@@ -387,10 +387,50 @@ class SessionController extends Controller
      */
     public function indexStagiairesAction(Request $request)
     {
-        $form = $this->createChooseForm('session_stagiaires');
+        $form = $this->createChooseForm('session_stagiaire_list');
         
         return array(
             'choose_form' => $form->createView(),
+        );
+    }
+
+    /**
+    * Affiche la liste des sessions d'un stagiaire en fonction du module/moduleType/OF choisi dans le formulaire
+    *
+    * @Route(
+    *   path="/stagiaire/list",
+    *   name="session_stagiaire_list"
+    * )
+    * @Method({"POST"})
+    * @Template("::Session\index_stagiaires.html.twig")
+    */
+    public function stagiaireListAction(Request $request)
+    {
+        $form = $this->createChooseForm('session_stagiaire_list');
+
+        $form->handleRequest($request);
+        // data is an array
+        $data = $form->getData();
+        $module = $data['module'];
+        $modType = $data['type'];
+        $of = $data['of'];
+        $id = $this->get('session')->get('structure');
+
+        $em = $this->getDoctrine()->getManager();
+        $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
+        $participants = $em->getRepository('CEOFESABundle:Parcours')->getParcours($id,$of,$module,$modType)->getQuery()->getResult();
+        $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(),$modType->getMtyId(),$of->getStrId(),$id)->getQuery()->getResult();
+
+        $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
+
+        return array(
+            'choose_form' => $form->createView(),
+            'participants' => $participants,
+            'entities' => $entities,
+            'module' => $module,
+            'type' => $modType,
+            'of' => $of,
+            'formateurs' => $formateurs,
         );
     }
 

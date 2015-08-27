@@ -36,6 +36,27 @@
 			</div>
 		</div>
 	</div>
+
+	{% if entities is defined and of is defined and module is defined and type is defined %}
+
+		<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-visible margin-bottom-none">
+				<div class="panel-heading">
+	                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Résultats pour le module {{ module.modCode }} avec le type {{ type.mtyType }} pour l'OF {{ of.strNom }} </div>
+	            </div>
+	            <div class="panel-body">
+	                <div class="clearfix"></div>
+	                <select name="stagiaires">
+	                {% for participant in participants %}
+	                	<option value="value1">{{ participant.prctiersdaf }}</option> 
+	                {% endfor %}
+	            	</select>
+	            </div>
+            </div>
+        </div>
+
+    {% endif %}
 {% endblock %}
 {% block javascripts %}
 <script type="text/javascript">
