@@ -49,15 +49,19 @@
 	                <div class="clearfix"></div>
 	                <div class="col-md-4">
 		                <p>Choisissez un stagiaire :</p>
-		                <select name="stagiaires" id="select_stagiaires">
+		                <select name="stagiaires" id="select_stagiaires" class="form-control">
 		                {% for participant in participants %}
 		                	<option value="{{ participant.prcid }}">{{ participant.prctiersdaf }}</option> 
 		                {% endfor %}
 		            	</select>
 		            </div>
 		            <div class="col-md-8">
+		            	<div class="jumbotron">
+		            		<h3>Détails du Stagiaire :</h3>
+		            	</div>
 		            </div>
 		            <div class="col-md-4">
+		            	<h3>Liste des sessions du stagiaire :</h3>
 						<div class="table-responsive list-session">
 							<table class="table">
 								<thead>
