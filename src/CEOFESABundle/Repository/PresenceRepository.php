@@ -37,6 +37,21 @@ class PresenceRepository extends EntityRepository
         return $result;
     }
 
+    public function getParcoursDcontTotalDurees($dcont,$mtype,$module,$structure)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('sum(t.pscDuree as total')
+        ->innerJoin('t.pscParcours','par')
+        ->where('par.prcDcont = :dcont')
+        ->andWhere('par.prcType = :mtype')
+        ->andWhere('par.prcModule = :module')
+        ->andWhere('par.prcStructure = :structure')
+        ->setParameters(array('dcont'=> $dcont,'mtype' => $mtype,'module' => $module,'structure' => $structure))
+        ;
+        $result = $qb->getQuery()->getSingleScalarResult();
+        return $result;
+    }
+
     public function getPresencesParcours($idparcours)
     {
         return $this

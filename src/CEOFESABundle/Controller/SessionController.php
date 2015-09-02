@@ -659,11 +659,11 @@ class SessionController extends Controller
         $limiteOK = $this->checkTotalHeures($dcont,$duree);
 
         if(!$dureeOK){
-            $response = new JsonResponse('duree', 419);
+            $reponse = new JsonResponse('duree', 419);
         }elseif($presenceExist) {
-            $response = new JsonResponse('doublon', 419);
+            $reponse = new JsonResponse('doublon', 419);
         }elseif(!$limiteOK) {
-            $response = new JsonResponse('limite', 419);
+            $reponse = new JsonResponse('limite', 419);
         }else{
             $presence = new Presence();
             $presence->setPscDuree($duree);
@@ -672,10 +672,10 @@ class SessionController extends Controller
             $presence->setPscParcours($parcours);
             $em->persist($presence);
             $em->flush();
-            $response = new JsonResponse($idsession); 
+            $reponse = new JsonResponse($idsession); 
         }
 
-        return $response;
+        return $reponse;
     }
 
     /**
@@ -697,9 +697,43 @@ class SessionController extends Controller
             $p['id'] = $session->getSesId();
             $p['date']= $session->getSesDate()->format('d-m-Y');
             $p['type']= $session->getSesStype()->getStyType();
-            $p['duree']= $session->getSesDuree();
+            $p['duree']= $presence->getPscDuree();
             $reponse[] = $p;
         }
+
+        return new JsonResponse($reponse);
+    }
+
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> affichage des détails concernant le stagiaire choisi
+     * 
+     * @Route("/stagiaire-details-ajax", name="stagiaire_details_ajax")
+     *
+     */
+    public function stagiaireDetailsAjaxAction(Request $request){
+
+        $idparcours = $request->request->get('idParcours');
+        $reponse = array();
+        $em = $this->getDoctrine()->getManager();
+        $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
+        $nomPrenom = $parcours->getPrcDcont()->getCntTiers()->getTrsNomPrenom();
+        $daf = $parcours->getPrcDcont()->getCntDaf()->getDafDossier();
+        $nbHeurePrevParcours = $parcours->getPrcNombreheure();
+        $nbHeurePrevDAF = $parcours->getPrcDcont()->getCntDaf()->getDafNbheure();
+        $dcont = $parcours->getPrcDcont()->getCntId();
+        $mtype = $parcours->getPrcType()->getMtyId();
+        $module = $parcours->getPrcModule()->getModId();
+        $structure = $parcours->getPrcStructure()->getStrId();
+        $nbHeureReaParcours = $em->getRepository('CEOFESABundle:Presence')->getParcoursDcontTotalDurees($dcont,$mtype,$module,$structure);
+        $nbHeureReaDAF = $em->getRepository('CEOFESABundle:Presence')->getDcontTotalDurees($dcont);
+
+        $reponse['nomPrenom']= $nomPrenom;
+        $reponse['daf']= $daf;
+        $reponse['nbHeurePrevParcours']= $nbHeurePrevParcours;
+        $reponse['nbHeurePrevDAF']= $nbHeurePrevDAF;
+        $reponse['nbHeureReaParcours']= $nbHeureReaParcours;
+        $reponse['nbHeureReaDAF']= $nbHeureReaDAF;
 
         return new JsonResponse($reponse);
     }

@@ -50,6 +50,7 @@
 	                <div class="col-md-4">
 		                <p>Choisissez un stagiaire :</p>
 		                <select name="stagiaires" id="select_stagiaires" class="form-control">
+		                	<option value=""> --- </option>
 		                {% for participant in participants %}
 		                	<option value="{{ participant.prcid }}">{{ participant.prctiersdaf }}</option> 
 		                {% endfor %}
@@ -58,6 +59,32 @@
 		            <div class="col-md-8">
 		            	<div class="jumbotron">
 		            		<h3>Détails du Stagiaire :</h3>
+		            		<div class="row detail-session">
+								<div class="col-md-4">
+									<label>Nom et Prenom :</label>
+									<input disabled class="nomPrenom"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Nb Heures prévues pour ce parcours :</label>
+									<input disabled class="nbHeurePrevParcours"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Nb Heures prévues pour cette DAF :</label>
+									<input disabled class="nbHeurePrevDAF"></input>
+								</div>
+								<div class="col-md-4">
+									<label>DAF :</label>
+									<input disabled class="daf"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Nb Heures réalisées pour ce parcours :</label>
+									<input disabled class="nbHeureReaParcours"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Nb Heures réalisées pour cette DAF :</label>
+									<input disabled class="nbHeureReaDAF"></input>
+								</div>
+							</div>
 		            	</div>
 		            </div>
 		            <div class="col-md-4">
@@ -88,6 +115,46 @@
 							</table>
 						</div>	
 		            </div>
+		            <div class="col-md-8 infos-session">
+						<div class="jumbotron">
+							<h3>Informations de la session n°<span class="idSession"></span></h3>
+							<div class="row detail-session">
+								<div class="col-md-4">
+									<label>Date :</label>
+									<input disabled class="dateSession"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Heure de début :</label>
+									<input disabled class="HDebutSession"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Heure de fin :</label>
+									<input disabled class="HFinSession"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Durée :</label>
+									<input disabled class="DureeSession"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Séance :</label>
+									<input disabled class="TypeSeance"></input>
+								</div>
+								<div class="col-md-4">
+									<label>Type de Formation :</label>
+									<input disabled class="TypeFormation"></input>
+								</div>
+								<div class="col-md-12">
+									<div class="modifDetailBtn"></div>
+								</div>
+							</div>
+						</div>
+						<div class="jumbotron">
+							<h3>Formateur</h3>
+							<div class="row formateur-session">
+								<div class="listFormateur table-responsive"></div>
+	                		</div>
+						</div>
+					</div>
 	            </div>
             </div>
         </div>
@@ -101,7 +168,9 @@ $(document).ready(function() {
 	// Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
-    var OFSelect	= $( "#select_OF select" );	
+    var OFSelect	= $( "#select_OF select" );
+
+    $(".infos-session").hide();
 
     function changeOF(modSelect,typeSelect) {
     	$(".no-result").hide();
@@ -153,6 +222,75 @@ $(document).ready(function() {
         });
 	};
 
+	function detailStagiaire(idParcours) {
+		$.ajax({  
+	    	type: "POST",
+	    	url: "{{ path('stagiaire_details_ajax') }}",
+	    	data: 'idParcours=' + idParcours,
+        	dataType: 'json',
+        	timeout: 30000,
+        	success: function (data) {
+        		$("input.nomPrenom").val(data['nomPrenom']);
+        		$("input.daf").val(data['daf']);
+        		$("input.nbHeurePrevParcours").val(data['nbHeurePrevParcours']);
+        		$("input.nbHeurePrevDAF").val(data['nbHeurePrevDAF']);
+        		$("input.nbHeureReaParcours").val(data['nbHeureReaParcours']);
+        		$("input.nbHeureReaDAF").val(data['nbHeureReaDAF']);
+        	},
+        	error: function(exception){
+          		alert(exception.responseText);
+        	}
+        });
+	};
+
+	function detailSession(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('details_session_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	var id = data['id'];
+            	$("span.idSession").html(id);
+            	$("input.dateSession").val(data['date']);
+            	$("input.HDebutSession").val(data['hDebut']);
+            	$("input.HFinSession").val(data['hFin']);
+            	$("input.DureeSession").val(data['duree']);
+            	$("input.TypeSeance").val(data['seance']);
+            	$("input.TypeFormation").val(data['formation']);
+            },
+            error: function(exception){
+          		alert(exception.responseText);
+        	}
+        });
+	};
+
+	function listFormateur(id) {
+		$.ajax({
+            type: "POST",
+            url: "{{ path('formateurs_session_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+            	var noResult = 1;
+        		$("div.listFormateur").html('<table><tbody>');
+        		$.each(data, function(index){
+        			var id      = data[index].id;
+		            var tiers    = data[index].tiers;
+		            $("div.listFormateur").append('<tr><td>'+tiers+'</td></tr>');
+		            noResult = 0;
+		    	});
+		    	$("div.listFormateur").append('</tbody></table>');
+		    	if(noResult==1){
+		    		$("div.listFormateur").html('Pas de formateur inscrit pour cette session');
+		    	}
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.responseText); //Ce code affichera le message d'erreur.
+			}
+        });
+	};
+
 	changeOF(modSelect,typeSelect);
 
     typeSelect.change(function(){
@@ -166,6 +304,14 @@ $(document).ready(function() {
     $( "#select_stagiaires" ).change(function(){
     	var idParcours = $( "#select_stagiaires" ).val();
     	listSessions(idParcours);
+    	detailStagiaire(idParcours);
+    });
+
+    $("body").on("click",".btn-voir", function(){  
+    	var entityid = $(this).data("entityid");
+    	detailSession(entityid);
+    	listFormateur(entityid);
+    	$(".infos-session").show();
     });
 
 });
