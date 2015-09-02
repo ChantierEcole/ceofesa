@@ -9,6 +9,7 @@
 
 		{% for stagiaire in stagiaires %}
 			<div class="page">
+			<div class="content">
 				<div class="logo">
 					{% if(devis.devOF.strID == '1') %}
 						<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
@@ -151,7 +152,8 @@
 					{% endif %}
 					
 				</div>
-		
+			
+			</div>
 			</div>
 		{% endfor %}
 	

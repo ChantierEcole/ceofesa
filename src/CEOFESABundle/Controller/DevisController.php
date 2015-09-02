@@ -65,7 +65,7 @@ class DevisController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Demande de devis')
                 ->setFrom($this->get('session')->get('mail'))
-                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2'),$this->container->getParameter('contact_mail3')))
+                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2'),$this->container->getParameter('contact_mail3'),$this->container->getParameter('contact_mail4')))
                 ->setBody($this->renderView('Mail\devis.txt.twig',array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);
@@ -257,7 +257,7 @@ class DevisController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Modification d\'un devis')
                 ->setFrom($this->get('session')->get('mail'))
-                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2'),$this->container->getParameter('contact_mail3')))
+                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2'),$this->container->getParameter('contact_mail3'),$this->container->getParameter('contact_mail4')))
                 ->setBody($this->renderView('Mail\modifDevis.txt.twig',array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);
@@ -362,7 +362,7 @@ class DevisController extends Controller
         ));
 
         $response= new Response();
-        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait')));
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait','page-size' => 'A4')));
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-disposition', 'filename=devis.pdf');
 

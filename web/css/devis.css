@@ -17,9 +17,14 @@
 
 #print .page {
     width: 210mm;
-    height: 297mm;
-    padding: 5mm;
+    height: 306mm;
     position: relative;
+}
+
+#print .page .content {
+    position: absolute;
+    width: 210mm;
+    height: 297mm;
 }
 
 #print .page .logo {
