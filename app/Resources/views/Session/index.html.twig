@@ -309,7 +309,7 @@ $(document).ready(function() {
             	});
             },
             error: function (xhr, ajaxOptions, thrownError) {
-				alert('FATAL ERROR TAVU'); //Ce code affichera le message d'erreur.
+				alert('FATAL ERROR'); //Ce code affichera le message d'erreur.
 			}
         });
 	};
@@ -351,6 +351,8 @@ $(document).ready(function() {
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
 		if(isNaN(nbHeures) == true || isNaN(nbMinutes) == true ){
 			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
+		} else if($("input.TypeSeance").val() == 'Individuel' && $( ".listParticipant tr" ).length != 0) {
+			alert('Cette session est de type \'Individuel\' et ne peut donc pas comporter plus d\'un participant');
 		} else {
 			var duree = nbHeures+'.'+nbMinutes;
 			$.ajax({
@@ -369,6 +371,8 @@ $(document).ready(function() {
 	            		alert('Erreur : Ce stagiaire est déjà inscrit dans cette session');
 	            	} else if (erreur == 'limite'){
 	            		alert('Erreur : Ce stagiaire a atteint sa limite d\'heures prises en charge pour cette DAF');
+	            	} else if (erreur == 'individuel'){
+	            		alert('Erreur : Cette formation est individuelle et ne peut comporter plusieurs participants');
 	            	} else {
 	            		//alert('Un erreur est survenue lors de l\'enregistrement');
 	            		alert(request.responseText);
