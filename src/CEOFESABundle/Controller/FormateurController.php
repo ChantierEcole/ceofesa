@@ -79,6 +79,7 @@ class FormateurController extends Controller
 
         $form = $this->createForm(new TiersType($id), $entity, array(
             'action' => $this->generateUrl('formateur_create'),
+            'validation_groups' => array('formateur'),
             'method' => 'POST',
         ));
 
@@ -168,6 +169,7 @@ class FormateurController extends Controller
 
         $form = $this->createForm(new TiersType($id), $entity, array(
             'action' => $this->generateUrl('formateur_update', array('id' => $entity->getTrsId())),
+            'validation_groups' => array('formateur'),
             'method' => 'PUT',
         ));
 
