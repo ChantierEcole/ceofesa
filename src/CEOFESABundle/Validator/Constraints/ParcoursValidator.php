@@ -29,6 +29,7 @@ class ParcoursValidator extends ConstraintValidator
             $data[0] = $parcour->getDprType()->getMtyType();
             $data[1] = $parcour->getDprModule()->getModCode();
             $data[2] = $parcour->getDprTiers()->getTrsNomPrenom();
+            $data[3] = $parcour->getDprStructure()->getStrId();
 
             // création d'une chaine de données pour l'entrée
             $result = implode(",", $data);
