@@ -651,20 +651,25 @@ class SessionController extends Controller
         $duree = $request->request->get('duree');
         $idsession = $request->request->get('idsession');
         $session = $em->getRepository('CEOFESABundle:Session')->find($idsession);
+        $type = $session->getSesStype()->getStyType();
         $idparcours = $request->request->get('idparcours');
         $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
         $dcont = $parcours->getPrcDcont()->getCntId();
         $dureeOK = preg_match("/(^[01]?[0-9]|2[0-3])\.[0-5][0-9]/", $duree);
         $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$idparcours)->getQuery()->getResult();
         $limiteOK = $this->checkTotalHeures($dcont,$duree);
+        $isParticipants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($idsession)->getQuery()->getResult();
 
-        if(!$dureeOK){
+
+        if(!$dureeOK){ // vérifie que la durée est bien au format HH:MM (entre 00:00 et 23:59)
             $reponse = new JsonResponse('duree', 419);
-        }elseif($presenceExist) {
+        }elseif($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
             $reponse = new JsonResponse('doublon', 419);
-        }elseif(!$limiteOK) {
+        }elseif(!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de sa DAF
             $reponse = new JsonResponse('limite', 419);
-        }else{
+        }elseif($type == 'Individuel' && $isParticipants) {
+                $reponse = new JsonResponse('individuel', 419);
+        }else{ // si ok : rajout de la présence en base
             $presence = new Presence();
             $presence->setPscDuree($duree);
             $presence->setPscFacture(0);

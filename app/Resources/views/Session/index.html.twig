@@ -307,9 +307,12 @@ $(document).ready(function() {
             		$("tbody.listParticipant").append('<td><button type="button" class="btn btn-red3 btn-xs btn-delete-participant" data-presenceid="'+id+'">Supprimer</button></td>');
             		$("tbody.listParticipant").append('</tr>');
             	});
+            	var dureeSession = $("input.DureeSession").val().split(".");
+            	$("input#form_nbHeures_hour").val(dureeSession[0]);
+            	$("input#form_nbHeures_minute").val(dureeSession[1]);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-				alert('FATAL ERROR TAVU'); //Ce code affichera le message d'erreur.
+				alert('FATAL ERROR'); //Ce code affichera le message d'erreur.
 			}
         });
 	};
@@ -349,10 +352,14 @@ $(document).ready(function() {
 	};
 
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
+		var duree = nbHeures+'.'+nbMinutes;
 		if(isNaN(nbHeures) == true || isNaN(nbMinutes) == true ){
 			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
+		} else if($("input.TypeSeance").val() == 'Individuel' && $( ".listParticipant tr" ).length != 0) {
+			alert('Cette session est de type \'Individuel\' et ne peut donc pas comporter plus d\'un participant');
+		} else if(parseFloat($("input.DureeSession").val()) < parseFloat(duree)){
+			alert('Le nombre d\'heures ne doit pas dépasser la durée de la session');
 		} else {
-			var duree = nbHeures+'.'+nbMinutes;
 			$.ajax({
 	            type: "POST",
 	            url: "{{ path('participant_add_ajax') }}",
@@ -369,6 +376,8 @@ $(document).ready(function() {
 	            		alert('Erreur : Ce stagiaire est déjà inscrit dans cette session');
 	            	} else if (erreur == 'limite'){
 	            		alert('Erreur : Ce stagiaire a atteint sa limite d\'heures prises en charge pour cette DAF');
+	            	} else if (erreur == 'individuel'){
+	            		alert('Erreur : Cette formation est individuelle et ne peut comporter plusieurs participants');
 	            	} else {
 	            		//alert('Un erreur est survenue lors de l\'enregistrement');
 	            		alert(request.responseText);

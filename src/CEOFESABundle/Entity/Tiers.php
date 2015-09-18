@@ -162,6 +162,7 @@ class Tiers
      * @ORM\Column(name="trs_NumSecu", type="string", length=45, nullable=true)
      * @Assert\Regex(pattern="/^[\d ]*$/", message="Ce champ ne doit contenir que des nombres")
      * @Assert\Length(min=13,max=21)
+     * @CeofesaAssert\Numsecu(groups={"formateur"})
      */
     private $trsNumsecu;
 
