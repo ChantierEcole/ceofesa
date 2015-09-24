@@ -15,14 +15,14 @@ use CEOFESABundle\Entity\Devis;
 use CEOFESABundle\Form\Type\DevisType;
 
 /**
- * Devis controller.
+ * Devis controller
  *
  * @Route("/devis")
  */
 class DevisController extends Controller
 {
     /**
-     * Lists all Devis entities.
+     * Liste des devis
      *
      * @Route("/", name="devis")
      * @Method("GET")
@@ -36,12 +36,12 @@ class DevisController extends Controller
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisStructure($id)->getQuery()->getResult();
 
         return array(
-            'entities' => $entities,
+            'devis' => $entities,
         );
     }
 
     /**
-     * Creates a new Devis entity.
+     * Gestion de l'envoi d'un formulaire de création d'une entité Devis
      *
      * @Route("/", name="devis_create")
      * @Method("POST")
@@ -80,7 +80,7 @@ class DevisController extends Controller
     }
 
     /**
-     * Creates a form to create a Devis entity.
+     * Formulaire pour la création d'une entité Devis
      *
      * @param Devis $entity The entity
      *
@@ -101,7 +101,7 @@ class DevisController extends Controller
     }
 
     /**
-     * Displays a form to create a new Devis entity.
+     * Affichage du formulaire pour créer une nouvelle entité Devis
      *
      * @Route("/new", name="devis_new")
      * @Method("GET")
@@ -130,28 +130,27 @@ class DevisController extends Controller
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
 
+        /* sélectionne toutes les structures selon leur type (intra/externe) */
         if($typeId == '0'){
             $rep = $em->getRepository('CEOFESABundle:Structure')->getIntra();
         }elseif($typeId == '1'){
             $rep = $em->getRepository('CEOFESABundle:Structure')->getSoustraitants($id);
         }
-
         $structures = $rep->getQuery()->getResult();
 
+        /* On créer un tableau avec l'ID et le nom de toutes les structures choisies pour le renvoyer */
         $OFList = array();
-
         foreach ($structures as $structure) {
             $p = array();
             $p['id'] = $structure->getStrId();
             $p['nom'] = $structure->getStrNom();
             $OFList[] = $p;
         }
-
         return new JsonResponse($OFList);
     }
 
     /**
-     * Finds and displays a Devis entity.
+     * Affiche les détails d'une entité Devis
      *
      * @Route("/{id}", name="devis_show")
      * @Method("GET")
@@ -178,7 +177,7 @@ class DevisController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Devis entity.
+     * Affiche un formulaire pour éditer une entité Devis
      *
      * @Route("/{id}/edit", name="devis_edit")
      * @Method("GET")
@@ -208,7 +207,7 @@ class DevisController extends Controller
     }
 
     /**
-    * Creates a form to edit a Devis entity.
+    * Créer un formulaire pour éditer une entité Devis
     *
     * @param Devis $entity The entity
     *
@@ -228,7 +227,7 @@ class DevisController extends Controller
         return $form;
     }
     /**
-     * Edits an existing Devis entity.
+     * Gestion de l'envoi d'un formulaire d'édition d'une entité Devis
      *
      * @Route("/{id}", name="devis_update")
      * @Method("PUT")
@@ -271,7 +270,7 @@ class DevisController extends Controller
         );
     }
     /**
-     * Deletes a Devis entity.
+     * Action de suppression d'une entité Devis
      *
      * @Route("/{id}", name="devis_delete")
      * @Method("DELETE")
@@ -300,7 +299,7 @@ class DevisController extends Controller
     }
 
     /**
-     * Creates a form to delete a Devis entity by id.
+     * Création d'un formulaire pour supprimer une entité Devis en fonction de son id
      *
      * @param mixed $id The entity id
      *
@@ -343,7 +342,7 @@ class DevisController extends Controller
     }
 
     /**
-     * Render a pdf document as response Route
+     * Génère un PDF de Devis à l'aide de la vue Templates/devis.html.twig
      *
      * @Route("/{id}/pdf", name="devis_print")
      */
@@ -370,7 +369,7 @@ class DevisController extends Controller
     }
 
     /**
-     * Render a pdf document as response Route
+     * Génère un PDF d'attestation d'inscription à l'aide de la vue Templates/attestation-inscription.html.twig
      *
      * @Route("/{id}/pdf/attestation", name="attestation_print")
      */

@@ -1,3 +1,5 @@
+{# Vue "liste des devis" dans la partie Devis #}
+
 {% extends '::layout.html.twig' %}
 
 {% block body %}
@@ -23,33 +25,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for entity in entities %}
+                    {% for devi in devis %}
                         <tr>
-                            <td>{{ entity.devAnnee }}</td>
-                            <td>{{ entity.devNumero }}</td>
-                            <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if entity.devDatedebut %}{{ entity.devDatedebut|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if entity.devDatefin %}{{ entity.devDatefin|date('Y-m-d') }}{% endif %}</td>
-                            <td>{{ entity.devStatut }}</td>
+                            <td>{{ devi.devAnnee }}</td>
+                            <td>{{ devi.devNumero }}</td>
+                            <td>{% if devi.devDatedevis %}{{ devi.devDatedevis|date('Y-m-d') }}{% endif %}</td>
+                            <td>{% if devi.devDatedebut %}{{ devi.devDatedebut|date('Y-m-d') }}{% endif %}</td>
+                            <td>{% if devi.devDatefin %}{{ devi.devDatefin|date('Y-m-d') }}{% endif %}</td>
+                            <td>{{ devi.devStatut }}</td>
                             <td class="text-center">
-                                <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
+                                <a href="{{ path('devis_show', { 'id': devi.devId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
-                                {% if entity.devStatut != "Validé" %}
-                                    <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
+                                {% if devi.devStatut != "Validé" %}
+                                    <a href="{{ path('devis_edit', { 'id': devi.devId }) }}">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-pencil"></i> Editer
                                         </button>
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('devis_print', { 'id': entity.devId }) }}" target="_blank">
+                                    <a href="{{ path('devis_print', { 'id': devi.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-print"></i> Imprimer Devis
                                         </button>
                                     </a>
-                                     <a href="{{ path('attestation_print', { 'id': entity.devId }) }}" target="_blank">
+                                     <a href="{{ path('attestation_print', { 'id': devi.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue2 btn-xs">
                                             <i class="fa fa-print"></i> Imprimer Attestation
                                         </button>
