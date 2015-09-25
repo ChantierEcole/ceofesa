@@ -1,0 +1,31 @@
+{# Surchage d'une vue de FOSUserBundle (v2.0@dev) #}
+
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+<div id="main">
+  <div class="container">
+    <div class="row">
+      <div id="page-logo"> <img src="{{ asset('img/logos/logo-ceofesa.png') }}" class="img-responsive" alt="logo"> </div>
+    </div>
+    <div class="row">
+      <div class="panel">
+        <div class="panel-heading">
+          <div class="panel-title"> <span class="glyphicon glyphicon-lock"></span> Changer de mot de passe 
+          </div>
+        </div>
+			<form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_resetting_reset">
+				{{ form_widget(form) }}
+				<div>
+					<input type="submit" class="btn btn-primary" value="{{ 'resetting.reset.submit'|trans }}" />
+				</div>
+			</form>
+		</div>
+    </div>
+  </div>
+</div>
+{% endblock fos_user_content %}
+
+{% block javascripts %}
+{% endblock javascripts %}
