@@ -1,0 +1,88 @@
+#print {
+    font-size: 0.2cm;
+}
+
+.row {
+    margin: 0;
+}
+.ta-center  {
+    text-align: center;
+}
+
+.ta-right {
+    text-align: right;
+}
+
+img {
+    width: 100%;
+}
+
+img.little {
+    width: 5cm;
+}
+
+#print h1 {
+    font-size: 0.4cm;
+}
+
+#print h2 {
+    font-size: 0.5cm;
+}
+
+.module-type {
+    border: 1px solid black;
+    padding: 0.05cm 0.1cm;
+}
+
+.sign {
+    height: 100px;
+}
+
+.sessions {
+    text-align: center;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+.h15 {
+    height: 15px;
+}
+
+.h45  {
+    height: 45px;
+}
+
+.h185 {
+    height: 284px;
+}
+
+.sessions div:not(.contener) {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.sessions .col-xs-1 {
+    width: 9%;
+}
+
+.bb {
+    border-bottom: 1px solid black;
+}
+
+.br {
+    border-right: 1px solid black;
+}
+
+.page {
+    page-break-after : always
+}
+
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+    padding: 0;
+}
+
+.fs16 {
+    font-size: 16px;
+}

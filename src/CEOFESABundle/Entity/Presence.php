@@ -34,7 +34,7 @@ class Presence
     /**
      * @var \Parcours
      *
-     * @ORM\ManyToOne(targetEntity="Parcours")
+     * @ORM\ManyToOne(targetEntity="Parcours", inversedBy="prcPresence")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Parcours", referencedColumnName="prc_ID", nullable=false)
      * })

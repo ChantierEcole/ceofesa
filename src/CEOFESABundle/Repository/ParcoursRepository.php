@@ -20,6 +20,22 @@ class ParcoursRepository extends EntityRepository
         ;
     }
 
+    public function getParcoursAndSessions($idStructure, $idOF, $idModule, $idModuleType, $date)
+    {
+        $qb = $this->getParcours($idStructure, $idOF, $idModule, $idModuleType);
+
+        $qb->addSelect('pre', 'ses')
+            ->innerJoin('par.prcPresence', 'pre')
+            ->innerJoin('pre.pscSession', 'ses')
+            ->andWhere('ses.sesDate >= :dateMin')
+            ->andWhere('ses.sesDate <= :dateMax')
+            ->setParameter('dateMin', new \DateTime($date->format('Y-m-01')))
+            ->setParameter('dateMax', new \DateTime($date->format('Y-m-t')))
+            ->orderBy('ses.sesDate', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function getDcontTotalHeures($dcont)
     {
         $qb = $this->createQueryBuilder('t');

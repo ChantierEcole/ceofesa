@@ -47,45 +47,94 @@
 	            </div>
 	            <div class="panel-body">
 	                <div class="clearfix"></div>
-	                <div class="col-md-4">
-		                <p>Choisissez un stagiaire :</p>
-		                <select name="stagiaires" id="select_stagiaires" class="form-control">
-		                	<option value=""> --- </option>
-		                {% for participant in participants %}
-		                	<option value="{{ participant.prcid }}">{{ participant.prctiersdaf }}</option> 
-		                {% endfor %}
-		            	</select>
+	                <div class="row">
+		                <div class="col-md-12">
+			                <p>Choisissez un stagiaire :</p>
+			                <table class="js-data-table">
+			                	<thead>
+			                		<tr>
+			                			<th>Nom</th>
+			                			<th>Prénom</th>
+			                			<th>DAF</th>
+			                			<th>Action</th>
+			                		</tr>
+			                	</thead>
+			                	<tbody>
+					                {% for participant in participants %}
+					                	<tr>
+					                		<td>{{ participant.prcDcont.cntTiers.trsNom }}</td>
+					                		<td>{{ participant.prcDcont.cntTiers.trsPrenom }}</td>
+					                		<td>{{ participant.prcDcont.cntDaf.dafDossier }}</td>
+					                		<td>
+	                                			<button type="button" class="btn btn-blue3 btn-xs js-btn-voir" data-entityid="{{ participant.prcid }}">
+	                                    			<i class="fa fa-eye"></i> Détails
+	                                			</button>
+					                		</td>
+					                	</tr>
+			                		{% endfor %}
+			                	</tbody>
+			                </table>
+			            </div>
 		            </div>
-		            <div class="col-md-8">
-		            	<div class="jumbotron">
-		            		<h3>Détails du Stagiaire :</h3>
-		            		<div class="row detail-session">
-								<div class="col-md-4">
-									<label>Nom et Prenom :</label>
-									<input disabled class="nomPrenom"></input>
+
+					<br /><br /><br />
+
+            		<h3>Imprimer les feuilles d'émargement de ce module pour tous les stagiaires :</h3>
+            		<div class="row">
+            			{{ form_start(monthForm, {'action' : path('session_stagiaire_list_print')}) }}
+            
+            			<div class="col-sm-1 col-sm-offset-2">
+	            			{{ form_label(monthForm.date) }}
+            			</div>
+	            		{{ form_widget(monthForm.date.day, { 'attr': { 'style': 'display:none' }} )  }}
+            			<div class="col-sm-2">
+		            		{{ form_widget(monthForm.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+            			</div>
+            			<div class="col-sm-2">
+	    	        		{{ form_widget(monthForm.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+            			</div>
+
+            			<div class="col-sm-3">
+							<input type="submit" value="Valider" class="btn btn-primary" />
+            			</div>
+
+	            		{{ form_end(monthForm) }}
+            		</div>
+
+					<br /><br /><br />
+
+            		<h3>Détails du Stagiaire :</h3>
+	                <div class="row">
+			            <div class="col-md-12" id="stagDetail">
+			            	<div class="jumbotron">
+			            		<div class="row detail-session">
+									<div class="col-md-4">
+										<label>Nom et Prenom :</label>
+										<input disabled class="nomPrenom"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Nb Heures prévues pour ce parcours :</label>
+										<input disabled class="nbHeurePrevParcours"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Nb Heures prévues pour cette DAF :</label>
+										<input disabled class="nbHeurePrevDAF"></input>
+									</div>
+									<div class="col-md-4">
+										<label>DAF :</label>
+										<input disabled class="daf"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Nb Heures réalisées pour ce parcours :</label>
+										<input disabled class="nbHeureReaParcours"></input>
+									</div>
+									<div class="col-md-4">
+										<label>Nb Heures réalisées pour cette DAF :</label>
+										<input disabled class="nbHeureReaDAF"></input>
+									</div>
 								</div>
-								<div class="col-md-4">
-									<label>Nb Heures prévues pour ce parcours :</label>
-									<input disabled class="nbHeurePrevParcours"></input>
-								</div>
-								<div class="col-md-4">
-									<label>Nb Heures prévues pour cette DAF :</label>
-									<input disabled class="nbHeurePrevDAF"></input>
-								</div>
-								<div class="col-md-4">
-									<label>DAF :</label>
-									<input disabled class="daf"></input>
-								</div>
-								<div class="col-md-4">
-									<label>Nb Heures réalisées pour ce parcours :</label>
-									<input disabled class="nbHeureReaParcours"></input>
-								</div>
-								<div class="col-md-4">
-									<label>Nb Heures réalisées pour cette DAF :</label>
-									<input disabled class="nbHeureReaDAF"></input>
-								</div>
-							</div>
-		            	</div>
+			            	</div>
+			            </div>
 		            </div>
 		            <div class="col-md-4">
 		            	<h3>Liste des sessions du stagiaire :</h3>
@@ -301,10 +350,14 @@ $(document).ready(function() {
     	changeOF(modSelect,typeSelect);
     });
 
-    $( "#select_stagiaires" ).change(function(){
-    	var idParcours = $( "#select_stagiaires" ).val();
+    $( ".js-btn-voir" ).click(function(){
+    	var idParcours = $(this).data('entityid');
     	listSessions(idParcours);
     	detailStagiaire(idParcours);
+
+    	$('html, body').animate({
+			scrollTop:$('#stagDetail').offset().top
+		}, 'slow');
     });
 
     $("body").on("click",".btn-voir", function(){  

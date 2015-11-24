@@ -4,6 +4,7 @@ namespace CEOFESABundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -17,6 +18,7 @@ use CEOFESABundle\Entity\Animation;
 use CEOFESABundle\Entity\Presence;
 use CEOFESABundle\Repository\ParcoursRepository;
 use CEOFESABundle\Form\Type\SessionType;
+use CEOFESABundle\Form\Type\MonthType;
 
 
 /**
@@ -209,7 +211,7 @@ class SessionController extends Controller
     		$formulaire = $event->getForm();
     		$data = $event->getData();
 
-    		$ofId = $data['of'];
+    		$ofId = isset($data['of']) ? $data['of'] : null;
         	if($ofId != null){ 
             $formulaire->remove('of');
             $formulaire->add('of','entity',array(
@@ -401,7 +403,6 @@ class SessionController extends Controller
     *   path="/stagiaire/list",
     *   name="session_stagiaire_list"
     * )
-    * @Method({"POST"})
     * @Template("::Session\index_stagiaires.html.twig")
     */
     public function stagiaireListAction(Request $request)
@@ -409,22 +410,27 @@ class SessionController extends Controller
         $form = $this->createChooseForm('session_stagiaire_list');
 
         $form->handleRequest($request);
-        // data is an array
-        $data = $form->getData();
-        $module = $data['module'];
-        $modType = $data['type'];
-        $of = $data['of'];
-        $id = $this->get('session')->get('structure');
 
-        $em = $this->getDoctrine()->getManager();
-        $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
-        $participants = $em->getRepository('CEOFESABundle:Parcours')->getParcours($id,$of,$module,$modType)->getQuery()->getResult();
-        $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(),$modType->getMtyId(),$of->getStrId(),$id)->getQuery()->getResult();
+        $data       = $form->getData();
+        $module     = $data['module'];
+        $modType    = $data['type'];
+        $of         = $data['of'];
+        $id         = $this->get('session')->get('structure');
 
-        $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
+        $em             = $this->getDoctrine()->getManager();
+        $formateurs     = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
+        $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcours($id, $of, $module,$modType)->getQuery()->getResult();
+        $entities       = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(), $modType->getMtyId(), $of->getStrId(), $id)->getQuery()->getResult();
+
+        $monthForm = $this->createForm(new MonthType());
+
+        $monthForm->get('module')->setData($module->getModId());
+        $monthForm->get('type')->setData($modType->getMtyId());
+        $monthForm->get('of')->setData($of->getStrId());
 
         return array(
             'choose_form' => $form->createView(),
+            'monthForm'  => $monthForm->createView(),
             'participants' => $participants,
             'entities' => $entities,
             'module' => $module,
@@ -432,6 +438,49 @@ class SessionController extends Controller
             'of' => $of,
             'formateurs' => $formateurs,
         );
+    }
+
+    /**
+    * Imprimer les feuilles de présence via PDF
+    *
+    * @Route(
+    *   path="/stagiaire/list/print",
+    *   name="session_stagiaire_list_print"
+    * )
+    */
+    public function stagiaireListPrintAction(Request $request)
+    {
+        $form = $this->createForm(new MonthType());
+
+        $form->handleRequest($request);
+
+        $data       = $form->getData();
+        $date       = $data['date'];
+        $module     = $data['module'];
+        $modType    = $data['type'];
+        $of         = $data['of'];
+        $id         = $this->get('session')->get('structure');
+
+        $em             = $this->getDoctrine()->getManager();
+        $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
+
+/*        return $this->render('::Templates\emargement.html.twig', array(
+            'participants' => $participants,
+            'date'         => $date
+        ));*/
+
+
+        $html = $this->renderView('::Templates\emargement.html.twig', array(
+            'participants'  => $participants,
+            'date'          => $date
+        ));
+
+        $response= new Response();
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape','page-size' => 'A4')));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-disposition', 'filename=emargement-'.$date->format('mY').'.pdf');
+
+        return $response;
     }
 
     /**

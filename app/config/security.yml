@@ -29,8 +29,5 @@ security:
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/users/, role: ROLE_ADMIN }
         - { path: ^/structure/, role: ROLE_ADMIN }
-        - { path: ^/dashboard/, role: ROLE_USER }
-        - { path: ^/devis/, role: ROLE_USER }
-        - { path: ^/stagiaire/, role: ROLE_USER }
-        - { path: ^/soustraitant/, role: ROLE_USER }
+        - { path: ^/, role: ROLE_USER }
 

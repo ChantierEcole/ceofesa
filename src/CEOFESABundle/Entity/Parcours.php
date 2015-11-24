@@ -78,7 +78,12 @@ class Parcours
      */
     private $prcImpdevis;
 
-
+    /**
+     * @var \Presence
+     *
+     * @ORM\OneToMany(targetEntity="Presence", mappedBy="pscParcours")
+     */
+    private $prcPresence;
 
     /**
      * Get prcId
@@ -226,6 +231,22 @@ class Parcours
     public function getPrcImpdevis()
     {
         return $this->prcImpdevis;
+    }
+
+    /**
+     * @return \Presence
+     */
+    public function getPrcPresence()
+    {
+        return $this->prcPresence;
+    }
+
+    /**
+     * @param \Presence $prcPresence
+     */
+    public function setPrcPresence($prcPresence)
+    {
+        $this->prcPresence = $prcPresence;
     }
 
     /**
