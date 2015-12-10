@@ -113,7 +113,6 @@ class SessionType extends AbstractType
         ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form = $event->getForm();
             $session = $event->getData();
 
             if($session === null || $session->getSesId() === null)
@@ -123,8 +122,6 @@ class SessionType extends AbstractType
             if ($session instanceof Session) {
                 $hdebut = $session->getSesHeuredebut();
                 $session->setSesHeuredebut($hdebut.':00');
-                echo $session->getSesOf();
-                echo $session->getSesMtype()->getMtyType();
                 $hfin = $session->getSesHeurefin();
                 $session->setSesHeurefin($hfin.':00');
             }

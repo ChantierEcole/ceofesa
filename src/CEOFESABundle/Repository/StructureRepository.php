@@ -57,13 +57,13 @@ class StructureRepository extends EntityRepository
         $qb2 = $this->_em->createQueryBuilder();
         $qb2->select('IDENTITY(rl.relSoustraitant)')
             ->from('CEOFESABundle\Entity\Relation', 'rl')
-            ->where('rl.relStructure = :test')
+            ->where('rl.relStructure = :id')
         ;
 
         $qb = $this->createQueryBuilder('st');
         $qb ->where('st.strType = 3')
             ->andWhere($qb->expr()->in('st.strId', $qb2->getDQL()))
-            ->setParameter('test',$id)
+            ->setParameter('id', $id)
             ->orderBy('st.strNom','ASC')
         ;
 

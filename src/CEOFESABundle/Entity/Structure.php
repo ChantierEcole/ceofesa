@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use CEOFESABundle\Validator\Constraints as CeofesaAssert;
@@ -16,6 +17,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Structure
 {
+    const TYPE_STRUCTURE        = 1;
+    const TYPE_OF_PRINCIPAL     = 2;
+    const TYPE_OF_SOUSTRAITANT  = 3;
+
     /**
      * @var integer
      *
@@ -214,7 +219,20 @@ class Structure
      */
     private $strFonction;
 
+    /**
+     * @var \Relation
+     *
+     * @ORM\OneToMany(targetEntity="Relation", mappedBy="relStructure")
+     */
+    private $strRelations;
 
+    /**
+     * Structure constructor.
+     */
+    public function __construct()
+    {
+        $this->strRelations = new ArrayCollection();
+    }
 
     /**
      * Get strId
@@ -799,6 +817,22 @@ class Structure
     public function getStrType()
     {
         return $this->strType;
+    }
+
+    /**
+     * @return \Relation
+     */
+    public function getStrRelations()
+    {
+        return $this->strRelations;
+    }
+
+    /**
+     * @param \Relation $strRelations
+     */
+    public function setStrRelations($strRelations)
+    {
+        $this->strRelations = $strRelations;
     }
 
     public function __toString()

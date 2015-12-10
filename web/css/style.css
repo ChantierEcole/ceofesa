@@ -239,3 +239,7 @@
 .ajout-participant button {
     width: 100%;
 }
+
+.ta-right {
+    text-align: right;
+}
