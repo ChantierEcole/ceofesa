@@ -41,6 +41,7 @@ role :db,         domain, :primary => true
 before "symfony:assetic:dump", "symfony:assets:update_version"
 after "deploy", "deploy:cleanup"
 after "deploy", "symfony:clear_apc"
+after "deploy", "symfony:doctrine:migrations:migrate"
 after "deploy:rollback:cleanup", "symfony:clear_apc"
 
 # Be more verbose by uncommenting the following line
