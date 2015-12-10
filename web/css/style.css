@@ -178,15 +178,12 @@
 }
 
 .list-session{}
-    .list-session th {
+    .list-session th, .list-session td {
         text-align: center;
     }
     .list-session .table-responsive {
         max-height: 600px;
         overflow: auto;
-    }
-    .list-session > table > tbody > tr > td:first-child {
-        padding: 0;
     }
 
 .detail-session {}

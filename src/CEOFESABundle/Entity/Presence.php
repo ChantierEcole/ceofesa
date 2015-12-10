@@ -55,7 +55,12 @@ class Presence
      */
     private $pscFacture;
 
-
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="psc_Validate", type="boolean", nullable=false, options={"default" = 0})
+     */
+    private $pscValidate;
 
     /**
      * Get pscId
@@ -157,5 +162,21 @@ class Presence
     public function getPscSession()
     {
         return $this->pscSession;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPscValidate()
+    {
+        return $this->pscValidate;
+    }
+
+    /**
+     * @param boolean $sesValidate
+     */
+    public function setPscValidate($pscValidate)
+    {
+        $this->pscValidate = $pscValidate;
     }
 }

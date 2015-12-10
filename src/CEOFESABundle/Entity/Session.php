@@ -109,8 +109,6 @@ class Session
      */
     private $sesFtype = '0';
 
-
-
     /**
      * Get sesId
      *

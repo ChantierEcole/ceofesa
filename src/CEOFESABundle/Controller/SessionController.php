@@ -121,9 +121,16 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
 
+        $monthForm = $this->createForm(new MonthType());
+
+        $monthForm->get('module')->setData($module->getModId());
+        $monthForm->get('type')->setData($modType->getMtyId());
+        $monthForm->get('of')->setData($of->getStrId());
+
 		return array(
 		    'choose_form' => $form->createView(),
             'participant_form' => $form2->createView(),
+            'monthForm' => $monthForm->createView(),
 		    'entities' => $entities,
 		    'module' => $module,
 		    'type' => $modType,
@@ -178,9 +185,6 @@ class SessionController extends Controller
      */
     private function createChooseForm($actionURL)
     {
-        $id = $this->get('session')->get('structure');
-        $em = $this->getDoctrine()->getManager();
-
         $data = array();
         $formBuilder = $this->createFormBuilder($data)
             ->add('module','entity',array(
@@ -240,9 +244,6 @@ class SessionController extends Controller
     private function createParticipantForm($of,$module,$moduletype)
     {
         $id = $this->get('session')->get('structure');
-        $em = $this->getDoctrine()->getManager();
-        //$parcours = $em->getRepository('CEOFESABundle:Parcours')->getParcours($id,$of,$module,$moduletype)->getQuery()->getResult();
-
 
         $data = array();
         $formBuilder = $this->createFormBuilder($data)
@@ -599,9 +600,15 @@ class SessionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $participants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($sessionId)->getQuery()->getResult();
         $reponse = array();
+
+        $right = $this->get('security.context')->isGranted('ROLE_ADMIN');
+
         foreach ($participants as $participant) {
             $p = array();
             $p['id'] = $participant->getPscId();
+            $p['validate'] = $participant->isPscValidate();
+            $p['right'] = $right;
+
             $stagiaire = $participant->getPscParcours()->getPrcDcont()->getCntTiers();
             $p['stagiaire'] = $stagiaire->getTrsNom().' '.$stagiaire->getTrsPrenom();
             $p['nbheures'] = $participant->getPscDuree();
@@ -745,17 +752,49 @@ class SessionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $presences = $em->getRepository('CEOFESABundle:Presence')->getPresencesParcours($parcoursId)->getQuery()->getResult();
         $reponse = array();
+
+        $right = $this->get('security.context')->isGranted('ROLE_ADMIN');
+
         foreach ($presences as $presence) {
             $p = array();
             $session = $presence->getPscSession();
-            $p['id'] = $session->getSesId();
-            $p['date']= $session->getSesDate()->format('d-m-Y');
-            $p['type']= $session->getSesStype()->getStyType();
-            $p['duree']= $presence->getPscDuree();
-            $reponse[] = $p;
+            $p['id']            = $session->getSesId();
+            $p['presenceId']    = $presence->getPscId();
+            $p['date']          = $session->getSesDate()->format('d-m-Y');
+            $p['type']          = $session->getSesStype()->getStyType();
+            $p['validate']      = $presence->isPscValidate();
+            $p['duree']         = $presence->getPscDuree();
+            $p['right']         = $right;
+            $reponse[]          = $p;
         }
 
         return new JsonResponse($reponse);
+    }
+
+
+    /**
+     * Traitement backoffice de l'AJAX
+     * -> validation d'une presence par un admin
+     *
+     * @Route("/validate-presence-ajax", name="validate_presence_ajax")
+     *
+     */
+    public function validatePresenceAjaxAction(Request $request)
+    {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $presenceId = $request->request->get('id');
+
+            $em = $this->getDoctrine()->getManager();
+            $presence = $em->getRepository('CEOFESABundle:Presence')->find($presenceId);
+
+            $presence->setPscValidate(true);
+            $em->flush();
+
+            return new Response("OK", 200);
+        }
+        else {
+            return new Response("Access denied", 403);
+        }
     }
 
     /**

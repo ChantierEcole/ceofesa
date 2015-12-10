@@ -40,6 +40,9 @@
 	</div>	
 </div>
 {% if entities is defined and of is defined and module is defined and type is defined %}
+
+	{% include '::Session/print_form.html.twig' with {'route' : 'session_stagiaire_list_print'} %}
+
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-visible margin-bottom-none">
@@ -54,7 +57,7 @@
 					{% else %}
 						<div class="col-md-4">
 							<div class="table-responsive list-session">
-								<table class="table">
+								<table class="table js-data-table">
 									<thead>
 										<tr>
 											<th style="width: 15%">ID</th>
@@ -65,38 +68,29 @@
 										</tr>
 									</thead>
 									<tbody>
+										{% for entity in entities %}
 										<tr>
-											<td colspan="5">
-												<div class="table-responsive">
-													<table class="table table-striped table-bordered table-hover">
-														<tbody>
-															{% for entity in entities %}
-															<tr>
-																<td>{{ entity.sesId }}</td>
-																<td>{{ entity.sesDate|date('d-m-Y') }}</td>
-																<td>{{ entity.sesStype.styType }}</td>
-																<td>
-																	{% if entity.sesDuree != "0.00" %}
-																		{{ entity.sesDuree }}
-																	{% else %}
-																		-
-																	{% endif %}
-																</td>
-																<td class="text-center">
-					                                    			<button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="{{entity.sesId|default('')}}">
-					                                        			<i class="fa fa-eye"></i> Détails
-					                                    			</button>
-						                                		</td>
-															</tr>
-															{% endfor %}
-														</tbody>
-													</table>
-												</div>
+											<td>{{ entity.sesId }}</td>
+											<td>{{ entity.sesDate|date('d-m-Y') }}</td>
+											<td>{{ entity.sesStype.styType }}</td>
+											<td>
+												{% if entity.sesDuree != "0.00" %}
+													{{ entity.sesDuree }}
+												{% else %}
+													-
+												{% endif %}
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="{{entity.sesId|default('')}}">
+													<i class="fa fa-eye"></i> Détails
+												</button>
 											</td>
 										</tr>
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
+							<br />
 							<a href="{{ path('session_create', { 'module': module.modId,'type': type.mtyId,'of': of.strId }) }}">
 								<button type="button" class="btn btn-primary btn-lg btn-block btn-square"> Ajouter une session </button>
 							</a>
@@ -107,27 +101,27 @@
 								<div class="row detail-session">
 									<div class="col-md-4">
 										<label>Date :</label>
-										<input disabled class="dateSession"></input>
+										<input disabled class="dateSession" />
 									</div>
 									<div class="col-md-4">
 										<label>Heure de début :</label>
-										<input disabled class="HDebutSession"></input>
+										<input disabled class="HDebutSession" />
 									</div>
 									<div class="col-md-4">
 										<label>Heure de fin :</label>
-										<input disabled class="HFinSession"></input>
+										<input disabled class="HFinSession" />
 									</div>
 									<div class="col-md-4">
 										<label>Durée :</label>
-										<input disabled class="DureeSession"></input>
+										<input disabled class="DureeSession" />
 									</div>
 									<div class="col-md-4">
 										<label>Séance :</label>
-										<input disabled class="TypeSeance"></input>
+										<input disabled class="TypeSeance" />
 									</div>
 									<div class="col-md-4">
 										<label>Type de Formation :</label>
-										<input disabled class="TypeFormation"></input>
+										<input disabled class="TypeFormation" />
 									</div>
 									<div class="col-md-12">
 										<div class="modifDetailBtn"></div>
@@ -159,6 +153,7 @@
 											<th>Stagiaire</th>
 											<th>Nombre d'heures effectuées</th>
 											<th>DAF</th>
+											<th>Validé</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
@@ -256,7 +251,6 @@ $(document).ready(function() {
             	$(".btn-add-formateur").data( "sessionid", id );
             	$(".btn-add-participant").attr( "data-sessionid", id );
             	$(".btn-add-participant").data( "sessionid", id );
-                /*alert(JSON.stringify(data));*/
             },
             error: function (xhr, ajaxOptions, thrownError) {
 				alert(xhr.responseText); //Ce code affichera le message d'erreur.
@@ -300,12 +294,23 @@ $(document).ready(function() {
             	$("tbody.listParticipant").html("");
             	$.each(data, function(index){
             		var id = data[index].id;
-            		$("tbody.listParticipant").append('<tr>');
-            		$("tbody.listParticipant").append('<td>'+data[index].stagiaire+'</td>');
-            		$("tbody.listParticipant").append('<td>'+data[index].nbheures+'</td>');
-            		$("tbody.listParticipant").append('<td>'+data[index].daf+'</td>');
-            		$("tbody.listParticipant").append('<td><button type="button" class="btn btn-red3 btn-xs btn-delete-participant" data-presenceid="'+id+'">Supprimer</button></td>');
-            		$("tbody.listParticipant").append('</tr>');
+
+					var vTab = $("tbody.listParticipant");
+					vTab.append('<tr>');
+
+					var tr = $("tbody.listParticipant tr:last-child");
+					tr.append('<td>'+data[index].stagiaire+'</td>');
+					tr.append('<td>'+data[index].nbheures+'</td>');
+					tr.append('<td>'+data[index].daf+'</td>');
+					tr.append('<td class="js-validate">'+(data[index].validate ? 'Oui' : 'Non') +'</td>');
+
+					if (data[index].validate == false && data[index].right == true) {
+						tr.append('<td><button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="' + data[index].id + '"><i class="fa fa-check"></i> Valider</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+					} else if (data[index].validate == false) {
+						tr.append('<td><button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+					} else {
+						tr.append('<td></td>');
+					}
             	});
             	var dureeSession = $("input.DureeSession").val().split(".");
             	$("input#form_nbHeures_hour").val(dureeSession[0]);
@@ -445,4 +450,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
+{% include '::Session/session_js.html.twig' %}
+
 {% endblock %}

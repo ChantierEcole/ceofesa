@@ -90,5 +90,8 @@ jQuery(document).ready(function() {
 		"language": {
 			"url": '//cdn.datatables.net/plug-ins/1.10.10/i18n/French.json'
 		}
-	} );
+	});
+
+	/* INIT CHOSEN */
+	$('.js-chosen').chosen();
 });

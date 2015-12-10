@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible margin-bottom-none">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-print"></span>Imprimer les feuilles d'émargement de ce module pour tous les stagiaires</div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    {{ form_start(monthForm, {'action' : path(route)}) }}
+
+                    <div class="col-sm-1 col-sm-offset-2">
+                        {{ form_label(monthForm.date) }}
+                    </div>
+                    {{ form_widget(monthForm.date.day, { 'attr': { 'style': 'display:none' }} )  }}
+                    <div class="col-sm-2">
+                        {{ form_widget(monthForm.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_widget(monthForm.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+                    </div>
+
+                    <div class="col-sm-3">
+                        <input type="submit" value="Valider" class="btn btn-primary" />
+                    </div>
+
+                    {{ form_end(monthForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
