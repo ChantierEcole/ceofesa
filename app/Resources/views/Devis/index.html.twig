@@ -16,7 +16,7 @@
                     <thead>
                         <tr>
                             <th>Année</th>
-                            <th>Numero</th>
+                            <th>Numéro</th>
                             <th>Date du devis</th>
                             <th>Date de debut</th>
                             <th>Date de fin</th>
@@ -29,9 +29,9 @@
                         <tr>
                             <td>{{ devi.devAnnee }}</td>
                             <td>{{ devi.devNumero }}</td>
-                            <td>{% if devi.devDatedevis %}{{ devi.devDatedevis|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if devi.devDatedebut %}{{ devi.devDatedebut|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if devi.devDatefin %}{{ devi.devDatefin|date('Y-m-d') }}{% endif %}</td>
+                            <td>{% if devi.devDatedevis %}{{ devi.devDatedevis|date('d/m/Y') }}{% endif %}</td>
+                            <td>{% if devi.devDatedebut %}{{ devi.devDatedebut|date('d/m/Y') }}{% endif %}</td>
+                            <td>{% if devi.devDatefin %}{{ devi.devDatefin|date('d/m/Y') }}{% endif %}</td>
                             <td>{{ devi.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': devi.devId }) }}">
@@ -46,6 +46,13 @@
                                         </button>
                                     </a>
                                 {% else %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('new_daf', { 'id': devi.devId }) }}">
+                                        <button type="button" class="btn btn-blue btn-xs">
+                                            <i class="fa fa-folder"></i> Créer une DAF
+                                        </button>
+                                    </a>
+                                    {% endif %}
                                     <a href="{{ path('devis_print', { 'id': devi.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-print"></i> Imprimer Devis

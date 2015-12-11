@@ -7,7 +7,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 use Doctrine\ORM\EntityManager;
 
-class ParcoursValidator extends ConstraintValidator
+class DParcoursValidator extends ConstraintValidator
 {
 
     public function __construct($maxHeures,EntityManager $entityManager){
@@ -26,10 +26,10 @@ class ParcoursValidator extends ConstraintValidator
         foreach ($value->toArray() as $parcour)
         {
             // Récupération des données pour l'unicité
-            $data[0] = $parcour->getPrcType()->getMtyType();
-            $data[1] = $parcour->getPrcModule()->getModCode();
-            $data[2] = $parcour->getPrcTiers()->getTrsNomPrenom();
-            $data[3] = $parcour->getPrcStructure()->getStrId();
+            $data[0] = $parcour->getDprType()->getMtyType();
+            $data[1] = $parcour->getDprModule()->getModCode();
+            $data[2] = $parcour->getDprTiers()->getTrsNomPrenom();
+            $data[3] = $parcour->getDprStructure()->getStrId();
 
             // création d'une chaine de données pour l'entrée
             $result = implode(",", $data);
@@ -52,18 +52,18 @@ class ParcoursValidator extends ConstraintValidator
             }
 
             // Ajout du nombe d'heure au stagiaire (total Heures/Stagiaire)
-            $stagiaires[$data[2]] += $parcour->getPrcNombreheure();
+            $stagiaires[$data[2]] += $parcour->getDprNombreheure();
 
             ///
 
             if($data[0] == "EXTERNE")
             {
-                $idModule = $parcour->getPrcModule()->getModId();
-                $sousTraitant = $parcour->getPrcStructure()->getStrNom();
+                $idModule = $parcour->getDprModule()->getModId();
+                $sousTraitant = $parcour->getDprStructure()->getStrNom();
 
-                $idStructure = $parcour->getPrcDevis()->getDevStructure();
-                $idOF = $parcour->getPrcDevis()->getDevOf();
-                $idSousTraitant = $parcour->getPrcStructure()->getStrId();
+                $idStructure = $parcour->getDprDevis()->getDevStructure();
+                $idOF = $parcour->getDprDevis()->getDevOf();
+                $idSousTraitant = $parcour->getDprStructure()->getStrId();
 
                 //On vérifie si la relation OF/Structure/Sous-traitant existe bien et on prend son ID
                 $relation = $this->em->getRepository('CEOFESABundle:Relation')->getRelation($idStructure,$idSousTraitant,$idOF)->getQuery()->getOneOrNullResult();

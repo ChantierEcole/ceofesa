@@ -3,6 +3,8 @@
 namespace CEOFESABundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 
 /**
  * DCont
@@ -12,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DCont
 {
+    const DEFAULT_SORTIE_ID = 0;
+
     /**
      * @var integer
      *
@@ -24,7 +28,7 @@ class DCont
     /**
      * @var \DAF
      *
-     * @ORM\ManyToOne(targetEntity="DAF")
+     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="prcDcont")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cnt_DAF", referencedColumnName="daf_ID", nullable=false)
      * })
@@ -58,7 +62,20 @@ class DCont
      */
     private $cntMotifsortie;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcDCont", cascade={"persist"}, orphanRemoval=true)
+     * @Assert\Valid
+     * @CeofesaAssert\Parcours
+     */
+    protected $cntParcours;
 
+    /**
+     * DCont constructor.
+     */
+    public function __construct()
+    {
+        $this->cntMotifsortie = 0;
+    }
 
     /**
      * Get cntId
@@ -160,5 +177,39 @@ class DCont
     public function getCntMotifsortie()
     {
         return $this->cntMotifsortie;
+    }
+
+    /**
+     * Add cntParcours
+     *
+     * @param \CEOFESABundle\Entity\Parcours $cntParcours
+     * @return DCont
+     */
+    public function addCntParcour(\CEOFESABundle\Entity\Parcours $cntParcours)
+    {
+        $cntParcours->setPrcDcont($this);
+        $this->cntParcours[] = $cntParcours;
+
+        return $this;
+    }
+
+    /**
+     * Remove cntParcours
+     *
+     * @param \CEOFESABundle\Entity\Parcours $cntParcours
+     */
+    public function removeCntParcour(\CEOFESABundle\Entity\Parcours $cntParcours)
+    {
+        $this->cntParcours->removeElement($cntParcours);
+    }
+
+    /**
+     * Get cntParcours
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCntParcours()
+    {
+        return $this->cntParcours;
     }
 }

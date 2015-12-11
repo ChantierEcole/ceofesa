@@ -1,0 +1,51 @@
+{% extends '::layout.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-list"></span> Liste des Daf </div>
+            </div>
+            <div class="panel-body">
+                <div class="clearfix"></div>
+
+                <table class="table table-striped table-bordered table-hover dataTable records_list" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>Numero</th>
+                            <th>Date de debut</th>
+                            <th>Date de fin</th>
+                            <th>Nombre d'heures</th>
+                            <th>Nombre de salariés</th>
+                            <th>Montant (HT)</th>
+                            <th>Taux horaire</th>
+                            <th>OF</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for daf in dafs %}
+                        <tr>
+                            <td>{{ daf.dafDossier }}</td>
+                            <td>{% if daf.dafDatedebut %}{{ daf.dafDatedebut|date('d/m/Y') }}{% endif %}</td>
+                            <td>{% if daf.dafDatefin %}{{ daf.dafDatefin|date('d/m/Y') }}{% endif %}</td>
+                            <td>{{ daf.dafNbheure }}</td>
+                            <td>{{ daf.dafNbsalarie }}</td>
+                            <td>{{ daf.dafMontant }}</td>
+                            <td>{{  daf.dafTauxhoraire }}</td>
+                            <td>{{  daf.dafOf.strNom }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

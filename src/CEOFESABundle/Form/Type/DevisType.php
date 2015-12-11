@@ -49,8 +49,7 @@ class DevisType extends AbstractType
             ))
             ->add('devTauxhoraire','text',array(
                 'data' => $tarif,
-                'attr' => array('class' => 'hide'),
-                'label' => false
+                'label' => "Taux horaire (€)"
             ))
             ->add('devStructure','entity', array(
                 'class' => 'CEOFESABundle\Entity\Structure',
@@ -77,28 +76,12 @@ class DevisType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => 'Stagiaires',
+                'attr' => array('class' => 'collection-group')
             ))
             ->add('enregistrer','submit', array(
                 'attr' => array('class' => 'btn-primary')
             ))
         ;
-
-        /*$builder
-            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-
-                $data = $event->getData();
-                $form = $event->getForm();
-
-                if (!$data || !$data->getId()) {
-                    $form->add('devNumero','text',array(
-                            'data' => $numDevis,
-                            'attr' => array('class' => 'hide'),
-                            'label' => false
-                    ));
-                }
-
-            })
-        ;*/
     }
     
     /**

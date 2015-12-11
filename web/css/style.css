@@ -82,67 +82,77 @@
         width: 100%;
     }
 
-#ceofesabundle_devis_devParcours {
+.collection-group .form-group {
+    position: relative;
+    width: auto;
+    border: 1px solid;
+    margin-top: 10px;
 }
-    #ceofesabundle_devis_devParcours .form-group {
-        position: relative;
-        width: auto;
-        border: 1px solid;
-        margin-top: 10px;
-    }
-        #ceofesabundle_devis_devParcours .form-group .form-group {
-            border: none;
-            margin: 0px;
-            display: inline-block;
-            margin-bottom: 2px;
-            height: auto;
-        }
-            #ceofesabundle_devis_devParcours .form-group .form-group:first-child {
-                width: 0%;
-            }
-            #ceofesabundle_devis_devParcours .form-group .form-group:last-child .col-sm-10 {
-                width: 300px;
-            }
 
-        #ceofesabundle_devis_devParcours .form-group .col-sm-10 {
-            width: 100%;
-            padding: 10px;
-            text-align: center;
-        }
+.collection-group .form-group .form-group {
+    border: none;
+    margin: 0px;
+    display: inline-block;
+    margin-bottom: 2px;
+    height: auto;
+    display: inline-block;
+}
 
-            #ceofesabundle_devis_devParcours .form-group .form-group .col-sm-10 {
-                padding-top: 0px;
-                border: none;
-            }
-                #ceofesabundle_devis_devParcours .form-group .form-group .col-sm-10 input[type=text] {
-                    width: 80px;
-                }
+.collection-group .form-group .col-sm-10 {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
 
+.collection-group .form-group .form-group .col-sm-10 {
+    padding-top: 0px;
+    border: none;
+}
 
-        #ceofesabundle_devis_devParcours .form-group .col-sm-2 {
-            padding: 7px 10px;
-            background: #555;
-            color: #fff;
-        }
+.collection-group .form-group .form-group .col-sm-10 input[type=text] {
+    width: 80px;
+}
 
-            #ceofesabundle_devis_devParcours .form-group .form-group .col-sm-2 {
-                background: none;
-                padding: 0;
-                color: #bbb;
-                position: absolute;
-                bottom: -10px;
-                left: 0px;
-                text-align: center;
-            }
+.collection-group .form-group .col-sm-2 {
+    padding: 7px 10px;
+    background: #555;
+    color: #fff;
+}
 
-        #ceofesabundle_devis_devParcours .form-group .btn {
-            height: 5px;
-            padding: 10px;
-            line-height: 1px;
-            position: absolute;
-            right: 16px;
-            top: 3px;
-        }
+.collection-group .form-group .form-group .col-sm-2 {
+    background: none;
+    padding: 0;
+    color: #bbb;
+    position: absolute;
+    bottom: -10px;
+    left: 0px;
+    text-align: center;
+}
+
+.collection-group .form-group .btn {
+    height: 5px;
+    padding: 10px;
+    line-height: 1px;
+    position: absolute;
+    right: 16px;
+    top: 3px;
+}
+
+.collection-group .form-group .form-group .col-sm-2.stagiaire-label {
+    bottom: 0;
+    position: relative;
+    padding: 7px 10px;
+}
+
+.collection-group .form-group .parcours-widget > .form-group {
+    display: block;
+}
+
+.collection-group > .form-group > div > div > .form-group:first-child {
+    display: block;
+    width: 20%;
+    margin: 0 auto;
+}
 
 .form-horizontal > .form-group {
     margin-bottom: 0px;

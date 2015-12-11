@@ -11,9 +11,9 @@ set :keep_releases, 5
 
 set :scm,         :git
 set :scm_verbose, true
-set :repository,  "git@github.com:ChantierEcole/ceofesa.git"
+set :repository,  "file:///var/www/ceofesa"
 
-set :deploy_via, :remote_cache
+set :deploy_via, :copy
 set :deploy_to,  "/var/www/ceofesa/preprod"
 
 set :use_sudo,         false

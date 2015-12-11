@@ -2,13 +2,16 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 
 /**
  * DAF
  *
  * @ORM\Table(name="tb_DAF", indexes={@ORM\Index(name="daf_Dossier", columns={"daf_Dossier"}), @ORM\Index(name="daf_DDebut", columns={"daf_DateDebut"})})
- * @ORM\Entity
+ * @ORM\Entity()
  */
 class DAF
 {
@@ -90,7 +93,20 @@ class DAF
      */
     private $dafOf;
 
+    /**
+     * @var \DCont
+     *
+     * @ORM\OneToMany(targetEntity="DCont", mappedBy="cntDaf", cascade={"persist"})
+     */
+    private $dafDcont;
 
+    /**
+     * DAF constructor.
+     */
+    public function __construct()
+    {
+        $this->dafDcont = new ArrayCollection();
+    }
 
     /**
      * Get dafId
@@ -308,4 +324,125 @@ class DAF
     {
         return $this->dafOf;
     }
+
+    /**
+     * @return \DCont
+     */
+    public function getDafDcont()
+    {
+        return $this->dafDcont;
+    }
+
+    /**
+     * @param DCont $dafDcont
+     * @return DAF
+     */
+    public function addDafDcont(DCont $dafDcont)
+    {
+        $this->dafDcont[] = $dafDcont;
+        $dafDcont->setCntDaf($this);
+
+        return $this;
+    }
+
+    /**
+     * @param DCont $dafDcont
+     * @return $this
+     */
+    public function removeDafDcont(DCont $dafDcont)
+    {
+        $this->dafDcont->removeElement($dafDcont);
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function calcNbSalarie()
+    {
+        $tab = array();
+
+        foreach ($this->getDafDcont() as $dcont) {
+            $tab[$dcont->getCntTiers()->getTrsId()] = true;
+        }
+
+        return count($tab);
+    }
+
+    /**
+     * @return int
+     */
+    public function calcNbheure()
+    {
+        $ret = 0;
+
+        $dcont = $this->getDafDcont()->first();
+
+        foreach ($dcont->getCntParcours() as $parcours) {
+            $ret += $parcours->getPrcNombreheure();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @param Tiers $tiers
+     * @return DCont|null
+     */
+    public function getTiersDCont(Tiers $tiers)
+    {
+        $DCont = null;
+
+        if ($this->getDafDcont() != null)  {
+            foreach ($this->getDafDcont() as $dcont) {
+                if ($dcont->getCntTiers() and $dcont->getCntTiers()->getTrsId() == $tiers->getTrsId()) {
+                    $DCont = $dcont;
+                }
+            }
+        }
+
+        if ($DCont == null) {
+            $DCont = new DCont();
+            $this->addDafDcont($DCont);
+        }
+
+        $DCont->setCntTiers($tiers);
+
+        return $DCont;
+    }
+
+    /**
+     * @return float
+     */
+    public function calcMontant()
+    {
+        return $this->getDafNbHeure() * $this->getDafTauxhoraire() * $this->getDafNbsalarie();
+    }
+
+    /**
+     * @param Devis $devis
+     */
+    public function createFromDevis(Devis $devis)
+    {
+        $this->setDafDatedebut($devis->getDevDatedebut());
+        $this->setDafDatefin($devis->getDevDatefin());
+        $this->setDafOf($devis->getDevOf());
+        $this->setDafStructure($devis->getDevStructure());
+
+        foreach ($devis->getDevParcours() as $dParcour) {
+            $DCont = $this->getTiersDCont($dParcour->getDprTiers());
+
+            $parcours = new Parcours();
+            $parcours->setPrcModule($dParcour->getDprModule());
+            $parcours->setPrcNombreheure($dParcour->getDprNombreheure());
+            $parcours->setPrcStructure($dParcour->getDprStructure());
+            $parcours->setPrcType($dParcour->getDprType());
+            $parcours->setPrcDcont($DCont);
+
+            $DCont->addCntParcour($parcours);
+        }
+
+        return ;
+    }
+
 }

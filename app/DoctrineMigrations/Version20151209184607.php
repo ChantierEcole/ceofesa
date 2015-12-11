@@ -19,6 +19,7 @@ class Version20151209184607 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE tb_Presence ADD psc_Validate TINYINT(1) DEFAULT \'0\' NOT NULL');
+        $this->addSql('UPDATE tb_Presence set psc_Validate = true where psc_Facture = true');
         $this->addSql('DROP TRIGGER trg_bef_upd_tb_Presence');
     }
 

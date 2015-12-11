@@ -1,62 +1,49 @@
-{# Vue pour l'édition d'un devis #}
-
 {% extends '::layout.html.twig' %}
-{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
-
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block body %}
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-visible">
             <div class="panel-heading">
-                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-download"></span>Générer un devis</div>
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-download"></span>Générer une DAF</div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body padding-bottom-none">
 
-                {{ form_start(edit_form) }}
-                    {{ form_errors(edit_form) }}
+            {{ form_start(form) }}
+                    {{ form_errors(form) }}
 
                     <div class="col-md-6">
-                        {{ form_row(edit_form.devDatedebut) }}
+                        {{ form_row(form.dafDossier) }}
                     </div>
                     <div class="col-md-6">
-                        {{ form_row(edit_form.devDatefin) }}
+                        {{ form_row(form.dafTauxhoraire) }}
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form_label(edit_form.devTauxhoraire) }}
-                            {{ form_errors(edit_form.devTauxhoraire) }}
-                            <div class="col-sm-2">
-                                {{ form_widget(edit_form.devTauxhoraire) }}
-                            </div>
-                        </div>
+                        {{ form_row(form.dafDatedebut) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dafDatefin) }}
                     </div>
                     <div class="col-md-12 parcours-forms">
-                      <div class="patate">{{ form_row(edit_form.devParcours) }}</div>
-                        
+                        {{ form_row(form.dafDcont) }}
                     </div>
                     <div class="col-md-12">
                       <a class="pull-left" href="{{ path('stagiaire_create') }}">
-                        <button type="button" class="btn btn-light2 spacing-button">
+                        <button type="button" class="btn btn-light2 modif-alert">
                             Créer un nouveau stagiaire
                         </button>
                       </a>
-                      <a class="pull-left" href="{{ path('devis') }}">
-                        <button type="button" class="btn btn-light4">
-                            Retour à la liste
-                        </button>
-                      </a>
-                      <div class="pull-right">
-                        {{ form_row(edit_form.enregistrer) }}
+                      <div style="float: right;">
+                        {{ form_row(form.enregistrer) }}
                       </div>
                     </div>
-                {{ form_end(edit_form) }}
-                
+                {{ form_end(form) }}
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
+        
 {% block javascripts %}
 <script type="text/javascript">
 
@@ -64,11 +51,11 @@
 
     // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
 
-    var $container = $('div#ceofesabundle_devis_devParcours');
+    var $container = $('div#ceofesabundle_daf_dafDcont');
 
     // On ajoute un lien pour ajouter une nouvelle catégorie
 
-    var $addLink = $('<a href="#" id="add_category" class="btn btn-dark2">Ajouter un Parcours de Stagiaire</a>');
+    var $addLink = $('<a href="#" id="add_category" class="btn btn-dark2">Ajouter un Stagiaire</a>');
 
     $container.after($addLink);
 
@@ -91,7 +78,7 @@
     $container.children('.form-group').each(function() {
       var data = $(this).children('label').text();
       data =  parseInt(data)+1;
-      $(this).children('label').text("Parcours n° "+data);
+      $(this).children('label').text("Stagiaire n° "+data);
     });
     
     // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un
@@ -161,13 +148,13 @@
 
     // Modification dynamique du champ "OF" du formulaire en fonction du champ "Type"
     var url             = "{{ path('devis_ajax') }}";
-    var typeSelect     = 'select[id^="ceofesabundle_devis_devParcours_"][id$="_dprType"]';
+    var typeSelect     = 'select[id^="ceofesabundle_daf_dafDcont"][id$="_dprType"]';
 
-    $('#ceofesabundle_devis_devParcours').on('change', typeSelect, function(){
+    $('#ceofesabundle_daf_dafDcont').on('change', typeSelect, function(){
 
       var type_id = $(this).val();
       var select_id = $(this).attr("id").split("_")[3];
-      var ofElement = 'select[id="ceofesabundle_devis_devParcours_'+select_id+'_dprStructure"]';
+      var ofElement = 'select[id="ceofesabundle_daf_dafDcont'+select_id+'_dprStructure"]';
 
       $.ajax({  type: "POST",
         url: url,
@@ -176,10 +163,10 @@
         timeout: 30000,
         success: function (data) {
           console.log(data);          
-          //réinitialise la liste des joueurs
+          //réinitialise la liste des sous-traitants
           $(ofElement).html('');
 
-          //met à jour la liste des joueurs
+          //met à jour la liste des sous-traitants
           $.each(data, function(index){
             var id      = data[index].id;
             var name    = data[index].nom;
@@ -192,6 +179,6 @@
       });
     });
   });
-</script>
 
+</script>
 {% endblock %}

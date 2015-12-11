@@ -90,7 +90,7 @@ class Devis
     /**
     * @ORM\OneToMany(targetEntity="DParcours", mappedBy="dprDevis", cascade={"persist"}, orphanRemoval=true)
     * @Assert\Valid
-    * @CeofesaAssert\Parcours
+    * @CeofesaAssert\DParcours
     */
     protected $devParcours;
 
