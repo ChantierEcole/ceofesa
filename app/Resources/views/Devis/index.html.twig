@@ -12,7 +12,7 @@
             <div class="panel-body">
                 <div class="clearfix"></div>
 
-                <table class="table table-striped table-bordered table-hover dataTable records_list" id="datatable">
+                <table class="table table-striped table-bordered table-hover dataTable records_list js-data-table" id="datatable">
                     <thead>
                         <tr>
                             <th>Année</th>
@@ -29,9 +29,9 @@
                         <tr>
                             <td>{{ devi.devAnnee }}</td>
                             <td>{{ devi.devNumero }}</td>
-                            <td>{% if devi.devDatedevis %}{{ devi.devDatedevis|date('d/m/Y') }}{% endif %}</td>
-                            <td>{% if devi.devDatedebut %}{{ devi.devDatedebut|date('d/m/Y') }}{% endif %}</td>
-                            <td>{% if devi.devDatefin %}{{ devi.devDatefin|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{% if devi.devDatedevis %}{{ devi.devDatedevis|date('Y-m-d') }}{% endif %}">{% if devi.devDatedevis %}{{ devi.devDatedevis|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{% if devi.devDatedebut %}{{ devi.devDatedebut|date('Y-m-d') }}{% endif %}">{% if devi.devDatedebut %}{{ devi.devDatedebut|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{% if devi.devDatefin %}{{ devi.devDatefin|date('Y-m-d') }}{% endif %}">{% if devi.devDatefin %}{{ devi.devDatefin|date('d/m/Y') }}{% endif %}</td>
                             <td>{{ devi.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': devi.devId }) }}">

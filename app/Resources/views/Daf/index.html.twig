@@ -10,7 +10,7 @@
             <div class="panel-body">
                 <div class="clearfix"></div>
 
-                <table class="table table-striped table-bordered table-hover dataTable records_list" id="datatable">
+                <table class="table table-striped table-bordered table-hover dataTable records_list js-data-table" id="datatable">
                     <thead>
                         <tr>
                             <th>Numero</th>
@@ -28,14 +28,20 @@
                     {% for daf in dafs %}
                         <tr>
                             <td>{{ daf.dafDossier }}</td>
-                            <td>{% if daf.dafDatedebut %}{{ daf.dafDatedebut|date('d/m/Y') }}{% endif %}</td>
-                            <td>{% if daf.dafDatefin %}{{ daf.dafDatefin|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{% if daf.dafDatedebut %}{{ daf.dafDatedebut|date('Y-m-d') }}{% endif %}">{% if daf.dafDatedebut %}{{ daf.dafDatedebut|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{% if daf.dafDatefin %}{{ daf.dafDatefin|date('Y-m-d') }}{% endif %}">{% if daf.dafDatefin %}{{ daf.dafDatefin|date('d/m/Y') }}{% endif %}</td>
                             <td>{{ daf.dafNbheure }}</td>
                             <td>{{ daf.dafNbsalarie }}</td>
                             <td>{{ daf.dafMontant }}</td>
                             <td>{{  daf.dafTauxhoraire }}</td>
                             <td>{{  daf.dafOf.strNom }}</td>
-                            <td></td>
+                            <td>
+                                <a href="{{ path('daf_show', { 'id': daf.dafId }) }}">
+                                    <button type="button" class="btn btn-green3 btn-xs">
+                                        <i class="fa fa-eye"></i> Voir
+                                    </button>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

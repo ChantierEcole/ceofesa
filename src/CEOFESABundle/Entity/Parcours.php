@@ -32,7 +32,7 @@ class Parcours
     private $prcDcont;
 
     /**
-     * @var \ModuleT
+     * @var ModuleT
      *
      * @ORM\ManyToOne(targetEntity="ModuleT")
      * @ORM\JoinColumns({
@@ -42,7 +42,7 @@ class Parcours
     private $prcType;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
      * @ORM\ManyToOne(targetEntity="Structure")
      * @ORM\JoinColumns({
@@ -52,7 +52,7 @@ class Parcours
     private $prcStructure;
 
     /**
-     * @var \Module
+     * @var Module
      *
      * @ORM\ManyToOne(targetEntity="Module")
      * @ORM\JoinColumns({

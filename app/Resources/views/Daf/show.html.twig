@@ -1,0 +1,78 @@
+{% extends '::layout.html.twig' %}
+
+{% block body -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails de la DAF </div>
+            </div>
+            <div class="panel-body">
+                <table class="record_properties table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Structure</th>
+                            <td>{{ daf.dafStructure.strNom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro</th>
+                            <td>{{ daf.dafDossier }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Début</th>
+                            <td>{{ daf.dafDatedebut|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Fin</th>
+                            <td>{{ daf.dafDatefin|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre de stagiaires</th>
+                            <td>{{ daf.dafNbSalarie }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre d'heure total</th>
+                            <td>{{ daf.dafNbheure }}</td>
+                        </tr>
+                        <tr>
+                            <th>Taux Horaire</th>
+                            <td>{{ daf.dafTauxhoraire }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix Total</th>
+                            <td>{{ daf.dafMontant|number_format(2, ',', ' ')  }} €</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Parcours de stagiaire</h3>
+                <table class="table table-bordered table-condensed table-hover">
+                    <tr>
+                        <th>Stagiaire</th>
+                        <th>Module</th>
+                        <th>Nombre d'Heures</th>
+                        <th>Type</th>
+                        <th>OF</th>
+                    </tr>
+                    {% for dcont in daf.dafDCont %}
+                        {% for parcours in dcont.cntParcours %}
+                            <tr>
+                                <td>{{ dcont.cntTiers.trsNomPrenom }}</td>
+                                <td>{{ parcours.prcModule.modCode }}</td>
+                                <td>{{ parcours.prcNombreHeure }}</td>
+                                <td>{{ parcours.prcType.mtyType }}</td>
+                                <td>{{ parcours.prcStructure.strNom }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+                <br />
+                <a href="{{ path('daf') }}">
+                    <button type="button" class="btn btn-light4 spacing-button">
+                        Retour à la liste
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

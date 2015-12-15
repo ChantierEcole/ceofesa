@@ -101,4 +101,17 @@ class DafController extends Controller
         return $form;
     }
 
+    /**
+     * Affiche les détails d'une entité DAF
+     *
+     * @Route("/{id}", name="daf_show")
+     * @Method("GET")
+     * @Template("::Daf\show.html.twig")
+     */
+    public function showAction(DAF $daf)
+    {
+        return array(
+            'daf'   => $daf
+        );
+    }
 }

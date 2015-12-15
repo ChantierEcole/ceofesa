@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use CEOFESABundle\Validator\Constraints as CeofesaAssert;
@@ -28,7 +29,7 @@ class DCont
     /**
      * @var \DAF
      *
-     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="prcDcont")
+     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="dafDcont")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cnt_DAF", referencedColumnName="daf_ID", nullable=false)
      * })
@@ -63,7 +64,7 @@ class DCont
     private $cntMotifsortie;
 
     /**
-     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcDCont", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcDcont", cascade={"persist"}, orphanRemoval=true)
      * @Assert\Valid
      * @CeofesaAssert\Parcours
      */
@@ -74,7 +75,7 @@ class DCont
      */
     public function __construct()
     {
-        $this->cntMotifsortie = 0;
+        $this->cntParcours = new ArrayCollection();
     }
 
     /**
