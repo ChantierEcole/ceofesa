@@ -44,14 +44,22 @@ class DafController extends Controller
     /**
      * Creation d'une daf
      *
-     * @Route("/new/{id}", name="new_daf")
+     * @Route("/new/{id}", defaults={"id" = null}, name="new_daf")
      * @Template("::Daf\new.html.twig")
      */
-    public function newAction(Request $request, Devis $devis)
+    public function newAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $em     = $this->getDoctrine()->getManager();
+        $em          = $this->getDoctrine()->getManager();
+        $idStructure = $this->get('session')->get('structure');
+
+        if ($id) {
+            $devis = $em->getRepository('CEOFESABundle:Devis')->find($id);
+        } else {
+            $devis = new Devis();
+        }
+
         $form   = $this->createCreateForm($devis);
 
         $form->handleRequest($request);
@@ -64,6 +72,8 @@ class DafController extends Controller
                 $dCont->setCntMotifsortie($sortieT);
             }
 
+            $daf->setDafStructure($em->getReference('CEOFESABundle\Entity\Structure', $idStructure));
+            $daf->setDafOF($em->getRepository('CEOFESABundle:Structure')->getOfesa()->getQuery()->getOneOrNullResult());
             $daf->setDafNbsalarie($daf->calcNbSalarie());
             $daf->setDafNbheure($daf->calcNbheure());
             $daf->setDafMontant($daf->calcMontant());
@@ -78,6 +88,38 @@ class DafController extends Controller
             'form' => $form->createView()
         );
     }
+
+    /**
+     * Edition d'une daf
+     *
+     * @Route("/edit/{id}", name="edit_daf")
+     * @Template("::Daf\new.html.twig")
+     */
+    public function editAction(Request $request, DAF $daf)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $id = $this->get('session')->get('structure');
+
+        $form = $this->createForm(new DafType($id), $daf, array(
+            'action' => $this->generateUrl('edit_daf', array('id' => $daf->getDafId())),
+            'method' => 'POST',
+        ));
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($daf);
+            $em->flush();
+
+            return $this->redirectToRoute('daf');
+        }
+
+        return [
+            'form'  => $form->createView()
+        ];
+    }
+
 
     /**
      * Formulaire pour la création d'une entité Daf à partir d'un devis

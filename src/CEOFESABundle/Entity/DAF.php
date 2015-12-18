@@ -426,8 +426,6 @@ class DAF
     {
         $this->setDafDatedebut($devis->getDevDatedebut());
         $this->setDafDatefin($devis->getDevDatefin());
-        $this->setDafOf($devis->getDevOf());
-        $this->setDafStructure($devis->getDevStructure());
 
         foreach ($devis->getDevParcours() as $dParcour) {
             $DCont = $this->getTiersDCont($dParcour->getDprTiers());

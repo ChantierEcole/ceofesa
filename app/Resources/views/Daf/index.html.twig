@@ -41,6 +41,13 @@
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('edit_daf', { 'id': daf.dafId }) }}">
+                                    <button type="button" class="btn btn-blue4 btn-xs">
+                                        <i class="fa fa-pencil"></i> Editer
+                                    </button>
+                                </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

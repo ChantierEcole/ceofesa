@@ -148,13 +148,13 @@
     display: block;
 }
 
-.collection-group > .form-group > div > div > .form-group {
+.new-daf .collection-group > .form-group > div > div > .form-group {
     display: block;
     width: 100%;
     margin: 0 auto;
 }
 
-.collection-group > .form-group > div > div > .form-group:first-child {
+.new-daf .collection-group > .form-group > div > div > .form-group:first-child {
     width: 20%;
 }
 
