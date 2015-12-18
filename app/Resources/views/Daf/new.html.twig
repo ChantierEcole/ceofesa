@@ -50,31 +50,23 @@
   $(document).ready(function() {
 
     // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
-
     var $container = $('div#ceofesabundle_daf_dafDcont');
 
     // On ajoute un lien pour ajouter une nouvelle catégorie
-
     var $addLink = $('<a href="#" id="add_category" class="btn btn-dark2">Ajouter un Stagiaire</a>');
-
     $container.after($addLink);
 
     // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
-
     $addLink.click(function(e) {
-
       addCategory($container);
-
       e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-
       return false;
-
     });
 
     // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
-
     var index = $container.children('.form-group').length;
 
+    /* set des labels */
     $container.children('.form-group').each(function() {
       var data = $(this).children('label').text();
       data =  parseInt(data)+1;
@@ -85,10 +77,26 @@
     if (index == 0) {
       addCategory($container);
     } else {
-      // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
-      $container.children('div').each(function() {
-        addDeleteLink($(this));
-      });
+        // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
+        $container.children('div').each(function() {
+            addDeleteLink($(this));
+        });
+
+        /* ajout du lien de delete sur les parcours */
+        $container.find('.parcours-widget > .form-group').each(function() {
+            addDeleteLink($(this));
+        });
+
+        $container.find('.parcours-widget').each(function() {
+            var $addLink = $('<div class="form-group"><a href="#" id="add_parcours">Ajouter un parcours</a></div>');
+            var parcoursContainer = $(this);
+            $(this).after($addLink);
+
+            $addLink.find('a').click(function() {
+                addParcours(parcoursContainer);
+                return false;
+            });
+        });
     }
     
 
@@ -96,65 +104,61 @@
 
     function addCategory($container) {
 
-      // Dans le contenu de l'attribut « data-prototype », on remplace :
-
-      // - le texte "__name__label__" qu'il contient par le label du champ
-
-      // - le texte "__name__" qu'il contient par le numéro du champ
-
-      var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Parcours n°' + (index+1))
-
+      var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Stagiaire n°' + (index+1))
           .replace(/__name__/g, index));
 
       // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
-
       addDeleteLink($prototype);
 
       // On ajoute le prototype modifié à la fin de la balise <div>
-
       $container.append($prototype);
 
       // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
-
       index++;
-
     }
 
-    // La fonction qui ajoute un lien de suppression d'une catégorie
+      // La fonction qui ajoute un formulaire Parcours
+      function addParcours($container) {
 
+          var parcoursIndex = $container.children('.form-group').length;
+
+          var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Parcours n°' + (parcoursIndex+1))
+                  .replace(/__name__/g, parcoursIndex));
+
+          addDeleteLink($prototype);
+          $container.append($prototype);
+      }
+
+    // La fonction qui ajoute un lien de suppression d'une catégorie
     function addDeleteLink($prototype) {
 
       // Création du lien
 
       $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
-
       // Ajout du lien
 
       $prototype.append($deleteLink);
-
       // Ajout du listener sur le clic du lien
 
       $deleteLink.click(function(e) {
-
         $prototype.remove();
-
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-
         return false;
-
       });
 
     }
 
+
     // Modification dynamique du champ "OF" du formulaire en fonction du champ "Type"
     var url             = "{{ path('devis_ajax') }}";
-    var typeSelect     = 'select[id^="ceofesabundle_daf_dafDcont"][id$="_dprType"]';
+    var typeSelect     = 'select[id^="ceofesabundle_daf_dafDcont"][id$="_prcType"]';
 
     $('#ceofesabundle_daf_dafDcont').on('change', typeSelect, function(){
 
       var type_id = $(this).val();
       var select_id = $(this).attr("id").split("_")[3];
-      var ofElement = 'select[id="ceofesabundle_daf_dafDcont'+select_id+'_dprStructure"]';
+      var select_second_id = $(this).attr("id").split("_")[5];
+      var ofElement = 'select[id="ceofesabundle_daf_dafDcont_'+select_id+'_cntParcours_'+select_second_id+'_prcStructure"]';
 
       $.ajax({  type: "POST",
         url: url,

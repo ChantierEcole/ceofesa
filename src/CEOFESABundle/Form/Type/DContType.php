@@ -41,8 +41,8 @@ class DContType extends AbstractType
             ))
             ->add('cntParcours','collection', array(
                 'type' => new ParcoursType($id),
-                'allow_add' => false,
-                'allow_delete' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false,
                 'attr' => array('class' => 'parcours-widget'),
                 'label' => false,

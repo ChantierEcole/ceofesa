@@ -63,6 +63,14 @@ class Presence
     private $pscValidate;
 
     /**
+     * Presence constructor.
+     */
+    public function __construct()
+    {
+        $this->pscValidate = false;
+    }
+
+    /**
      * Get pscId
      *
      * @return integer 
