@@ -465,12 +465,6 @@ class SessionController extends Controller
         $em             = $this->getDoctrine()->getManager();
         $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
 
-/*        return $this->render('::Templates\emargement.html.twig', array(
-            'participants' => $participants,
-            'date'         => $date
-        ));*/
-
-
         $html = $this->renderView('::Templates\emargement.html.twig', array(
             'participants'  => $participants,
             'date'          => $date

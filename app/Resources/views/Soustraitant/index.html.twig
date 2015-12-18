@@ -15,19 +15,26 @@
                             <th>Nom</th>
                             <th>Siret</th>
                             <th>Reponsable</th>
+                            <th>OF</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for entity in entities %}
+                    {% for entity in relations %}
                         <tr>
-                            <td>{{ entity.strNom }}</td>
-                            <td>{{ entity.strSiret }}</td>
-                            <td>{{ entity.strReponsable }}</td>
+                            <td>{{ entity.relSoustraitant.strNom }}</td>
+                            <td>{{ entity.relSoustraitant.strSiret }}</td>
+                            <td>{{ entity.relSoustraitant.strReponsable }}</td>
+                            <td>{{ entity.relOf.strNom }}</td>
                             <td class="text-center">
-                                <a href="{{ path('soustraitant_show', { 'id': entity.strId }) }}">
+                                <a href="{{ path('soustraitant_show', { 'id': entity.relSoustraitant.strId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
+                                    </button>
+                                </a>
+                                <a href="{{ path('soustraitant_convention_print', { 'id': entity.relId }) }}">
+                                    <button type="button" class="btn btn-blue3 btn-xs">
+                                        <i class="fa fa-print"></i> Imprimer la convention
                                     </button>
                                 </a>
                             </td>

@@ -2,6 +2,8 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Entity\Relation;
+use Symfony\Component\HttpFoundation\Response;
 use CEOFESABundle\Form\Type\RelationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,9 +33,10 @@ class SoustraitantController extends Controller
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
 
-        $entities = $em->getRepository('CEOFESABundle:Structure')->getSoustraitants($id)->getQuery()->getResult();
+        $relations = $em->getRepository('CEOFESABundle:Relation')->findBy(array('relStructure' => $id));
+
         return array(
-            'entities' => $entities,
+            'relations' => $relations,
         );
     }
 
@@ -75,6 +78,26 @@ class SoustraitantController extends Controller
 
 
     /**
+     * Print convention sous trainte
+     *
+     * @Route("/print_convention/{id}", name="soustraitant_convention_print")
+     * @Method("GET")
+     */
+    public function printConventionAction(Relation $relation)
+    {
+        $html = $this->renderView('::Templates\convention_soustraitance.html.twig', array(
+            'relation' => $relation
+        ));
+
+        $response= new Response();
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait','page-size' => 'A4')));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-disposition', 'filename=convention-'.$relation->getRelSoustraitant()->getStrNom().'.pdf');
+
+        return $response;
+    }
+
+    /**
      * Finds and displays a Structure entity.
      *
      * @Route("/{id}", name="soustraitant_show")
@@ -95,4 +118,5 @@ class SoustraitantController extends Controller
             'entity'      => $entity,
         );
     }
+
 }
