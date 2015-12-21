@@ -35,7 +35,7 @@ img.little {
 }
 
 .sign {
-    height: 100px;
+    height: 50px;
 }
 
 .sessions {
@@ -51,11 +51,11 @@ img.little {
 }
 
 .h45  {
-    height: 45px;
+    height: 34px;
 }
 
 .h185 {
-    height: 284px;
+    height: 184px;
 }
 
 .sessions div:not(.contener) {
@@ -85,4 +85,8 @@ img.little {
 
 .fs16 {
     font-size: 16px;
+}
+
+.fs14 {
+    font-size: 13px;
 }
