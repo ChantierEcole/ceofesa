@@ -227,11 +227,19 @@ class Structure
     private $strRelations;
 
     /**
+     * @var Parcours
+     *
+     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcStructure")
+     */
+    private $strParcours;
+
+    /**
      * Structure constructor.
      */
     public function __construct()
     {
         $this->strRelations = new ArrayCollection();
+        $this->strParcours = new ArrayCollection();
     }
 
     /**
@@ -833,6 +841,22 @@ class Structure
     public function setStrRelations($strRelations)
     {
         $this->strRelations = $strRelations;
+    }
+
+    /**
+     * @return Parcours
+     */
+    public function getStrParcours()
+    {
+        return $this->strParcours;
+    }
+
+    /**
+     * @param Parcours $strParcours
+     */
+    public function setStrParcours($strParcours)
+    {
+        $this->strParcours = $strParcours;
     }
 
     public function __toString()

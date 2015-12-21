@@ -5,7 +5,9 @@ namespace CEOFESABundle\Controller;
 use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\DCont;
 use CEOFESABundle\Entity\Devis;
+use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\DafType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -152,8 +154,35 @@ class DafController extends Controller
      */
     public function showAction(DAF $daf)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $sousTraitants = $em->getRepository('CEOFESABundle:Structure')->findDAFSousTraitants($daf->getDafId());
+
         return array(
-            'daf'   => $daf
+            'sousTraitants' => $sousTraitants,
+            'daf'           => $daf
         );
     }
+
+    /**
+     * Imprimer le bon de commande d'un sous traitant de la DAF
+     *
+     * @Route("/print_bon_commande/{dafId}/{strId}", name="print_st_daf")
+     * @Method("GET")
+     */
+    public function printBonCommandeAction(DAF $daf, Structure $sousTraitant)
+    {
+        $html = $this->renderView('::Templates\bon_commande.html.twig', array(
+            'sousTraitant' => $sousTraitant,
+        ));
+
+        $response= new Response();
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait','page-size' => 'A4')));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-disposition', 'filename=bon_commande-'.$sousTraitant->getStrNom().'.pdf');
+
+        return $response;
+    }
+
+
 }

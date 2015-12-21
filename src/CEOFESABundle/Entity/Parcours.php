@@ -44,7 +44,7 @@ class Parcours
     /**
      * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity="Structure", inversedBy="strParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_Structure", referencedColumnName="str_ID", nullable=false)
      * })

@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ModuleT
 {
+    const EXTER = 'EXTERNE';
+    const INTRA = 'INTRA';
+
     /**
      * @var integer
      *

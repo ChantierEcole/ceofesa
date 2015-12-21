@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\ModuleT;
 use Doctrine\ORM\EntityRepository;
 
 class StructureRepository extends EntityRepository
@@ -87,6 +88,23 @@ class StructureRepository extends EntityRepository
         ->setParameter('ofId',$id)
         ->orderBy('s.strNom','ASC')
         ;
+    }
+
+    public function findDAFSousTraitants($dafId)
+    {
+        $qb = $this
+            ->createQueryBuilder('s')
+            ->join('s.strParcours', 'prc')
+            ->join('prc.prcType', 'mty')
+            ->join('prc.prcDcont', 'cnt')
+            ->where('cnt.cntDaf = :dafId')
+            ->andWhere('mty.mtyType = :externType')
+            ->setParameter('dafId', $dafId)
+            ->setParameter('externType', ModuleT::EXTER)
+            ->orderBy('s.strNom','ASC')
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getAllStructures()

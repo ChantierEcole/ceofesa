@@ -11,7 +11,7 @@ use CEOFESABundle\Validator\Constraints as CeofesaAssert;
  * DAF
  *
  * @ORM\Table(name="tb_DAF", indexes={@ORM\Index(name="daf_Dossier", columns={"daf_Dossier"}), @ORM\Index(name="daf_DDebut", columns={"daf_DateDebut"})})
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\DAFRepository")
  */
 class DAF
 {

@@ -44,6 +44,27 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <h3>Sous traitants</h3>
+                <table class="table table-bordered table-condensed table-hover">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for s in sousTraitants %}
+                        <tr>
+                            <td>{{ s.strNom }}</td>
+                            <td>
+                                <a href="{{ path('print_st_daf', { 'dafId' : daf.dafId, 'strId' :  s.strId }) }}">
+                                    <button type="button" class="btn btn-blue4 btn-xs">
+                                        <i class="fa fa-print"></i> Imprimer le bon de commande
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
                 <h3>Parcours de stagiaire</h3>
                 <table class="table table-bordered table-condensed table-hover">
                     <tr>
