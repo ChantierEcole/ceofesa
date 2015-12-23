@@ -3,6 +3,7 @@
 namespace CEOFESABundle\Repository;
 
 use CEOFESABundle\Entity\ModuleT;
+use CEOFESABundle\Entity\Structure;
 use Doctrine\ORM\EntityRepository;
 
 class StructureRepository extends EntityRepository
@@ -74,9 +75,9 @@ class StructureRepository extends EntityRepository
     public function getIntra()
     {
         return $this
-        ->createQueryBuilder('s')
-        ->where('s.strType = 2')
-        ->orderBy('s.strNom','DESC')
+            ->createQueryBuilder('s')
+            ->where('s.strId = :id')
+            ->setParameter('id', Structure::OFESA_ID)
         ;
     }
 

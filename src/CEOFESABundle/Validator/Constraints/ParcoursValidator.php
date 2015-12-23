@@ -21,7 +21,6 @@ class ParcoursValidator extends ConstraintValidator
         $i = 0;
         $parcours = [];
         $stagiaires = [];
-        $totalh = 0;
 
         foreach ($value->toArray() as $parcour)
         {

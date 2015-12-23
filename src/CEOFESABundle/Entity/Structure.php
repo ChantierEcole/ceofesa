@@ -21,6 +21,8 @@ class Structure
     const TYPE_OF_PRINCIPAL     = 2;
     const TYPE_OF_SOUSTRAITANT  = 3;
 
+    const OFESA_ID = 2;
+
     /**
      * @var integer
      *
