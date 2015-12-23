@@ -101,11 +101,19 @@ class DAF
     private $dafDcont;
 
     /**
+     * @var \DCont
+     *
+     * @ORM\OneToMany(targetEntity="BonCde", mappedBy="bcdDAF", cascade={"persist"})
+     */
+    private $bcdBonCdes;
+
+    /**
      * DAF constructor.
      */
     public function __construct()
     {
         $this->dafDcont = new ArrayCollection();
+        $this->bcdBonCdes = new ArrayCollection();
     }
 
     /**

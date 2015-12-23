@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Structure
  *
- * @ORM\Table(name="tb_Structure")
+ * @ORM\Table(name="tb_Structure", options={"collate"="utf8_general_ci"})
  * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\StructureRepository")
  * @UniqueEntity(fields="strSiret", message="L'Organisme de Formation avec le numéro SIRET indiqué est déjà enregistré.")
  */

@@ -25,7 +25,7 @@
         .ft3{font: 15px 'Kalinga';line-height: 23px;}
         .ft4{font: 1px 'Kalinga';line-height: 1px;}
         .ft5{font: 1px 'Kalinga';line-height: 9px;}
-        .ft6{font: bold 13px 'Kalinga';line-height: 20px;}
+        .ft6{font: 13px 'Kalinga';line-height: 20px;}
         .ft7{font: 1px 'Kalinga';line-height: 10px;}
         .ft8{font: 1px 'Kalinga';line-height: 14px;}
         .ft9{font: 1px 'Kalinga';line-height: 15px;}
@@ -59,8 +59,8 @@
         .p18{text-align: right;padding-right: 11px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
         .p19{text-align: right;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
         .p20{text-align: left;padding-left: 8px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-        .p21{text-align: left;padding-left: 43px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
-        .p22{text-align: left;padding-left: 497px;margin-top: 60px;margin-bottom: 0px;}
+        .p21{text-align: left;padding-left: 8px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+        .p22{text-align: left;padding-left: 497px;margin-top: 10px;margin-bottom: 0px;}
         .p23{text-align: left;padding-left: 497px;margin-top: 0px;margin-bottom: 0px;}
 
         .td0{padding: 0px;margin: 0px;width: 0px;vertical-align: bottom;}
@@ -131,11 +131,11 @@
         .td65{padding: 0px;margin: 0px;width: 74px;vertical-align: bottom;}
         .td66{padding: 0px;margin: 0px;width: 22px;vertical-align: bottom;}
         .td67{padding: 0px;margin: 0px;width: 133px;vertical-align: bottom;}
-        .td68{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 211px;vertical-align: bottom;}
-        .td69{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 275px;vertical-align: bottom;}
-        .td70{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 7px;vertical-align: bottom;}
-        .td71{padding: 0px;margin: 0px;width: 211px;vertical-align: bottom;}
-        .td72{padding: 0px;margin: 0px;width: 275px;vertical-align: bottom;}
+        .td68{padding: 0px;margin: 0px;width: 211px;vertical-align: bottom;}
+        .td69{padding: 0px;margin: 0px;width: 275px;vertical-align: bottom;}
+        .td70{padding: 0px;margin: 0px;width: 7px;vertical-align: bottom;}
+        .td71{padding: 0px; margin: 0px; width: 211px; vertical-align: top; border: 1px solid black;}
+        .td72{padding: 0px; margin: 0px; width: 275px; vertical-align: top; border-top: 1px solid black; border-bottom: 1px solid black; border-right: 1px solid black;}
 
         .tr0{height: 21px;}
         .tr1{height: 28px;}
@@ -153,6 +153,7 @@
         .tr13{height: 20px;}
         .tr14{height: 33px;}
         .tr15{height: 32px;}
+        .tr16{height: 80px;}
 
         .t0{width: 604px;margin-left: 14px;font: 13px 'Kalinga';}
         .t1{width: 736px;margin-top: 65px;font: bold 12px 'Kalinga';}
@@ -174,11 +175,11 @@
         <TR>
             <TD class="tr0 td0"></TD>
             <TD rowspan=2 class="tr1 td1"><P class="p2 ft0">Tél. :01.48.07.60.31</P></TD>
-            <TD class="tr0 td2"><P class="p2 ft2"><NOBR>{{ sousTraitant.strNom }}</NOBR></P></TD>
+            <TD class="tr0 td2"><P class="p2 ft2"><NOBR>{{ bonCde.bcdRelation.relSoustraitant.strNom }}</NOBR></P></TD>
         </TR>
         <TR>
             <TD class="tr2 td0"></TD>
-            <TD rowspan=2 class="tr3 td2"><P class="p2 ft3">{{ sousTraitant.strAdresse1 }} {{ sousTraitant.strAdresse2 }}</P></TD>
+            <TD rowspan=2 class="tr3 td2"><P class="p2 ft3">{{ bonCde.bcdRelation.relSoustraitant.strAdresse1 }} {{ bonCde.bcdRelation.relSoustraitant.strAdresse2 }}</P></TD>
         </TR>
         <TR>
             <TD class="tr4 td0"></TD>
@@ -187,7 +188,7 @@
         <TR>
             <TD class="tr5 td0"></TD>
             <TD class="tr5 td1"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr5 td2"><P class="p2 ft3">{{ sousTraitant.strCP }} {{ sousTraitant.strVille }}</P></TD>
+            <TD class="tr5 td2"><P class="p2 ft3">{{ bonCde.bcdRelation.relSoustraitant.strCP }} {{ bonCde.bcdRelation.relSoustraitant.strVille }}</P></TD>
         </TR>
     </TABLE>
     <TABLE cellpadding=0 cellspacing=0 class="t1">
@@ -223,11 +224,11 @@
         </TR>
         <TR>
             <TD class="tr10 td26"><P class="p2 ft10">&nbsp;</P></TD>
-            <TD colspan=3 rowspan=2 class="tr3 td27"><P class="p5 ft0">05/06/2014</P></TD>
+            <TD colspan=3 rowspan=2 class="tr3 td27"><P class="p5 ft0">{{ bonCde.bcdDate | date('d/m/Y') }}</P></TD>
             <TD colspan=4 rowspan=2 class="tr3 td28"><P class="p6 ft0">Module de formation CQP Salarié Polyvalent</P></TD>
-            <TD colspan=3 class="tr10 td29"><P class="p7 ft11">CEN / EXEMPLE "STRUCTURE"</P></TD>
+            <TD colspan=3 class="tr10 td29"><P class="p7 ft11">CEN / {{ bonCde.bcdDAF.dafStructure.strNom }}</P></TD>
             <TD class="tr10 td30"><P class="p2 ft10">&nbsp;</P></TD>
-            <TD colspan=2 rowspan=2 class="tr3 td31"><P class="p8 ft0"><NOBR>2014-0001</NOBR></P></TD>
+            <TD colspan=2 rowspan=2 class="tr3 td31"><P class="p8 ft0"><NOBR>{{ bonCde.bcdAnnee }}-{{ "%04d"|format(bonCde.bcdNumero) }}</NOBR></P></TD>
             <TD class="tr10 td32"><P class="p2 ft10">&nbsp;</P></TD>
             <TD class="tr10 td33"><P class="p2 ft10">&nbsp;</P></TD>
             <TD class="tr10 td16"><P class="p2 ft10">&nbsp;</P></TD>
@@ -235,7 +236,7 @@
         <TR>
             <TD class="tr6 td26"><P class="p2 ft5">&nbsp;</P></TD>
             <TD class="tr6 td34"><P class="p2 ft5">&nbsp;</P></TD>
-            <TD rowspan=2 class="tr9 td35"><P class="p9 ft12">/ 1</P></TD>
+            <TD rowspan=2 class="tr9 td35"><P class="p9 ft12"> / 1</P></TD>
             <TD class="tr6 td36"><P class="p2 ft5">&nbsp;</P></TD>
             <TD class="tr6 td30"><P class="p2 ft5">&nbsp;</P></TD>
             <TD class="tr6 td32"><P class="p2 ft5">&nbsp;</P></TD>
@@ -291,22 +292,24 @@
             <TD colspan=2 class="tr0 td56"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td16"><P class="p2 ft4">&nbsp;</P></TD>
         </TR>
+        {% for parcours in bonCde.bcdBParcours %}
         <TR>
             <TD class="tr0 td51"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td57"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD colspan=2 class="tr13 td53"><P class="p16 ft17"><NOBR>DF000000-0</NOBR></P></TD>
+            <TD colspan=2 class="tr13 td53"><P class="p16 ft17"><NOBR>{{ parcours.bprParcours.prcDcont.cntDaf.dafDossier }}</NOBR></P></TD>
             <TD class="tr13 td58"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD colspan=2 class="tr13 td59"><P class="p16 ft17">EXEMPLE "Nom" EXEMPLE "Prénom"</P></TD>
+            <TD colspan=2 class="tr13 td59"><P class="p16 ft17">{{ parcours.bprParcours.prcDcont.cntTiers.trsNom }} {{ parcours.bprParcours.prcDcont.cntTiers.trsPrenom }}</P></TD>
             <TD class="tr13 td54"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td60"><P class="p17 ft17">M1</P></TD>
-            <TD class="tr13 td61"><P class="p18 ft17">140,00</P></TD>
-            <TD colspan=2 class="tr13 td55"><P class="p19 ft17">10,00</P></TD>
+            <TD class="tr13 td60"><P class="p17 ft17">{{ parcours.bprParcours.prcModule.modCode }}</P></TD>
+            <TD class="tr13 td61"><P class="p18 ft17">{{ parcours.bprNombreHeure }}</P></TD>
+            <TD colspan=2 class="tr13 td55"><P class="p19 ft17">{{ parcours.bprTauxHoraire }}</P></TD>
             <TD class="tr13 td62"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td63"><P class="p18 ft17">1 400,00</P></TD>
+            <TD class="tr13 td63"><P class="p18 ft17">{{ parcours.montant | number_format(2, ',', ' ') }}</P></TD>
             <TD class="tr0 td32"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td51"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td16"><P class="p2 ft4">&nbsp;</P></TD>
         </TR>
+        {% endfor %}
         <TR>
             <TD class="tr0 td51"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td57"><P class="p2 ft4">&nbsp;</P></TD>
@@ -316,11 +319,11 @@
             <TD class="tr13 td43"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td54"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td60"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td61"><P class="p18 ft16">140,00</P></TD>
+            <TD class="tr13 td61"><P class="p18 ft16">{{ bonCde.totalHeures | number_format(2, ',', ' ') }}</P></TD>
             <TD class="tr13 td64"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td47"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td62"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td63"><P class="p18 ft16">1 400,00</P></TD>
+            <TD class="tr13 td63"><P class="p18 ft16">{{ bonCde.totalMontant | number_format(2, ',', ' ') }}</P></TD>
             <TD class="tr0 td32"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td51"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td16"><P class="p2 ft4">&nbsp;</P></TD>
@@ -337,19 +340,17 @@
             <TD class="tr15 td70"><P class="p2 ft4">&nbsp;</P></TD>
         </TR>
         <TR>
-            <TD class="tr13 td51"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td52"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td65"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td51"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td66"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td67"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD colspan=3 class="tr13 td71"><P class="p20 ft6">Signature demandeur :</P></TD>
-            <TD colspan=7 class="tr13 td72"><P class="p21 ft6">Signature responsable :</P></TD>
-            <TD class="tr13 td16"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD class="tr16 td51"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD class="tr16 td52"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD class="tr16 td65"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD class="tr16 td51"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD class="tr16 td66"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD class="tr16 td67"><P class="p2 ft4">&nbsp;</P></TD>
+            <TD colspan=3 class="tr16 td71"><P class="p20 ft6"><b>Signature demandeur :</b></P></TD>
+            <TD colspan=7 class="tr16 td72"><P class="p21 ft6"><b>Signature responsable :</b> <br /><br /><br />Xavier DEMANCHE,<br />Coordinateur.</P></TD>
+            <TD class="tr16 td16"><P class="p2 ft4">&nbsp;</P></TD>
         </TR>
     </TABLE>
-    <P class="p22 ft0">Xavier DEMANCHE,</P>
-    <P class="p23 ft0">Coordinateur.</P>
 </DIV>
 </BODY>
 </HTML>

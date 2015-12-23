@@ -60,6 +60,7 @@ class SoustraitantController extends Controller
 
             $structure = $em->getRepository('CEOFESABundle:Structure')->find($id);
             $relation->setRelStructure($structure);
+            $relation->setRelOF($em->getRepository('CEOFESABundle:Structure')->getOfesa()->getQuery()->getOneOrNullResult());
 
             try {
                 $em->persist($relation);

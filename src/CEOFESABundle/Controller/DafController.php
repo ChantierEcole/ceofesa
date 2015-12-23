@@ -2,11 +2,14 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Entity\BonCde;
 use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\DCont;
 use CEOFESABundle\Entity\Devis;
+use CEOFESABundle\Entity\ModuleT;
 use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\DafType;
+use Proxies\__CG__\CEOFESABundle\Entity\BParcours;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -83,6 +86,8 @@ class DafController extends Controller
             $em->persist($daf);
             $em->flush();
 
+            $this->manageBonCommande($daf);
+
             return $this->redirectToRoute('daf');
         }
 
@@ -122,6 +127,48 @@ class DafController extends Controller
         ];
     }
 
+    /**
+     * @param DAF $daf
+     */
+    private function manageBonCommande(DAF $daf) {
+
+        $em             = $this->getDoctrine()->getManager();
+        $sousTraitants  = $em->getRepository('CEOFESABundle:Structure')->findDAFSousTraitants($daf->getDafId());
+
+        foreach ($sousTraitants as $ss) {
+            $bcd = new BonCde();
+
+            $relation = $em->getRepository('CEOFESABundle:Relation')->getRelation($daf->getDafStructure()->getStrId(), $ss->getStrId(), $daf->getDafOf()->getStrId())->getQuery()->getOneOrNullResult();
+            $year     = $daf->getDafDatedebut()->format('Y');
+
+            $bcd->setBcdAnnee($year);
+            $bcd->setBcdDate($daf->getDafDatedebut());
+            $bcd->setBcdRelation($relation);
+            $bcd->setBcdNumero($em->getRepository('CEOFESABundle:BonCde')->getBcdNumber($year, $relation));
+            $bcd->setBcdDAF($daf);
+
+            foreach ($daf->getDafDcont() as $dCont) {
+                foreach ($dCont->getCntParcours() as $parcours) {
+                    if ($parcours->getPrcType()->getMtyType() == ModuleT::EXTER && $parcours->getPrcStructure()->getStrId() == $ss->getStrId()) {
+                        $bparcours = new BParcours();
+                        $bparcours->setBprNombreheure($parcours->getPrcNombreheure());
+                        $bparcours->setBprTauxhoraire($daf->getDafTauxhoraire());
+                        $bparcours->setBprParcours($parcours);
+                        $bparcours->setBprBonCde($bcd);
+                        $bcd->addBcdBParcour($bparcours);
+                        $em->persist($bcd);
+                    }
+                }
+            }
+
+            $em->persist($bcd);
+            $em->flush();
+        }
+
+
+        return ;
+    }
+
 
     /**
      * Formulaire pour la création d'une entité Daf à partir d'un devis
@@ -156,30 +203,30 @@ class DafController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $sousTraitants = $em->getRepository('CEOFESABundle:Structure')->findDAFSousTraitants($daf->getDafId());
+        $bonCdes = $em->getRepository('CEOFESABundle:BonCde')->findBy(array('bcdDAF' => $daf));
 
         return array(
-            'sousTraitants' => $sousTraitants,
-            'daf'           => $daf
+            'bonCdes' => $bonCdes,
+            'daf'     => $daf
         );
     }
 
     /**
      * Imprimer le bon de commande d'un sous traitant de la DAF
      *
-     * @Route("/print_bon_commande/{dafId}/{strId}", name="print_st_daf")
+     * @Route("/print_bon_commande/{id}", name="print_st_daf")
      * @Method("GET")
      */
-    public function printBonCommandeAction(DAF $daf, Structure $sousTraitant)
+    public function printBonCommandeAction(BonCde $bonCde)
     {
         $html = $this->renderView('::Templates\bon_commande.html.twig', array(
-            'sousTraitant' => $sousTraitant,
+            'bonCde' => $bonCde,
         ));
 
         $response= new Response();
         $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait','page-size' => 'A4')));
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-disposition', 'filename=bon_commande-'.$sousTraitant->getStrNom().'.pdf');
+        $response->headers->set('Content-disposition', 'filename=bon_commande-'.$bonCde->getBcdRelation()->getRelSoustraitant()->getStrNom().'.pdf');
 
         return $response;
     }

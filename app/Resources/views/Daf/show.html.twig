@@ -45,25 +45,27 @@
                     </tbody>
                 </table>
 
-                <h3>Sous traitants</h3>
-                <table class="table table-bordered table-condensed table-hover">
-                    <tr>
-                        <th>Nom</th>
-                        <th>Action</th>
-                    </tr>
-                    {% for s in sousTraitants %}
+                {% if bonCdes | length > 0 %}
+                    <h3>Sous traitants</h3>
+                    <table class="table table-bordered table-condensed table-hover">
                         <tr>
-                            <td>{{ s.strNom }}</td>
-                            <td>
-                                <a href="{{ path('print_st_daf', { 'dafId' : daf.dafId, 'strId' :  s.strId }) }}">
-                                    <button type="button" class="btn btn-blue4 btn-xs">
-                                        <i class="fa fa-print"></i> Imprimer le bon de commande
-                                    </button>
-                                </a>
-                            </td>
+                            <th>Nom</th>
+                            <th>Action</th>
                         </tr>
-                    {% endfor %}
-                </table>
+                        {% for bon in bonCdes %}
+                            <tr>
+                                <td>{{ bon.bcdRelation.relSoustraitant.strNom }}</td>
+                                <td>
+                                    <a href="{{ path('print_st_daf', { 'id' : bon.bcdId }) }}">
+                                        <button type="button" class="btn btn-blue4 btn-xs">
+                                            <i class="fa fa-print"></i> Imprimer le bon de commande
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
 
                 <h3>Parcours de stagiaire</h3>
                 <table class="table table-bordered table-condensed table-hover">

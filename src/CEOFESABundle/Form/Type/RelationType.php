@@ -18,16 +18,6 @@ class RelationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('relOf', 'entity', array(
-                'label' => 'OF Principal',
-                'class' => 'CEOFESABundle\Entity\Structure',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('str')
-                        ->where('str.strType = :type')
-                        ->setParameter('type', Structure::TYPE_OF_PRINCIPAL)
-                        ->orderBy('str.strNom', 'ASC');
-                },
-            ))
             ->add('relSoustraitant', 'entity', array(
                 'label' => 'Sous-traitant',
                 'class' => 'CEOFESABundle\Entity\Structure',

@@ -24,7 +24,7 @@ class BParcours
     /**
      * @var \BonCde
      *
-     * @ORM\ManyToOne(targetEntity="BonCde")
+     * @ORM\ManyToOne(targetEntity="BonCde", inversedBy="bcdBParcours")
      * @ORM\JoinColumn(name="bpr_BonCde", referencedColumnName="bcd_ID", nullable=false)
      *
      */
@@ -157,5 +157,13 @@ class BParcours
     public function getBprParcours()
     {
         return $this->bprParcours;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMontant()
+    {
+        return $this->getBprTauxhoraire() * $this->getBprNombreheure();
     }
 }
