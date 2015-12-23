@@ -32,4 +32,4 @@ assetic:
     use_controller: "%use_assetic_controller%"
 
 swiftmailer:
-    delivery_address: developpeur@chantierecole.org
+    delivery_address: olivier.dairay@gmail.com

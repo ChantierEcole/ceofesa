@@ -67,4 +67,12 @@ class Utilisateurs extends BaseUser
     {
         return $this->structure;
     }
+
+    /**
+     * @return string
+     */
+    public function getNameAndMail()
+    {
+        return $this->getUsername() .  ' (' . $this->getEmail() . ')';
+    }
 }

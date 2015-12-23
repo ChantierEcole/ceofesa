@@ -97,7 +97,10 @@
                                             <li>
                                                 <a href="{{ path('users_gestion') }}"><span class="glyphicons glyphicons-list"></span> Liste des utilisateurs </a>
                                             </li>
-                                        </ul>    
+                                            <li>
+                                                <a href="{{ path('admin_email') }}"><span class="glyphicons glyphicons-e-mail"></span> Envoyer un e-mail </a>
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li> 
                                         <a class="accordion-toggle" href="#sideTwo-sub"><span class="glyphicons glyphicons-building"></span><span class="sidebar-title">Structures</span><span class="caret"></span></a>
@@ -182,6 +185,13 @@
             <!-- Start: Content -->
             <section id="content">
                 <div class="container">
+
+                    {% for flashMessage in app.session.flashbag.get('notice') %}
+                        <div class="alert alert-info" role="alert">
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+
                     {% block body %}{% endblock %}
                 </div>
             </section>

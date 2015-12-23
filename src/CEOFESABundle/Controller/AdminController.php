@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Form\Type\EmailType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -245,5 +246,51 @@ class AdminController extends Controller
 
         return new Response($this->get('session')->get('structure'));
 
+    }
+
+    /**
+     * Envoi d'emails aux utilisateurs
+     *
+     * @Route(
+     *   path="/email",
+     *   name="admin_email"
+     * )
+     */
+    public function emailAction(Request $request){
+
+        $form = $this->createForm(new EmailType());
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+
+            $data = $form->getData();
+
+            foreach ($form->get('users')->getData() as $user) {
+                $message = \Swift_Message::newInstance()
+                    ->setSubject($data['sujet'])
+                    ->setFrom($this->container->getParameter('contact_mail1'))
+                    ->setTo($user->getEmail())
+                    ->setBody($data['message']);
+                ;
+                $this->get('mailer')->send($message);
+
+            }
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject($data['sujet'])
+                ->setFrom($this->container->getParameter('contact_mail1'))
+                ->setTo($this->getUser()->getEmail())
+                ->setBody($data['message']);
+            ;
+            $this->get('mailer')->send($message);
+
+            $this->addFlash('notice', 'E-mail envoyé.');
+
+            return $this->redirectToRoute('admin_email');
+        }
+
+        return $this->render("User/email.html.twig", array(
+            'form' => $form->createView()
+        ));
     }
 }
