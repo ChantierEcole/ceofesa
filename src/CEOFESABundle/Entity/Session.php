@@ -110,6 +110,13 @@ class Session
     private $sesFtype = '0';
 
     /**
+     * @var Animation
+     *
+     * @ORM\OneToMany(targetEntity="Animation", mappedBy="aniSession")
+     */
+    private $sesAnimations;
+
+    /**
      * Get sesId
      *
      * @return integer 
@@ -347,5 +354,21 @@ class Session
     public function getSesOf()
     {
         return $this->sesOf;
+    }
+
+    /**
+     * @return Animation
+     */
+    public function getSesAnimations()
+    {
+        return $this->sesAnimations;
+    }
+
+    /**
+     * @param Animation $sesAnimations
+     */
+    public function setSesAnimations($sesAnimations)
+    {
+        $this->sesAnimations = $sesAnimations;
     }
 }

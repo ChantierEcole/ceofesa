@@ -24,7 +24,7 @@ class Parcours
     /**
      * @var \DCont
      *
-     * @ORM\ManyToOne(targetEntity="DCont")
+     * @ORM\ManyToOne(targetEntity="DCont", inversedBy="cntParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_DCont", referencedColumnName="cnt_ID", nullable=false)
      * })
@@ -247,6 +247,19 @@ class Parcours
     public function setPrcPresence($prcPresence)
     {
         $this->prcPresence = $prcPresence;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalHeures()
+    {
+        $total = 0;
+        foreach ($this->getPrcPresence() as $presence) {
+          $total +=  $presence->getPscDuree();
+        }
+
+        return $total;
     }
 
     /**

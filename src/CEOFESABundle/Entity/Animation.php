@@ -24,7 +24,7 @@ class Animation
     /**
      * @var \Session
      *
-     * @ORM\ManyToOne(targetEntity="Session")
+     * @ORM\ManyToOne(targetEntity="Session", inversedBy="sesAnimations")
      * @ORM\JoinColumn(name="ani_Session", referencedColumnName="ses_ID", nullable=false)
      */
     private $aniSession;
