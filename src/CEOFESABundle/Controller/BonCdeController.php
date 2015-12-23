@@ -26,13 +26,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class BonCdeController extends Controller
 {
+
+    /**
+     * Liste des bon de commandes
+     *
+     * @Route("/liste", name="bcd_index")
+     * @Method("GET")
+     * @Template("::BonCde\index.html.twig")
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $this->get('session')->get('structure');
+
+        $bons = $em->getRepository('CEOFESABundle:BonCde')->findByStructure($id);
+
+        return array(
+            'bons' => $bons
+        );
+    }
+
     /**
      * Send bon de commande
      *
      * @Route("/send/{id}", name="bcd_send")
      * @Method("GET")
      */
-    public function sendAction(BonCde $bon)
+    public function sendAction(Request $request, BonCde $bon)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -43,6 +63,8 @@ class BonCdeController extends Controller
         $em->persist($bon);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('daf_show', array('id' => $bon->getBcdDaf()->getDafId())));
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer);
     }
 }
