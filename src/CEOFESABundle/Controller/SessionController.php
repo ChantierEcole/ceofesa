@@ -166,7 +166,14 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of,$module,$type);
 
+        $monthForm = $this->createForm(new MonthType());
+
+        $monthForm->get('module')->setData($moduleEntity->getModId());
+        $monthForm->get('type')->setData($modtypeEntity->getMtyId());
+        $monthForm->get('of')->setData($ofEntity->getStrId());
+
         return array(
+            'monthForm' => $monthForm->createView(),
             'choose_form' => $form->createView(),
             'participant_form' => $form2->createView(),
             'entities' => $sessions,
