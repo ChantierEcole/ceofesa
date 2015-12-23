@@ -64,6 +64,13 @@ class BonCde
     private $bcdDAF;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="bcdSent", type="boolean", nullable=false, options={"default" = 0})
+     */
+    private $bcdSent;
+
+    /**
      * @ORM\OneToMany(targetEntity="BParcours", mappedBy="bprBonCde", cascade={"persist"}, orphanRemoval=true)
      */
     protected $bcdBParcours;
@@ -226,6 +233,22 @@ class BonCde
     public function setBcdDAF($bcdDAF)
     {
         $this->bcdDAF = $bcdDAF;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getBcdSent()
+    {
+        return $this->bcdSent;
+    }
+
+    /**
+     * @param boolean $bcdSent
+     */
+    public function setBcdSent($bcdSent)
+    {
+        $this->bcdSent = $bcdSent;
     }
 
     /**
