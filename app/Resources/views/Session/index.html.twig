@@ -202,8 +202,8 @@ $(document).ready(function() {
     	$(".no-result").hide();
     	var module_id = modSelect.val();
 	    var type_id = typeSelect.val();
-	    /*alert(modSelect.val() + typeSelect.val());*/
-	    $.ajax({  
+
+	    $.ajax({
 	    	type: "POST",
 	    	url: "{{ path('session_ajax') }}",
 	    	data: {'module_id':module_id,'type_id':type_id},

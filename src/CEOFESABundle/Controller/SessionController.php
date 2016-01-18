@@ -223,7 +223,7 @@ class SessionController extends Controller
     		$data = $event->getData();
 
     		$ofId = isset($data['of']) ? $data['of'] : null;
-        	if($ofId != null){ 
+        	if($ofId != null){
             $formulaire->remove('of');
             $formulaire->add('of','entity',array(
 	                'class' => 'CEOFESABundle\Entity\Structure',
@@ -511,6 +511,8 @@ class SessionController extends Controller
             $p['nom'] = $structure->getSesOf()->getStrNom();
             $OFList[] = $p;
         }
+
+        rsort($OFList);
 
         return new JsonResponse($OFList);
     }
