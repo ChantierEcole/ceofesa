@@ -84,6 +84,8 @@
                         <th>Nombre d'Heures</th>
                         <th>Type</th>
                         <th>OF</th>
+                        <th>Sortie</th>
+                        <th>Action</th>
                     </tr>
                     {% for dcont in daf.dafDCont %}
                         {% for parcours in dcont.cntParcours %}
@@ -93,6 +95,14 @@
                                 <td>{{ parcours.prcNombreHeure }}</td>
                                 <td>{{ parcours.prcType.mtyType }}</td>
                                 <td>{{ parcours.prcStructure.strNom }}</td>
+                                <td>{% if dcont.cntDatesortie %}{{ dcont.cntDatesortie | date('d/m/Y') }} - {{ dcont.cntMotifsortie.srtMotif }}{% endif %}</td>
+                                <td>
+                                    <a href="{{ path('sortie_edit', { 'id' : dcont.cntId }) }}">
+                                        <button type="button" class="btn btn-warning btn-xs">
+                                            <i class="glyphicons glyphicons-file_import"></i> Indiquer le motif de sortie
+                                        </button>
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                     {% endfor %}
