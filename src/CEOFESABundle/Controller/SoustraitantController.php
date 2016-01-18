@@ -49,6 +49,8 @@ class SoustraitantController extends Controller
      */
     public function addRelationAction(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
 
