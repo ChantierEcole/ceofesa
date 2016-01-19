@@ -219,6 +219,8 @@ class DafController extends Controller
      */
     public function printBonCommandeAction(BonCde $bonCde)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $html = $this->renderView('::Templates\bon_commande.html.twig', array(
             'bonCde' => $bonCde,
         ));
