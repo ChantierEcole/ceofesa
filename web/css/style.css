@@ -257,3 +257,8 @@
 .ta-right {
     text-align: right;
 }
+
+input.ofe-time {
+    width: 50px;
+    display: inline-block;
+}

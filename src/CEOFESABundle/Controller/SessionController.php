@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Form\Type\PresenceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -687,7 +688,7 @@ class SessionController extends Controller
 
         if (!$presence) {
             throw $this->createNotFoundException(
-                'Aucun participant trouvé pour cette session. (id liaison : '.$id.')'
+                'Aucun participant trouvé pour cette session. (id liaison : '.$presenceId.')'
             );
         }
 
@@ -696,6 +697,39 @@ class SessionController extends Controller
         $em->flush();
 
         return new JsonResponse($sessionid);
+    }
+
+    /**
+     * Edit presence sur une session
+     *
+     * @Route("/participant-edit-ajax", name="participant_edit_ajax")
+     * @Template("::Session\editPresence.html.twig")
+     */
+    public function editPresenceAjaxAction(Request $request){
+        $presenceId = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $presence = $em->getRepository('CEOFESABundle:Presence')->find($presenceId);
+
+        if (!$presence) {
+            throw $this->createNotFoundException(
+                'Aucun participant trouvé pour cette session. (id liaison : '.$presenceId.')'
+            );
+        }
+
+        $form = $this->createForm(new PresenceType(), $presence);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em->persist($presence);
+            $em->flush();
+
+            return $this->render("::Session\presence.html.twig", array('presence' => $presence));
+        }
+
+        return array(
+            'presence'  => $presence,
+            'form'      => $form->createView()
+        );
     }
 
     /**
