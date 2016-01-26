@@ -4,6 +4,9 @@
 <div class="row select-session-form">
 	<div class="col-md-12">
 		<div class="panel panel-visible">
+			<div class="panel-heading">
+				<div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Choisir un module à consulter </div>
+			</div>
 			 <div class="panel-body">
 
 			 	{% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
@@ -40,8 +43,6 @@
 	</div>	
 </div>
 {% if entities is defined and of is defined and module is defined and type is defined %}
-
-	{% include '::Session/print_form.html.twig' with {'route' : 'session_stagiaire_list_print'} %}
 
 	<div class="row">
 		<div class="col-md-12">
@@ -90,10 +91,6 @@
 									</tbody>
 								</table>
 							</div>
-							<br />
-							<a href="{{ path('session_create', { 'module': module.modId,'type': type.mtyId,'of': of.strId }) }}">
-								<button type="button" class="btn btn-primary btn-lg btn-block btn-square"> Ajouter une session </button>
-							</a>
 						</div>
 						<div class="col-md-8 infos-session">
 							<div class="jumbotron">

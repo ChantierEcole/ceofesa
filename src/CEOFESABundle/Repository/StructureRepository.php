@@ -36,6 +36,15 @@ class StructureRepository extends EntityRepository
         ;
     }
 
+    public function getOFPrincipal()
+    {
+        return $this
+            ->createQueryBuilder('f')
+            ->where('f.strType = 2')
+            ->orderBy('f.strNom','DESC')
+            ;
+    }
+
     public function getOF()
     {
         return $this

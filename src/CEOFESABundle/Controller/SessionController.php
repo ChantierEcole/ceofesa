@@ -50,14 +50,14 @@ class SessionController extends Controller
     /**
      * Creates a new Session entity.
      *
-     * @Route("/ajout/{module}/{type}/{of}", name="session_create")
+     * @Route("/ajout", name="session_create")
      * @Method({"GET","POST"})
      * @Template("::Session\new.html.twig")
      */
-    public function createAction(Request $request,$module,$type,$of)
+    public function createAction(Request $request)
     {
         $entity = new Session();
-        $form = $this->createCreateForm($entity,$module,$type,$of);
+        $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -67,7 +67,7 @@ class SessionController extends Controller
 
             $id = $entity->getSesId();
 
-            return $this->redirect($this->generateUrl('session_list2', array('module' => $module,'type' => $type,'of' => $of, 'session' => $id)));
+            return $this->redirect($this->generateUrl('session_list2', array('module' => $entity->getSesModule()->getModId(),'type' => $entity->getSesFtype()->getFtyId(),'of' => $entity->getSesOf()->getStrId(), 'session' => $id)));
         }
 
         return array(
@@ -83,12 +83,12 @@ class SessionController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Session $entity,$module,$type,$of)
+    private function createCreateForm(Session $entity)
     {
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new SessionType($id,$module,$type,$of), $entity, array(
-            'action' => $this->generateUrl('session_create', array('module' => $module,'type' => $type,'of' => $of)),
+        $form = $this->createForm(new SessionType($id), $entity, array(
+            'action' => $this->generateUrl('session_create'),
             'method' => 'POST',
         ));
 

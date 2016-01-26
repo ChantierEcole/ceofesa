@@ -120,6 +120,37 @@
                     {% if is_granted('ROLE_USER') %}
                     <ul class="nav sidebar-nav">
                         <li>
+                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-group"></span><span class="sidebar-title">Stagiaires</span><span class="caret"></span></a>
+                            <ul id="sideEight" class="nav sub-nav">
+                                <li>
+                                    <a href="{{ path('stagiaire_create') }}"><span class="glyphicons glyphicons-user_add"></span> Ajouter un stagiaire </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('stagiaire_list') }}"><span class="glyphicons glyphicons-group"></span> Liste des stagiaires </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav sidebar-nav">
+                        <li>
+                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-briefcase"></span><span class="sidebar-title">Sous-traitants</span><span class="caret"></span></a>
+                            <ul id="sideEight" class="nav sub-nav">
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li>
+                                        <a href="{{ path('structure_new') }}"><span class="glyphicons glyphicons-user_add"></span>Créer un sous-traitant</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('soustraitant_add_relation') }}"><span class="glyphicons glyphicons-link"></span>Lier un sous-traitant</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="{{ path('soustraitant_list') }}"><span class="glyphicons glyphicons-list"></span> Liste sous-traitants </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav sidebar-nav">
+                        <li>
                             <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-file"></span><span class="sidebar-title">Devis</span><span class="caret"></span></a>
                             <ul id="sideEight" class="nav sub-nav">
                                 <li>
@@ -127,15 +158,6 @@
                                 </li>
                                 <li>
                                     <a href="{{ path('devis') }}"><span class="glyphicons glyphicons-more_items"></span> Liste des devis </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('stagiaire_create') }}"><span class="glyphicons glyphicons-user_add"></span> Ajouter un stagiaire </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('stagiaire_list') }}"><span class="glyphicons glyphicons-group"></span> Liste des stagiaires </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('soustraitant_list') }}"><span class="glyphicons glyphicons-list"></span> Liste sous-traitants </a>
                                 </li>
                             </ul>
                         </li>
@@ -160,19 +182,29 @@
                     </ul>
                     <ul class="nav sidebar-nav">
                         <li>
-                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-clock"></span><span class="sidebar-title">Gérer les sessions</span><span class="caret"></span></a>
+                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-user"></span><span class="sidebar-title">Formateurs</span><span class="caret"></span></a>
                             <ul id="sideEight" class="nav sub-nav">
-                                <li>
-                                    <a href="{{ path('session_index') }}"><span class="glyphicons glyphicons-file"></span> Par dates </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('session_stagiaire_list') }}"><span class="glyphicons glyphicons-user"></span> Par Stagiaires </a>
-                                </li>
                                 <li>
                                     <a href="{{ path('formateur_create') }}"><span class="glyphicons glyphicons-user_add"></span> Ajouter un formateur </a>
                                 </li>
                                 <li>
                                     <a href="{{ path('formateur_list') }}"><span class="glyphicons glyphicons-group"></span> Liste des formateurs </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav sidebar-nav">
+                        <li>
+                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-clock"></span><span class="sidebar-title">Gérer les sessions</span><span class="caret"></span></a>
+                            <ul id="sideEight" class="nav sub-nav">
+                                <li>
+                                    <a href="{{ path('session_create') }}"><span class="glyphicons glyphicons-file_import"></span> Créer une session</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('session_index') }}"><span class="glyphicons glyphicons-file"></span> Liste par dates </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('session_stagiaire_list') }}"><span class="glyphicons glyphicons-user"></span> Liste par Stagiaires </a>
                                 </li>
                             </ul>
                         </li>

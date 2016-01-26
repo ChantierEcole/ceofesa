@@ -16,12 +16,9 @@ class SessionType extends AbstractType
 {
     protected $idUser;
 
-    public function __construct ($idUser,$module,$modtype,$of)
+    public function __construct ($idUser)
     {
         $this->idUser = $idUser;
-        $this->module = $module;
-        $this->modtype = $modtype;
-        $this->of = $of;
     }
 
     /**
@@ -31,9 +28,6 @@ class SessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $id = $this->idUser;
-        $module = $this->module;
-        $modtype = $this->modtype;
-        $of = $this->of;
 
         $builder
             ->add('sesDate','date',array(
@@ -62,8 +56,6 @@ class SessionType extends AbstractType
                 'query_builder' => function(StructureRepository $repo) use ($id) {
                     return $repo->getUserStructure($id);
                 },
-                /*'attr' => array('class' => 'hide'),
-                'label' => false*/
             ))
             ->add('sesOf','entity', array(
                 'class' => 'CEOFESABundle\Entity\Structure',
@@ -71,8 +63,8 @@ class SessionType extends AbstractType
                 'label' => "OF",
                 'multiple' => false,
                 'read_only' => true,
-                'query_builder' => function(StructureRepository $repo) use ($of) {
-                    return $repo->getUserStructure($of);
+                'query_builder' => function(StructureRepository $repo) {
+                    return $repo->getOFPrincipal();
                 },
             ))
             ->add('sesMtype','entity', array(
@@ -81,9 +73,6 @@ class SessionType extends AbstractType
                 'label' => "Type de Module",
                 'multiple' => false,
                 'read_only' => true,
-                'query_builder' => function(ModuleTRepository $repo) use ($modtype) {
-                    return $repo->getModuleType($modtype);
-                },
             ))
             ->add('sesModule','entity', array(
                 'class' => 'CEOFESABundle\Entity\Module',
@@ -91,9 +80,6 @@ class SessionType extends AbstractType
                 'label' => "Module",
                 'multiple' => false,
                 'read_only' => true,
-                'query_builder' => function(ModuleRepository $repo) use ($module) {
-                    return $repo->getModule($module);
-                },
             ))
             ->add('sesStype','entity', array(
                 'class' => 'CEOFESABundle\Entity\SessionT',
