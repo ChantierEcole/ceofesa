@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Entity\Parcours;
 use CEOFESABundle\Form\Type\PresenceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -711,10 +712,9 @@ class SessionController extends Controller
         $type = $session->getSesStype()->getStyType();
         $idparcours = $request->request->get('idparcours');
         $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
-        $dcont = $parcours->getPrcDcont()->getCntId();
         $dureeOK = preg_match("/(^[01]?[0-9]|2[0-3])\.[0-5][0-9]/", $duree);
-        $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$idparcours)->getQuery()->getResult();
-        $limiteOK = $this->checkTotalHeures($dcont,$duree);
+        $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$parcours->getPrcDcont()->getCntTiers())->getQuery()->getResult();
+        $limiteOK = $this->checkTotalHeures($parcours,$duree);
         $isParticipants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($idsession)->getQuery()->getResult();
 
 
@@ -848,12 +848,12 @@ class SessionController extends Controller
     /*
     * Fonction pour vérifer si la somme des durées saisies pour une DAF pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cette DAF/stagiaire (DCont)
     */
-    private function checkTotalHeures($dcont,$nextDuree=0){
+    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0){
 
         $em = $this->getDoctrine()->getManager();
-        $nbHeuresRealisees = $em->getRepository('CEOFESABundle:Presence')->getDcontTotalDurees($dcont);
-        $nbHeuresPrevues = $em->getRepository('CEOFESABundle:Parcours')->getDcontTotalHeures($dcont);
-        
+        $nbHeuresRealisees = $em->getRepository('CEOFESABundle:Presence')->getParcoursTotalDurees($parcours);
+        $nbHeuresPrevues = $parcours->getPrcNombreheure();
+
         $nbHeuresRealisees += $nextDuree;
 
         if($nbHeuresRealisees <= $nbHeuresPrevues){

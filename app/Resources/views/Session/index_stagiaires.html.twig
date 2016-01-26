@@ -68,9 +68,9 @@
 					                		<td>{{ participant.prcDcont.cntTiers.trsNom }}</td>
 					                		<td>{{ participant.prcDcont.cntTiers.trsPrenom }}</td>
 					                		<td>{{ participant.prcDcont.cntDaf.dafDossier }}</td>
-					                		<td></td>
-					                		<td></td>
-					                		<td></td>
+					                		<td>{{ participant.prcModule.modCode }}</td>
+					                		<td>{{ participant.prcType.mtyType }}</td>
+					                		<td>{{ participant.prcDcont.cntDaf.dafOF.strNom }}</td>
 					                		<td>
 	                                			<button type="button" class="btn btn-blue3 btn-xs js-btn-voir" data-entityid="{{ participant.prcid }}">
 	                                    			<i class="fa fa-eye"></i> Détails

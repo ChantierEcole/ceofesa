@@ -12,11 +12,13 @@ class ParcoursRepository extends EntityRepository
         ->createQueryBuilder('par')
         ->innerJoin('par.prcDcont','dcnt')
         ->innerJoin('dcnt.cntDaf','daf')
+        ->innerJoin('dcnt.cntTiers','trs')
         ->where('par.prcStructure = :IdOF')
         ->andWhere('par.prcModule = :IdModule')
         ->andWhere('par.prcType = :IdModuleType')
         ->andWhere('daf.dafStructure = :IdStructure')
         ->setParameters(array('IdStructure' => $idStructure, 'IdOF' => $idOF, 'IdModule' => $idModule, 'IdModuleType' => $idModuleType))
+        ->orderBy('trs.trsNom', 'ASC')
         ;
     }
 

@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\Tiers;
 use Doctrine\ORM\EntityRepository;
 
 class PresenceRepository extends EntityRepository
@@ -15,13 +16,20 @@ class PresenceRepository extends EntityRepository
         ;
     }
 
-    public function getPresence($idsession,$idparcours)
+    /**
+     * @param $idsession
+     * @param Tiers $tiers
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getPresence($idsession, Tiers $tiers)
     {
         return $this
         ->createQueryBuilder('p')
+        ->join('p.pscParcours', 'prc')
+        ->join('prc.prcDcont', 'cnt')
         ->where('p.pscSession = :SessionId')
-        ->andWhere('p.pscParcours = :ParcoursId')
-        ->setParameters(array('SessionId' => $idsession, 'ParcoursId' => $idparcours))
+        ->andWhere('cnt.cntTiers = :tiers')
+        ->setParameters(array('SessionId' => $idsession, 'tiers' => $tiers))
         ;
     }
 
@@ -32,6 +40,21 @@ class PresenceRepository extends EntityRepository
     	->innerJoin('t.pscParcours','par')
         ->where('par.prcDcont = :dcont')
         ->setParameter('dcont', $dcont)
+        ;
+        $result = $qb->getQuery()->getSingleScalarResult();
+        return $result;
+    }
+
+    /**
+     * @param $parcours
+     * @return mixed
+     */
+    public function getParcoursTotalDurees($parcours)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('sum(t.pscDuree as total')
+            ->where('t.pscParcours = :parcours')
+            ->setParameter('parcours', $parcours)
         ;
         $result = $qb->getQuery()->getSingleScalarResult();
         return $result;
