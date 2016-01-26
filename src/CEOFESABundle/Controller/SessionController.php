@@ -29,24 +29,25 @@ use CEOFESABundle\Form\Type\MonthType;
  */
 class SessionController extends Controller
 {
-	/**
-    * @Route(
-    * 	path="/",
-    * 	name="session_index"
-    * )
-    * @Method({"GET"})
-    * @Template("::Session\index.html.twig")
-    */
+    /**
+     * @Route(
+     * 	path="/",
+     * 	name="session_index"
+     * )
+     * @Method({"GET"})
+     * @Template("::Session\index.html.twig")
+     */
     public function indexAction(Request $request)
     {
-       	$form = $this->createChooseForm('session_list');
+        $form = $this->createChooseForm('session_list');
 
         return array(
             'choose_form' => $form->createView(),
         );
     }
 
-     /**
+
+    /**
      * Creates a new Session entity.
      *
      * @Route("/ajout/{module}/{type}/{of}", name="session_create")
@@ -390,22 +391,6 @@ class SessionController extends Controller
     }
 
     /**
-     * Page sélection par stagiaires
-     *
-     * @Route("/stagiaires", name="session_stagiaires")
-     * @Method({"GET","POST"})
-     * @Template("::Session\index_stagiaires.html.twig")
-     */
-    public function indexStagiairesAction(Request $request)
-    {
-        $form = $this->createChooseForm('session_stagiaire_list');
-        
-        return array(
-            'choose_form' => $form->createView(),
-        );
-    }
-
-    /**
     * Affiche la liste des sessions d'un stagiaire en fonction du module/moduleType/OF choisi dans le formulaire
     *
     * @Route(
@@ -414,38 +399,17 @@ class SessionController extends Controller
     * )
     * @Template("::Session\index_stagiaires.html.twig")
     */
-    public function stagiaireListAction(Request $request)
+    public function stagiaireListAction()
     {
-        $form = $this->createChooseForm('session_stagiaire_list');
-
-        $form->handleRequest($request);
-
-        $data       = $form->getData();
-        $module     = $data['module'];
-        $modType    = $data['type'];
-        $of         = $data['of'];
         $id         = $this->get('session')->get('structure');
 
         $em             = $this->getDoctrine()->getManager();
-        $formateurs     = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
-        $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcours($id, $of, $module,$modType)->getQuery()->getResult();
-        $entities       = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(), $modType->getMtyId(), $of->getStrId(), $id)->getQuery()->getResult();
-
-        $monthForm = $this->createForm(new MonthType());
-
-        $monthForm->get('module')->setData($module->getModId());
-        $monthForm->get('type')->setData($modType->getMtyId());
-        $monthForm->get('of')->setData($of->getStrId());
+        $structure      = $em->getRepository('CEOFESABundle:Structure')->find($id);
+        $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructure($id)->getQuery()->getResult();
 
         return array(
-            'choose_form' => $form->createView(),
-            'monthForm'  => $monthForm->createView(),
-            'participants' => $participants,
-            'entities' => $entities,
-            'module' => $module,
-            'type' => $modType,
-            'of' => $of,
-            'formateurs' => $formateurs,
+            'structure'     => $structure,
+            'participants'  => $participants,
         );
     }
 

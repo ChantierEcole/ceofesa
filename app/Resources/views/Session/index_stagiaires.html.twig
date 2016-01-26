@@ -1,7 +1,7 @@
 {% extends '::layout.html.twig' %}
 
 {% block body %}
-	<div class="row select-session-form">
+{#	<div class="row select-session-form">
 		<div class="col-md-12">
 			<div class="panel panel-visible">
 				 <div class="panel-body">
@@ -36,16 +36,14 @@
 			</div>
 		</div>
 	</div>
-
-	{% if entities is defined and of is defined and module is defined and type is defined %}
-
-        {% include '::Session/print_form.html.twig' with {'route' : 'session_stagiaire_list_print'} %}
+#}
+{#        {% include '::Session/print_form.html.twig' with {'route' : 'session_stagiaire_list_print'} %}#}
 
 		<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-visible margin-bottom-none">
 				<div class="panel-heading">
-	                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Résultats pour le module {{ module.modCode }} avec le type {{ type.mtyType }} pour l'OF {{ of.strNom }} </div>
+	                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Stagiaire et sessions de la structure {{ structure.strNom }} </div>
 	            </div>
 	            <div class="panel-body">
 	                <div class="clearfix"></div>
@@ -58,6 +56,9 @@
 			                			<th>Nom</th>
 			                			<th>Prénom</th>
 			                			<th>DAF</th>
+			                			<th>Module</th>
+			                			<th>Type</th>
+			                			<th>OF</th>
 			                			<th>Action</th>
 			                		</tr>
 			                	</thead>
@@ -67,6 +68,9 @@
 					                		<td>{{ participant.prcDcont.cntTiers.trsNom }}</td>
 					                		<td>{{ participant.prcDcont.cntTiers.trsPrenom }}</td>
 					                		<td>{{ participant.prcDcont.cntDaf.dafDossier }}</td>
+					                		<td></td>
+					                		<td></td>
+					                		<td></td>
 					                		<td>
 	                                			<button type="button" class="btn btn-blue3 btn-xs js-btn-voir" data-entityid="{{ participant.prcid }}">
 	                                    			<i class="fa fa-eye"></i> Détails
@@ -139,27 +143,27 @@
 							<div class="row detail-session">
 								<div class="col-md-4">
 									<label>Date :</label>
-									<input disabled class="dateSession"></input>
+									<input disabled class="dateSession" />
 								</div>
 								<div class="col-md-4">
 									<label>Heure de début :</label>
-									<input disabled class="HDebutSession"></input>
+									<input disabled class="HDebutSession" />
 								</div>
 								<div class="col-md-4">
 									<label>Heure de fin :</label>
-									<input disabled class="HFinSession"></input>
+									<input disabled class="HFinSession" />
 								</div>
 								<div class="col-md-4">
 									<label>Durée :</label>
-									<input disabled class="DureeSession"></input>
+									<input disabled class="DureeSession" />
 								</div>
 								<div class="col-md-4">
 									<label>Séance :</label>
-									<input disabled class="TypeSeance"></input>
+									<input disabled class="TypeSeance" />
 								</div>
 								<div class="col-md-4">
 									<label>Type de Formation :</label>
-									<input disabled class="TypeFormation"></input>
+									<input disabled class="TypeFormation" />
 								</div>
 								<div class="col-md-12">
 									<div class="modifDetailBtn"></div>
@@ -177,7 +181,6 @@
             </div>
         </div>
 
-    {% endif %}
 {% endblock %}
 {% block javascripts %}
 
@@ -294,7 +297,6 @@ $(document).ready(function() {
             	var noResult = 1;
         		$("div.listFormateur").html('<table><tbody>');
         		$.each(data, function(index){
-        			var id      = data[index].id;
 		            var tiers    = data[index].tiers;
 		            $("div.listFormateur").append('<tr><td>'+tiers+'</td></tr>');
 		            noResult = 0;

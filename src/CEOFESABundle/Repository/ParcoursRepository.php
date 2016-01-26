@@ -20,6 +20,22 @@ class ParcoursRepository extends EntityRepository
         ;
     }
 
+    /**
+     * @param $idStructure
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getParcoursByStructure($idStructure)
+    {
+        return $this
+            ->createQueryBuilder('par')
+            ->innerJoin('par.prcDcont','dcnt')
+            ->innerJoin('dcnt.cntDaf','daf')
+            ->where('daf.dafStructure = :IdStructure')
+            ->setParameters(array('IdStructure' => $idStructure))
+            ;
+    }
+
+
     public function getParcoursAndSessions($idStructure, $idOF, $idModule, $idModuleType, $date)
     {
         $qb = $this->getParcours($idStructure, $idOF, $idModule, $idModuleType);
