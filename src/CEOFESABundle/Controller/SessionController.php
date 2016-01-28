@@ -421,6 +421,7 @@ class SessionController extends Controller
     *   path="/stagiaire/list/print",
     *   name="session_stagiaire_list_print"
     * )
+    * @Template("::Session\print_form.html.twig")
     */
     public function stagiaireListPrintAction(Request $request)
     {
@@ -428,27 +429,33 @@ class SessionController extends Controller
 
         $form->handleRequest($request);
 
-        $data       = $form->getData();
-        $date       = $data['date'];
-        $module     = $data['module'];
-        $modType    = $data['type'];
-        $of         = $data['of'];
-        $id         = $this->get('session')->get('structure');
+        if ($form->isValid()) {
+            $data       = $form->getData();
+            $date       = $data['date'];
+            $module     = $data['module'];
+            $modType    = $data['type'];
+            $of         = $data['of'];
+            $id         = $this->get('session')->get('structure');
 
-        $em             = $this->getDoctrine()->getManager();
-        $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
+            $em             = $this->getDoctrine()->getManager();
+            $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
 
-        $html = $this->renderView('::Templates\emargement.html.twig', array(
-            'participants'  => $participants,
-            'date'          => $date
-        ));
+            $html = $this->renderView('::Templates\emargement.html.twig', array(
+                'participants'  => $participants,
+                'date'          => $date
+            ));
 
-        $response= new Response();
-        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape','page-size' => 'A4')));
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-disposition', 'filename=emargement-'.$date->format('mY').'.pdf');
+            $response= new Response();
+            $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape','page-size' => 'A4')));
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-disposition', 'filename=emargement-'.$date->format('mY').'.pdf');
 
-        return $response;
+            return $response;
+        }
+
+        return array(
+            'printForm' => $form->createView()
+        );
     }
 
     /**
