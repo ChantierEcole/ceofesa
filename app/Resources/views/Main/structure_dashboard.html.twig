@@ -1,0 +1,76 @@
+{% extends "::layout.html.twig" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-visible margin-bottom-none">
+        <div class="panel-heading">
+          <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-dashboard"></span>Panneau de contrôle - {{ structure.strNom }}</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="row">
+            {{ form_start(form) }}
+            {{ form_widget(form.date.day, { 'attr': { 'style': 'display:none' }} )  }}
+            <div class="col-sm-2">
+              {{ form_widget(form.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+            </div>
+            <div class="col-sm-2">
+              {{ form_widget(form.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+            </div>
+            <div class="col-sm-3">
+              {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+              {{ form_widget(form.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+            </div>
+            {{ form_end(form) }}
+          </div>
+
+          <br />
+          <br />
+
+          <div class="clearfix"></div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <table class="js-data-table">
+                <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>DAF</th>
+                  <th>Module</th>
+                  <th>Type</th>
+                  <th>Nombre d'Heures du mois</th>
+                  <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
+                  <th>Nombre d'Heures prévues<br /> pour le parcours</th>
+                  <th>OF Sous-traitant</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for participant in participants %}
+                  <tr>
+                    <td>{{ participant.prcDcont.cntTiers.trsNom }}</td>
+                    <td>{{ participant.prcDcont.cntTiers.trsPrenom }}</td>
+                    <td>{{ participant.prcDcont.cntDaf.dafDossier }}</td>
+                    <td>{{ participant.prcModule.modCode }}</td>
+                    <td>{{ participant.prcType.mtyType }}</td>
+                    <td class="ta-right">{{ participant.totalHeuresInMonth(date) }}</td>
+                    <td class="ta-right">{{ participant.totalHeures }}</td>
+                    <td class="ta-right">{{ participant.prcNombreheure }}</td>
+                    <td>{{ participant.prcStructure.strNom }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  
+
+<!-- End: Main --> 
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

@@ -37,6 +37,29 @@ class ParcoursRepository extends EntityRepository
             ;
     }
 
+    /**
+     * @param $idStructure
+     * @param $date
+     * @return array
+     */
+    public function getParcoursByStructureAndDate($idStructure, $date)
+    {
+        return $this
+            ->createQueryBuilder('par')
+            ->select('par, dcnt, daf', 'psc')
+            ->innerJoin('par.prcDcont','dcnt')
+            ->innerJoin('dcnt.cntDaf','daf')
+            ->leftJoin('par.prcPresence', 'psc')
+            ->where('daf.dafStructure = :IdStructure')
+            ->andWhere('daf.dafDatedebut <= :dateDebut')
+            ->andWhere('daf.dafDatefin >= :dateFin')
+            ->setParameter('IdStructure', $idStructure)
+            ->setParameter('dateDebut', $date->format('Y-m-01'))
+            ->setParameter('dateFin', $date->format('Y-m-t'))
+            ->getQuery()->getResult()
+            ;
+    }
+
 
     public function getParcoursAndSessions($idStructure, $idOF, $idModule, $idModuleType, $date)
     {

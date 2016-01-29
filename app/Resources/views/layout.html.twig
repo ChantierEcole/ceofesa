@@ -117,6 +117,11 @@
                         </li>
                     </ul>
                     {% endif %}
+                    <ul class="nav sidebar-nav">
+                        <li>
+                            <a href="{{ path('structure_dashboard') }}"><span class="glyphicons glyphicons-dashboard"></span><span class="sidebar-title">Dashboard</span></a>
+                        </li>
+                    </ul>
                     {% if is_granted('ROLE_USER') %}
                     <ul class="nav sidebar-nav">
                         <li>

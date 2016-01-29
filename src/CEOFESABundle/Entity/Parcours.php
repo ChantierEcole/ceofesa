@@ -263,6 +263,24 @@ class Parcours
     }
 
     /**
+     * @return int
+     */
+    public function getTotalHeuresInMonth(\DateTime $date)
+    {
+        $total = 0;
+        foreach ($this->getPrcPresence() as $presence) {
+            $sessionDate = $presence->getPscSession()->getSesDate();
+            if ($sessionDate
+                && $sessionDate->format('Y-m-d') >= $date->format('Y-m-01')
+                && $sessionDate->format('Y-m-d') <= $date->format('Y-m-t')) {
+                $total += $presence->getPscDuree();
+            }
+        }
+
+        return $total;
+    }
+
+    /**
      * Get prctiersdaf
      *
      * @return string
