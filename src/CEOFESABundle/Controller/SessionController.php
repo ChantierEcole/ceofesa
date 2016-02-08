@@ -68,7 +68,7 @@ class SessionController extends Controller
 
             $id = $entity->getSesId();
 
-            return $this->redirect($this->generateUrl('session_list2', array('module' => $entity->getSesModule()->getModId(),'type' => $entity->getSesFtype()->getFtyId(),'of' => $entity->getSesOf()->getStrId(), 'session' => $id)));
+            return $this->redirect($this->generateUrl('session_list2', array('module' => $entity->getSesModule()->getModId(),'type' => $entity->getSesMtype()->getMtyId(),'of' => $entity->getSesOf()->getStrId(), 'session' => $id)));
         }
 
         return array(

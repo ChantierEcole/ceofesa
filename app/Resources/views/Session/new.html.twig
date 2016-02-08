@@ -39,6 +39,35 @@
             }
         });
         });
+
+
+        $('#ceofesabundle_session_sesMtype').change(function(){
+
+            var type_id = $(this).val();
+            var ofElement = '#ceofesabundle_session_sesOf';
+
+            $.ajax({  type: "POST",
+                url: '{{ path('devis_ajax') }}',
+                data: {'type_id':type_id},
+                dataType: 'json',
+                timeout: 30000,
+                success: function (data) {
+                    console.log(data);
+                    //réinitialise la liste des sous-traitants
+                    $(ofElement).html('');
+
+                    //met à jour la liste des sous-traitants
+                    $.each(data, function(index){
+                        var id      = data[index].id;
+                        var name    = data[index].nom;
+                        $(ofElement).append('<option value="'+id+'">'+name+'</option>');
+                    });
+                },
+                error: function(exception){
+                    alert('Erreur, la connexion au serveur a été interrompue');
+                }
+            });
+        });
     });
 
 </script>

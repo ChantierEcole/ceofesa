@@ -57,29 +57,26 @@ class SessionType extends AbstractType
                     return $repo->getUserStructure($id);
                 },
             ))
-            ->add('sesOf','entity', array(
-                'class' => 'CEOFESABundle\Entity\Structure',
-                'property' => 'strNom',
-                'label' => "OF",
+            ->add('sesModule','entity', array(
+                'class' => 'CEOFESABundle\Entity\Module',
+                'property' => 'modCode',
+                'label' => "Module",
                 'multiple' => false,
-                'read_only' => true,
-                'query_builder' => function(StructureRepository $repo) {
-                    return $repo->getOFPrincipal();
-                },
             ))
             ->add('sesMtype','entity', array(
                 'class' => 'CEOFESABundle\Entity\ModuleT',
                 'property' => 'mtyType',
                 'label' => "Type de Module",
                 'multiple' => false,
-                'read_only' => true,
             ))
-            ->add('sesModule','entity', array(
-                'class' => 'CEOFESABundle\Entity\Module',
-                'property' => 'modCode',
-                'label' => "Module",
+            ->add('sesOf','entity', array(
+                'class' => 'CEOFESABundle\Entity\Structure',
+                'property' => 'strNom',
+                'label' => "OF",
                 'multiple' => false,
-                'read_only' => true,
+                'query_builder' => function(StructureRepository $repo) {
+                    return $repo->getOFPrincipal();
+                },
             ))
             ->add('sesStype','entity', array(
                 'class' => 'CEOFESABundle\Entity\SessionT',
@@ -98,6 +95,49 @@ class SessionType extends AbstractType
             ))
         ;
 
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function(FormEvent $event) {
+
+                $form = $event->getForm();
+
+                $data = $event->getData();
+
+                if($data != null && $data->getSesMtype()){
+                    $type = $data->getSesMtype()->getMtyType();
+                } else {
+                    $type = "INTRA";
+                }
+
+                if($type == "INTRA") {
+                    $form->add('sesOf','entity',array(
+                        'class' => 'CEOFESABundle\Entity\Structure',
+                        'property' => 'strNom',
+                        'label' => 'OF',
+                        'multiple' => false,
+                        'query_builder' => function(StructureRepository $repo){
+                            return $repo->getIntra();
+                        }
+                    ));
+                } elseif($type == "EXTERNE") {
+                    $id = $this->idUser;
+                    $form->add('sesOf','entity',array(
+                        'class' => 'CEOFESABundle\Entity\Structure',
+                        'property' => 'strNom',
+                        'label' => 'OF',
+                        'multiple' => false,
+                        'query_builder' => function(StructureRepository $repo) use ($id){
+                            return $repo->getSoustraitants($id);
+                        }
+                    ));
+                }
+            }
+        );
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $session = $event->getData();
 
@@ -113,7 +153,29 @@ class SessionType extends AbstractType
             }
         });
     }
-    
+
+    /**
+     * @param FormEvent $event
+     */
+    public function onPreSubmit(FormEvent $event) {
+        $form = $event->getForm();
+        $data = $event->getData();
+
+        $ofId = $data['sesOf'];
+        if($ofId != null){
+            $form->remove('sesOf');
+            $form->add('sesOf','entity',array(
+                'class' => 'CEOFESABundle\Entity\Structure',
+                'property' => 'strNom',
+                'label' => 'OF',
+                'multiple' => false,
+                'query_builder' => function(StructureRepository $repo) use($ofId) {
+                    return $repo->getSoustraitant($ofId);
+                }
+            ));
+        }
+    }
+
     /**
      * @param OptionsResolverInterface $resolver
      */
