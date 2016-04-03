@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -88,7 +89,7 @@ class Parcours
     /**
      * Get prcId
      *
-     * @return integer 
+     * @return integer
      */
     public function getPrcId()
     {
@@ -111,7 +112,7 @@ class Parcours
     /**
      * Get prcNombreheure
      *
-     * @return string 
+     * @return string
      */
     public function getPrcNombreheure()
     {
@@ -134,7 +135,7 @@ class Parcours
     /**
      * Get prcDcont
      *
-     * @return \CEOFESABundle\Entity\DCont 
+     * @return \CEOFESABundle\Entity\DCont
      */
     public function getPrcDcont()
     {
@@ -157,7 +158,7 @@ class Parcours
     /**
      * Get prcStructure
      *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getPrcStructure()
     {
@@ -180,7 +181,7 @@ class Parcours
     /**
      * Get prcModule
      *
-     * @return \CEOFESABundle\Entity\Module 
+     * @return \CEOFESABundle\Entity\Module
      */
     public function getPrcModule()
     {
@@ -226,7 +227,7 @@ class Parcours
     /**
      * Get prcImpdevis
      *
-     * @return \CEOFESABundle\Entity\DParcours 
+     * @return \CEOFESABundle\Entity\DParcours
      */
     public function getPrcImpdevis()
     {
@@ -234,7 +235,7 @@ class Parcours
     }
 
     /**
-     * @return \Presence
+     * @return Presence[]|ArrayCollection
      */
     public function getPrcPresence()
     {
@@ -242,7 +243,7 @@ class Parcours
     }
 
     /**
-     * @param \Presence $prcPresence
+     * @param Presence[]|ArrayCollection $prcPresence
      */
     public function setPrcPresence($prcPresence)
     {

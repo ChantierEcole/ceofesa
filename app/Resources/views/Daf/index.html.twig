@@ -28,8 +28,8 @@
                     {% for daf in dafs %}
                         <tr>
                             <td>{{ daf.dafDossier }}</td>
-                            <td data-order="{% if daf.dafDatedebut %}{{ daf.dafDatedebut|date('Y-m-d') }}{% endif %}">{% if daf.dafDatedebut %}{{ daf.dafDatedebut|date('d/m/Y') }}{% endif %}</td>
-                            <td data-order="{% if daf.dafDatefin %}{{ daf.dafDatefin|date('Y-m-d') }}{% endif %}">{% if daf.dafDatefin %}{{ daf.dafDatefin|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{{ daf.dafDatedebut.timestamp|default(0) }}">{{ daf.dafDatedebut|date('d/m/Y')|default() }}</td>
+                            <td data-order="{{ daf.dafDatefin.timestamp|default(0) }}">{{ daf.dafDatefin|date('d/m/Y')|default() }}</td>
                             <td>{{ daf.dafNbheure }}</td>
                             <td>{{ daf.dafNbsalarie }}</td>
                             <td>{{ daf.dafMontant }}</td>

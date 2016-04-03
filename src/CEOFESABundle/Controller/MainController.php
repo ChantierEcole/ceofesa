@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Entity\Parcours;
 use CEOFESABundle\Form\Type\DashboardType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,7 +27,7 @@ class MainController extends Controller
         } else if ($this->get('security.context')->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')){
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        
+
     }
 
     /**

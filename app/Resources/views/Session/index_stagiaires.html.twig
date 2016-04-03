@@ -97,7 +97,7 @@
 								<tbody>
 								</tbody>
 							</table>
-						</div>	
+						</div>
 		            </div>
 		            <div class="col-md-12 infos-session">
 						<div class="jumbotron">
@@ -161,7 +161,7 @@ $(document).ready(function() {
     	var module_id = modSelect.val();
 	    var type_id = typeSelect.val();
 
-	    $.ajax({  
+	    $.ajax({
 	    	type: "POST",
 	    	url: "{{ path('session_ajax') }}",
 	    	data: {'module_id':module_id,'type_id':type_id},
@@ -188,7 +188,7 @@ $(document).ready(function() {
 	};
 
 	function listSessions(idParcours) {
-		$.ajax({  
+		$.ajax({
 	    	type: "POST",
 	    	url: "{{ path('stagiaire_list_ajax') }}",
 	    	data: 'idParcours=' + idParcours,
@@ -207,7 +207,7 @@ $(document).ready(function() {
 	};
 
 	function detailStagiaire(idParcours) {
-		$.ajax({  
+		$.ajax({
 	    	type: "POST",
 	    	url: "{{ path('stagiaire_details_ajax') }}",
 	    	data: 'idParcours=' + idParcours,
@@ -277,7 +277,7 @@ $(document).ready(function() {
 	changeOF(modSelect,typeSelect);
 
     typeSelect.change(function(){
-    	changeOF(modSelect,typeSelect); 
+    	changeOF(modSelect,typeSelect);
     });
 
     modSelect.change(function(){
@@ -294,7 +294,7 @@ $(document).ready(function() {
 		}, 'slow');
     });
 
-    $("body").on("click",".btn-voir", function(){  
+    $("body").on("click",".btn-voir", function(){
     	var entityid = $(this).data("entityid");
     	detailSession(entityid);
     	listFormateur(entityid);

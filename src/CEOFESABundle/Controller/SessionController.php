@@ -3,6 +3,7 @@
 namespace CEOFESABundle\Controller;
 
 use CEOFESABundle\Entity\Parcours;
+use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\PresenceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ use CEOFESABundle\Entity\Presence;
 use CEOFESABundle\Repository\ParcoursRepository;
 use CEOFESABundle\Form\Type\SessionType;
 use CEOFESABundle\Form\Type\MonthType;
-
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Session controller.
@@ -47,13 +48,17 @@ class SessionController extends Controller
         );
     }
 
-
     /**
      * Creates a new Session entity.
      *
-     * @Route("/ajout", name="session_create")
-     * @Method({"GET","POST"})
+     * @Route("/ajout", name = "session_create")
+     * @Method({ "GET", "POST" })
+     *
      * @Template("::Session\new.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createAction(Request $request)
     {
@@ -63,12 +68,23 @@ class SessionController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $animation = new Animation();
+            $animation->setAniTiers($entity->getFormateur());
+            $animation->setAniSession($entity);
+
             $em->persist($entity);
+            $em->persist($animation);
             $em->flush();
 
             $id = $entity->getSesId();
 
-            return $this->redirect($this->generateUrl('session_list2', array('module' => $entity->getSesModule()->getModId(),'type' => $entity->getSesMtype()->getMtyId(),'of' => $entity->getSesOf()->getStrId(), 'session' => $id)));
+            return $this->redirect($this->generateUrl('session_list2', array(
+                'module'  => $entity->getSesModule()->getModId(),
+                'type'    => $entity->getSesMtype()->getMtyId(),
+                'of'      => $entity->getSesOf()->getStrId(),
+                'session' => $id,
+            )));
         }
 
         return array(
@@ -88,7 +104,8 @@ class SessionController extends Controller
     {
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new SessionType($id), $entity, array(
+        $form = $this
+            ->createForm(new SessionType($this->getDoctrine()->getRepository(Structure::class), $id), $entity, array(
             'action' => $this->generateUrl('session_create'),
             'method' => 'POST',
         ));
@@ -120,7 +137,11 @@ class SessionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $formateurs = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
-        $entities = $em->getRepository('CEOFESABundle:Session')->getSessions($module->getModId(),$modType->getMtyId(),$of->getStrId(),$id)->getQuery()->getResult();
+        $entities = $em
+            ->getRepository('CEOFESABundle:Session')
+            ->getSessions($module->getModId(), $modType->getMtyId(), $of->getStrId(), $id)
+            ->getQuery()
+            ->getResult();
 
         $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
 
@@ -131,16 +152,42 @@ class SessionController extends Controller
         $monthForm->get('of')->setData($of->getStrId());
 
 		return array(
-		    'choose_form' => $form->createView(),
+            'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
-            'monthForm' => $monthForm->createView(),
-		    'entities' => $entities,
-		    'module' => $module,
-		    'type' => $modType,
-		    'of' => $of,
-            'formateurs' => $formateurs,
+            'monthForm'        => $monthForm->createView(),
+            'entities'         => $entities,
+            'module'           => $module,
+            'type'             => $modType,
+            'of'               => $of,
+            'formateurs'       => $formateurs,
 		);
 	}
+
+    /**
+     * @Route(
+     *     path = "/delete/{id}",
+     *     name = "session_remove"
+     * )
+     *
+     * @param \CEOFESABundle\Entity\Session $session
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteSessionAction(Session $session)
+    {
+        if (count($session->getPresences()) > 0) {
+            throw new AccessDeniedException();
+        }
+
+        try {
+            $this->getDoctrine()->getManager()->remove($session);
+            $this->getDoctrine()->getManager()->flush();
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue');
+        }
+
+        return $this->redirectToRoute('session_index');
+    }
 
     /**
     * Affiche la liste des sessions après ajout ou modification d'une session
@@ -306,12 +353,12 @@ class SessionController extends Controller
 
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {     
+        if ($editForm->isValid()) {
             $em->flush();
             return $this->redirect($this->generateUrl('session_list2', array(
                 'module' => $entity->getSesModule()->getModId(),
                 'type' => $entity->getSesMtype()->getMtyId(),
-                'of' => $entity->getSesOf()->getStrId(), 
+                'of' => $entity->getSesOf()->getStrId(),
                 'session' => $entity->getSesId(),
             )));
         }
@@ -345,7 +392,7 @@ class SessionController extends Controller
 
         return $form;
     }
-    
+
     /**
      * Deletes a Session entity.
      *
@@ -461,7 +508,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> affichage de la listes des OF en fonction du module et du type
-     * 
+     *
      * @Route("/ajax", name="session_ajax")
      *
      */
@@ -493,7 +540,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> affichage du détail d'une session choisie
-     * 
+     *
      * @Route("/detail-ajax", name="details_session_ajax")
      *
      */
@@ -517,7 +564,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> recalcule la durée de la session en fonction de l'heure de début et de l'heure de fin
-     * 
+     *
      * @Route("/auto-heure-ajax", name="auto_heure_ajax")
      *
      */
@@ -543,7 +590,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> affichage des formateurs d'une session choisie
-     * 
+     *
      * @Route("/formateur-ajax", name="formateurs_session_ajax")
      *
      */
@@ -566,7 +613,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> affichage des participants d'une session choisie
-     * 
+     *
      * @Route("/participants-ajax", name="participants_session_ajax")
      *
      */
@@ -598,7 +645,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> suppression du formateur choisi
-     * 
+     *
      * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")
      *
      */
@@ -609,7 +656,7 @@ class SessionController extends Controller
 
         if (!$animation) {
             throw $this->createNotFoundException(
-                'Aucun formateur trouvé pour cette session. (id liaison : '.$id.')'
+                'Aucun formateur trouvé pour cette session. (id liaison : '.$animationId.')'
             );
         }
 
@@ -623,7 +670,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> ajout d'un formateur à la session
-     * 
+     *
      * @Route("/formateur-add-ajax", name="formateur_add_ajax")
      *
      */
@@ -649,7 +696,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> suppression du participant choisi
-     * 
+     *
      * @Route("/participant-delete-ajax", name="participant_delete_ajax")
      *
      */
@@ -707,7 +754,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> ajout d'un participant à la session
-     * 
+     *
      * @Route("/participant-add-ajax", name="participant_add_ajax")
      *
      */
@@ -741,7 +788,7 @@ class SessionController extends Controller
             $presence->setPscParcours($parcours);
             $em->persist($presence);
             $em->flush();
-            $reponse = new JsonResponse($idsession); 
+            $reponse = new JsonResponse($idsession);
         }
 
         return $reponse;
@@ -750,7 +797,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> affichage liste de session en fonction du stagiaire choisi
-     * 
+     *
      * @Route("/stagiaire-list-ajax", name="stagiaire_list_ajax")
      *
      */
@@ -808,7 +855,7 @@ class SessionController extends Controller
     /**
      * Traitement backoffice de l'AJAX
      * -> affichage des détails concernant le stagiaire choisi
-     * 
+     *
      * @Route("/stagiaire-details-ajax", name="stagiaire_details_ajax")
      *
      */

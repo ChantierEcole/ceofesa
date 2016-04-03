@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 
 /**
- * DAF
+ * DAF (Devis validé)
  *
  * @ORM\Table(name="tb_DAF", indexes={@ORM\Index(name="daf_Dossier", columns={"daf_Dossier"}), @ORM\Index(name="daf_DDebut", columns={"daf_DateDebut"})})
  * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\DAFRepository")
@@ -119,7 +119,7 @@ class DAF
     /**
      * Get dafId
      *
-     * @return integer 
+     * @return integer
      */
     public function getDafId()
     {
@@ -142,7 +142,7 @@ class DAF
     /**
      * Get dafDossier
      *
-     * @return string 
+     * @return string
      */
     public function getDafDossier()
     {
@@ -165,7 +165,7 @@ class DAF
     /**
      * Get dafDatedebut
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDafDatedebut()
     {
@@ -188,7 +188,7 @@ class DAF
     /**
      * Get dafDatefin
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDafDatefin()
     {
@@ -211,7 +211,7 @@ class DAF
     /**
      * Get dafNbheure
      *
-     * @return string 
+     * @return string
      */
     public function getDafNbheure()
     {
@@ -234,7 +234,7 @@ class DAF
     /**
      * Get dafNbsalarie
      *
-     * @return integer 
+     * @return integer
      */
     public function getDafNbsalarie()
     {
@@ -257,7 +257,7 @@ class DAF
     /**
      * Get dafMontant
      *
-     * @return string 
+     * @return string
      */
     public function getDafMontant()
     {
@@ -280,7 +280,7 @@ class DAF
     /**
      * Get dafTauxhoraire
      *
-     * @return string 
+     * @return string
      */
     public function getDafTauxhoraire()
     {
@@ -303,7 +303,7 @@ class DAF
     /**
      * Get dafStructure
      *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getDafStructure()
     {
@@ -326,7 +326,7 @@ class DAF
     /**
      * Get dafOf
      *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getDafOf()
     {

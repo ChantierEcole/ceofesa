@@ -26,7 +26,7 @@
                         <tr>
                             <td>{{ bon.bcdAnnee }}</td>
                             <td>{{ bon.bcdNumero }}</td>
-                            <td data-order="{{ bon.bcdDate | date('Y-m-d') }}">{{ bon.bcdDate | date('d/m/Y') }}</td>
+                            <td data-order="{{ bon.bcdDate.timestamp }}">{{ bon.bcdDate | date('d/m/Y') }}</td>
                             <td>{% if bon.bcdDAF %}{{ bon.bcdDAF.dafDossier }}{% endif %}</td>
                             <td>{{ bon.bcdSent ? 'Oui' : 'Non' }}</td>
                             <td>

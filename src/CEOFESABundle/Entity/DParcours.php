@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * DParcours
+ * DParcours (Devis Parours)
  *
  * @ORM\Table(name="tb_DParcours", uniqueConstraints={@ORM\UniqueConstraint(name="unq_dparcours", columns={"dpr_Devis", "dpr_Tiers", "dpr_Type", "dpr_Module", "dpr_Structure"})})
  * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\DParcoursRepository")
@@ -89,7 +89,7 @@ class DParcours
     /**
      * Get dprId
      *
-     * @return integer 
+     * @return integer
      */
     public function getDprId()
     {
@@ -112,7 +112,7 @@ class DParcours
     /**
      * Get dprNombreheure
      *
-     * @return string 
+     * @return string
      */
     public function getDprNombreheure()
     {
@@ -135,7 +135,7 @@ class DParcours
     /**
      * Get dprNumero
      *
-     * @return integer 
+     * @return integer
      */
     public function getDprNumero()
     {
@@ -158,7 +158,7 @@ class DParcours
     /**
      * Get dprDevis
      *
-     * @return \CEOFESABundle\Entity\Devis 
+     * @return \CEOFESABundle\Entity\Devis
      */
     public function getDprDevis()
     {
@@ -181,7 +181,7 @@ class DParcours
     /**
      * Get dprTiers
      *
-     * @return \CEOFESABundle\Entity\Tiers 
+     * @return \CEOFESABundle\Entity\Tiers
      */
     public function getDprTiers()
     {
@@ -204,7 +204,7 @@ class DParcours
     /**
      * Get dprType
      *
-     * @return \CEOFESABundle\Entity\ModuleT 
+     * @return \CEOFESABundle\Entity\ModuleT
      */
     public function getDprType()
     {
@@ -227,7 +227,7 @@ class DParcours
     /**
      * Get dprStructure
      *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getDprStructure()
     {
@@ -250,7 +250,7 @@ class DParcours
     /**
      * Get dprModule
      *
-     * @return \CEOFESABundle\Entity\Module 
+     * @return \CEOFESABundle\Entity\Module
      */
     public function getDprModule()
     {

@@ -1,4 +1,5 @@
 {% extends '::layout.html.twig' %}
+{# @var entities \CEOFESABundle\Entity\Session[] #}
 
 {% block body %}
 <div class="row select-session-form">
@@ -36,11 +37,11 @@
 
                 {{ form_end(choose_form) }}
                  <div class="alert alert-warning no-result">
-                 	
+
                  </div>
 			</div>
 		</div>
-	</div>	
+	</div>
 </div>
 {% if entities is defined and of is defined and module is defined and type is defined %}
 
@@ -61,24 +62,32 @@
 								<table class="table js-data-table">
 									<thead>
 										<tr>
-											<th style="width: 15%">ID</th>
-											<th style="width: 23%">Date</th>
-											<th style="width: 21%">Type</th>
-											<th style="width: 15%">Durée</th>
-											<th style="width: 26%">Action</th>
+											<th>ID</th>
+											<th>Date</th>
+											<th>Type</th>
+											<th>Durée</th>
+											<th>Inscrits</th>
+											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody>
 										{% for entity in entities %}
 										<tr>
 											<td>{{ entity.sesId }}</td>
-											<td>{{ entity.sesDate|date('d-m-Y') }}</td>
+											<td data-order="{{ entity.sesDate.timestamp|default(0) }}">{{ entity.sesDate|date('d-m-Y')|default() }}</td>
 											<td>{{ entity.sesStype.styType }}</td>
 											<td>
 												{% if entity.sesDuree != "0.00" %}
 													{{ entity.sesDuree }}
 												{% else %}
 													-
+												{% endif %}
+											</td>
+											<td>
+												{% if entity.presences|length <= 0  %}
+													<strong class="text-danger">{{ entity.presences|length }}</strong>
+												{% else %}
+													{{ entity.presences|length }}
 												{% endif %}
 											</td>
 											<td class="text-center">
@@ -130,7 +139,7 @@
 								<div class="row formateur-session">
 									<div class="listFormateur table-responsive"></div>
 									<p>
-										Changer de formateur : 
+										Changer de formateur :
 										<select id="nomFormateur">
 											{% for formateur in formateurs %}
 												<option value="{{ formateur.trsId }}">{{ formateur.trsNom }} {{ formateur.trsPrenom }}</option>
@@ -183,7 +192,7 @@ $(document).ready(function() {
 	// Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
     var modSelect  = $( "#select_module select" );
     var typeSelect	= $( "#select_typemod select" );
-    var OFSelect	= $( "#select_OF select" );	
+    var OFSelect	= $( "#select_OF select" );
     $(".infos-session").hide();
 
     //affichage du détail si une session est indiquée dans l'URL
@@ -242,7 +251,8 @@ $(document).ready(function() {
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
             	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
-            	button = button.replace("variable", id);
+				button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
+            	button = button.replace(new RegExp("variable", 'g'), id);
             	$(".modifDetailBtn").html(button);
             	$(".btn-add-formateur").attr( "data-sessionid", id );
             	$(".btn-add-formateur").data( "sessionid", id );
@@ -355,11 +365,13 @@ $(document).ready(function() {
 
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
 		var duree = nbHeures+'.'+nbMinutes;
-		if(isNaN(nbHeures) == true || isNaN(nbMinutes) == true ){
+		var dureeParticipant = parseFloat(nbHeures) + parseFloat(nbMinutes)/100;
+
+		if (isNaN(nbHeures) == true || isNaN(nbMinutes) == true ) {
 			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
 		} else if($("input.TypeSeance").val() == 'Individuel' && $( ".listParticipant tr" ).length != 0) {
 			alert('Cette session est de type \'Individuel\' et ne peut donc pas comporter plus d\'un participant');
-		} else if(parseFloat($("input.DureeSession").val()) < parseFloat(duree)){
+		} else if(parseFloat($("input.DureeSession").val()) < dureeParticipant) {
 			alert('Le nombre d\'heures ne doit pas dépasser la durée de la session');
 		} else {
 			$.ajax({
@@ -407,14 +419,14 @@ $(document).ready(function() {
 	changeOF(modSelect,typeSelect);
 
     typeSelect.change(function(){
-    	changeOF(modSelect,typeSelect); 
+    	changeOF(modSelect,typeSelect);
     });
 
     modSelect.change(function(){
-    	changeOF(modSelect,typeSelect); 
+    	changeOF(modSelect,typeSelect);
     });
-        
-    $("body").on("click",".btn-voir", function(){  
+
+    $("body").on("click",".btn-voir", function(){
     	var entityid = $(this).data("entityid");
     	detailSession(entityid);
     	listFormateur(entityid);
@@ -422,28 +434,29 @@ $(document).ready(function() {
     	$(".infos-session").show();
     });
 
-    $("body").on("click",".btn-delete-formateur", function(){  
+    $("body").on("click",".btn-delete-formateur", function(){
     	var entityid = $(this).data("animationid");
     	deleteFormateur(entityid);
     });
 
-    $("body").on("click",".btn-delete-participant", function(){  
+    $("body").on("click",".btn-delete-participant", function(){
     	var entityid = $(this).data("presenceid");
     	deleteParticipant(entityid);
     });
-    
-    $("body").on("click",".btn-add-formateur", function(){  
+
+    $("body").on("click",".btn-add-formateur", function(){
     	var idsession = $(this).data("sessionid");
     	var idformateur = $('#nomFormateur').val();
     	addFormateur(idsession,idformateur);
     });
 
-    $("body").on("click",".btn-add-participant", function(){  
+    $("body").on("click",".btn-add-participant", function(){
     	var idsession = $(this).data("sessionid");
     	var idparcours = $('#form_participant').val();
     	var nbHeures = $('#form_nbHeures_hour').val();
     	var nbMinutes = $('#form_nbHeures_minute').val();
-    	addParticipant(idsession,idparcours,nbHeures,nbMinutes);
+
+    	addParticipant(idsession, idparcours, nbHeures, nbMinutes);
     });
 });
 </script>

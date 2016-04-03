@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CEOFESABundle\Entity\Structure;
-use CEOFESABundle\Form\Type\SoustraitantType;
 
 /**
  * Structure controller.
@@ -20,12 +19,12 @@ use CEOFESABundle\Form\Type\SoustraitantType;
  */
 class SoustraitantController extends Controller
 {
-
     /**
      * Liste les Sous-Traitants de la Structure
      *
      * @Route("/liste", name="soustraitant_list")
      * @Method({"GET","POST"})
+     *
      * @Template("::Soustraitant\index.html.twig")
      */
     public function indexAction()
@@ -45,7 +44,12 @@ class SoustraitantController extends Controller
      *
      * @Route("/add_relation", name="soustraitant_add_relation")
      * @Method({"GET","POST"})
+     *
      * @Template("::Soustraitant\add_relation.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function addRelationAction(Request $request)
     {
@@ -79,12 +83,15 @@ class SoustraitantController extends Controller
         );
     }
 
-
     /**
      * Print convention sous trainte
      *
      * @Route("/print_convention/{id}", name="soustraitant_convention_print")
      * @Method("GET")
+     *
+     * @param \CEOFESABundle\Entity\Relation $relation
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function printConventionAction(Relation $relation)
     {
@@ -105,7 +112,12 @@ class SoustraitantController extends Controller
      *
      * @Route("/{id}", name="soustraitant_show")
      * @Method("GET")
+     *
      * @Template("::Soustraitant\show.html.twig")
+     *
+     * @param $id
+     *
+     * @return array
      */
     public function showAction($id)
     {
@@ -117,9 +129,6 @@ class SoustraitantController extends Controller
             throw $this->createNotFoundException('Unable to find Structure entity.');
         }
 
-        return array(
-            'entity'      => $entity,
-        );
+        return array('entity' => $entity);
     }
-
 }

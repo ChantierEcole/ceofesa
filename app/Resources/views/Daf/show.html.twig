@@ -20,11 +20,11 @@
                         </tr>
                         <tr>
                             <th>Date de Début</th>
-                            <td>{{ daf.dafDatedebut|date('d/m/Y') }}</td>
+                            <td data-order="{{ daf.dafDatedebut.timestamp|default(0) }}">{{ daf.dafDatedebut|date('d/m/Y') }}</td>
                         </tr>
                         <tr>
                             <th>Date de Fin</th>
-                            <td>{{ daf.dafDatefin|date('d/m/Y') }}</td>
+                            <td data-order="{{ daf.dafDatefin.timestamp|default(0) }}">{{ daf.dafDatefin|date('d/m/Y') }}</td>
                         </tr>
                         <tr>
                             <th>Nombre de stagiaires</th>

@@ -32,7 +32,8 @@ db:
         - ./docker/var/mysql/load-dump:/docker-entrypoint-initdb.d
     env_file:
         - docker/settings/mysql
-
+    ports:
+        - 3306:3306
 tools:
     build: docker/tools
     links:

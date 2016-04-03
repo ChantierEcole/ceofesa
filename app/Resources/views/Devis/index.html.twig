@@ -29,9 +29,9 @@
                         <tr>
                             <td>{{ devi.devAnnee }}</td>
                             <td>{{ devi.devNumero }}</td>
-                            <td data-order="{% if devi.devDatedevis %}{{ devi.devDatedevis|date('Y-m-d') }}{% endif %}">{% if devi.devDatedevis %}{{ devi.devDatedevis|date('d/m/Y') }}{% endif %}</td>
-                            <td data-order="{% if devi.devDatedebut %}{{ devi.devDatedebut|date('Y-m-d') }}{% endif %}">{% if devi.devDatedebut %}{{ devi.devDatedebut|date('d/m/Y') }}{% endif %}</td>
-                            <td data-order="{% if devi.devDatefin %}{{ devi.devDatefin|date('Y-m-d') }}{% endif %}">{% if devi.devDatefin %}{{ devi.devDatefin|date('d/m/Y') }}{% endif %}</td>
+                            <td data-order="{{ devi.devDatedevis.timestamp|default(0) }}">{{ devi.devDatedevis|date('d/m/Y')|default() }}</td>
+                            <td data-order="{{ devi.devDatedebut.timestamp|default(0) }}">{{ devi.devDatedebut|date('d/m/Y')|default() }}</td>
+                            <td data-order="{{ devi.devDatefin.timestamp|default(0) }}">{{ devi.devDatefin|date('d/m/Y')|default() }}</td>
                             <td>{{ devi.devStatut }}</td>
                             <td class="text-center">
                                 <a href="{{ path('devis_show', { 'id': devi.devId }) }}">
