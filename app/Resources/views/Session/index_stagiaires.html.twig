@@ -197,7 +197,7 @@ $(document).ready(function() {
         	success: function (data) {
         		$( "#table_sessions tbody" ).html('');
      			$.each(data, function(index){
-     				$( "#table_sessions tbody" ).append('<tr><td>'+data[index].id+'</td><td>'+data[index].date+'</td><td>'+data[index].type+'</td><td class="js-length">'+data[index].duree+'</td><td class="js-validate">'+(data[index].validate ? 'Oui' : 'Non')+'</td><td class="text-center">'+ (data[index].validate == false && data[index].right ? '<button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="'+data[index].presenceId+'"><i class="fa fa-check"></i> Valider</button>' : '') + (data[index].validate == false ? ' <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].presenceId + '"><i class="fa fa-edit"></i> Editer</button> ' : ' ' ) +  ' <button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="'+data[index].id+'"><i class="fa fa-eye"></i> Détails</button></td></tr>');
+     				$( "#table_sessions tbody" ).append('<tr><td>'+data[index].id+'</td><td>'+data[index].date+'</td><td>'+data[index].type+'</td><td class="js-length">'+data[index].duree['display']+'</td><td class="js-validate">'+(data[index].validate ? 'Oui' : 'Non')+'</td><td class="text-center">'+ (data[index].validate == false && data[index].right ? '<button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="'+data[index].presenceId+'"><i class="fa fa-check"></i> Valider</button>' : '') + (data[index].validate == false ? ' <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].presenceId + '"><i class="fa fa-edit"></i> Editer</button> ' : ' ' ) +  ' <button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="'+data[index].id+'"><i class="fa fa-eye"></i> Détails</button></td></tr>');
      			});
         	},
         	error: function(exception){
@@ -239,7 +239,7 @@ $(document).ready(function() {
             	$("input.dateSession").val(data['date']);
             	$("input.HDebutSession").val(data['hDebut']);
             	$("input.HFinSession").val(data['hFin']);
-            	$("input.DureeSession").val(data['duree']);
+            	$("input.DureeSession").val(data['duree']['display']);
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
             },

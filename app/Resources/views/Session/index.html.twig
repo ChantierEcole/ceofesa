@@ -78,7 +78,7 @@
 											<td>{{ entity.sesStype.styType }}</td>
 											<td>
 												{% if entity.sesDuree != "0.00" %}
-													{{ entity.sesDuree }}
+													{{ entity.sesDuree|ceo_duration }}
 												{% else %}
 													-
 												{% endif %}
@@ -119,7 +119,7 @@
 									</div>
 									<div class="col-md-4">
 										<label>Durée :</label>
-										<input disabled class="DureeSession" />
+										<input disabled class="DureeSession" data-hour="0" data-minute="0" />
 									</div>
 									<div class="col-md-4">
 										<label>Séance :</label>
@@ -247,7 +247,11 @@ $(document).ready(function() {
             	$("input.dateSession").val(data['date']);
             	$("input.HDebutSession").val(data['hDebut']);
             	$("input.HFinSession").val(data['hFin']);
-            	$("input.DureeSession").val(data['duree']);
+
+				$("input.DureeSession").val(data['duree']['display']); // input hidden to store raw value ?
+            	$("input.DureeSession").attr('data-hour', data['duree']['hour']);
+            	$("input.DureeSession").attr('data-minute', data['duree']['minute']);
+
             	$("input.TypeSeance").val(data['seance']);
             	$("input.TypeFormation").val(data['formation']);
             	var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
@@ -307,7 +311,7 @@ $(document).ready(function() {
 
 					var tr = $("tbody.listParticipant tr:last-child");
 					tr.append('<td>'+data[index].stagiaire+'</td>');
-					tr.append('<td class="js-length">'+data[index].nbheures+'</td>');
+					tr.append('<td class="js-length">'+data[index].nbheures['display']+'</td>');
 					tr.append('<td>'+data[index].daf+'</td>');
 					tr.append('<td class="js-validate">'+(data[index].validate ? 'Oui' : 'Non') +'</td>');
 
@@ -319,9 +323,11 @@ $(document).ready(function() {
 						tr.append('<td></td>');
 					}
             	});
-            	var dureeSession = $("input.DureeSession").val().split(".");
-            	$("input#form_nbHeures_hour").val(dureeSession[0]);
-            	$("input#form_nbHeures_minute").val(dureeSession[1]);
+
+				// TODO Handle this
+				var $inputDureeSession = $("input.DureeSession");
+            	$("input#form_nbHeures_hour").val($inputDureeSession.attr('data-hour'));
+            	$("input#form_nbHeures_minute").val($inputDureeSession.attr('data-minute'));
             },
             error: function (xhr, ajaxOptions, thrownError) {
 				alert('FATAL ERROR'); //Ce code affichera le message d'erreur.
@@ -365,7 +371,7 @@ $(document).ready(function() {
 
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
 		var duree = nbHeures+'.'+nbMinutes;
-		var dureeParticipant = parseFloat(nbHeures) + parseFloat(nbMinutes)/100;
+		var dureeParticipant = parseFloat(nbHeures) + parseFloat(nbMinutes)/60;
 
 		if (isNaN(nbHeures) == true || isNaN(nbMinutes) == true ) {
 			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');

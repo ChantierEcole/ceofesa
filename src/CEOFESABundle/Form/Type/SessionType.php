@@ -5,6 +5,7 @@ namespace CEOFESABundle\Form\Type;
 use CEOFESABundle\Entity\Animation;
 use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Entity\Tiers;
+use CEOFESABundle\Form\Transformer\FloatToTimeTransformer;
 use CEOFESABundle\Repository\TiersRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,8 +59,7 @@ class SessionType extends AbstractType
                 'widget' => 'text',
                 'input'  => 'string',
             ))
-            ->add('sesDuree', 'number', array(
-                'precision' => 2,
+            ->add('sesDuree', 'duration', array(
                 'label'     => 'Durée'
             ))
             ->add('sesModule', 'entity', array(
@@ -106,7 +106,6 @@ class SessionType extends AbstractType
                 'attr' => array('class' => 'btn-primary')
             ))
         ;
-
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
