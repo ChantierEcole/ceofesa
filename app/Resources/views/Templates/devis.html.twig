@@ -12,11 +12,11 @@
 			<div class="content">
 				<div class="logo">
 					{% if(devis.devOF.strID == '1') %}
-						<img src="{{ asset('img/logos/logo-CENATIONAL.jpg', absolute=true ) }}" class="devis_logo" alt="logo chantier école national"/>
+						<img src="{{ webRootDir~asset('img/logos/logo-CENATIONAL.jpg') }}" class="devis_logo" alt="logo chantier école national"/>
 					{% elseif(devis.devOF.strID == '2') %}
-						<img src="{{ asset('img/logos/logo-OFESA.jpg', absolute=true ) }}" class="devis_logo" alt="logo Of'ESA"/>
+						<img src="{{ webRootDir~asset('img/logos/logo-OFESA.jpg' ) }}" class="devis_logo" alt="logo Of'ESA"/>
 					{% else %}
-						<img src="{{ asset('img/logos/empty.png', absolute=true ) }}" class="devis_logo" alt="empty logo"/>
+						<img src="{{ webRootDir~asset('img/logos/empty.png') }}" class="devis_logo" alt="empty logo"/>
 					{% endif %}
 				</div>
 

@@ -2,13 +2,15 @@
 
 namespace CEOFESABundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use CEOFESABundle\Entity\Structure;
+use CEOFESABundle\Form\Type\StructureType;
+use Gedmo\Sluggable\Util\Urlizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use CEOFESABundle\Entity\Structure;
-use CEOFESABundle\Form\Type\StructureType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Structure controller.
@@ -34,12 +36,17 @@ class StructureController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new Structure entity.
      *
      * @Route("/", name="structure_create")
      * @Method("POST")
      * @Template("::Structure\new.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createAction(Request $request)
     {
@@ -102,6 +109,10 @@ class StructureController extends Controller
      * @Route("/{id}", name="structure_show")
      * @Method("GET")
      * @Template("::Structure\show.html.twig")
+     *
+     * @param int $id
+     *
+     * @return array
      */
     public function showAction($id)
     {
@@ -127,6 +138,10 @@ class StructureController extends Controller
      * @Route("/{id}/edit", name="structure_edit")
      * @Method("GET")
      * @Template("::Structure\edit.html.twig")
+     *
+     * @param int $id
+     *
+     * @return array
      */
     public function editAction($id)
     {
@@ -148,6 +163,7 @@ class StructureController extends Controller
         );
     }
 
+
     /**
     * Creates a form to edit a Structure entity.
     *
@@ -164,12 +180,18 @@ class StructureController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing Structure entity.
      *
      * @Route("/{id}", name="structure_update")
      * @Method("PUT")
      * @Template("::Structure\edit.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function updateAction(Request $request, $id)
     {
@@ -197,11 +219,17 @@ class StructureController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a Structure entity.
      *
      * @Route("/{id}", name="structure_delete")
      * @Method("DELETE")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, $id)
     {
@@ -238,5 +266,35 @@ class StructureController extends Controller
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+
+    /**
+     * @Route(
+     *     path         = "/convention_partenaire/{id}",
+     *     name         = "convention_partenaire_pdf",
+     *     requirements = { "id" = "\d+" }
+     * )
+     *
+     * @param \CEOFESABundle\Entity\Structure $structure
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function printPartnerCovenantPdfAction(Structure $structure)
+    {
+        $html = $this->renderView('::Templates\convention_partenariat.html.twig', array('info' => $structure));
+
+        $response= new Response();
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+            'orientation' => 'Portrait',
+            'page-size'   => 'A4',
+        )));
+        $response->headers->set('Content-Type', 'application/pdf');
+        $filename = Urlizer::urlize(Urlizer::unaccent($structure->getStrNom()), '-');
+        $response->headers->set(
+            'Content-disposition',
+            sprintf('filename=convention-partenariat-%s.pdf', $filename)
+        );
+
+        return $response;
     }
 }
