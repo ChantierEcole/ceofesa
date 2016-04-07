@@ -32,6 +32,13 @@
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
+
+                                <a href="{{ path('structure_edit', { 'id': entity.relSoustraitant.strId }) }}">
+                                    <button type="button" class="btn btn-blue4 btn-xs">
+                                        <i class="fa fa-pencil"></i> Editer
+                                    </button>
+                                </a>
+
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <a href="{{ path('soustraitant_convention_print', { 'id': entity.relId }) }}">
                                         <button type="button" class="btn btn-blue3 btn-xs">

@@ -24,7 +24,7 @@ class Presence
     /**
      * @var \Session
      *
-     * @ORM\ManyToOne(targetEntity="Session")
+     * @ORM\ManyToOne(targetEntity="Session", inversedBy="presence")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Session", referencedColumnName="ses_ID", nullable=false)
      * })
@@ -73,7 +73,7 @@ class Presence
     /**
      * Get pscId
      *
-     * @return integer 
+     * @return integer
      */
     public function getPscId()
     {
@@ -96,7 +96,7 @@ class Presence
     /**
      * Get pscDuree
      *
-     * @return string 
+     * @return string
      */
     public function getPscDuree()
     {
@@ -119,7 +119,7 @@ class Presence
     /**
      * Get pscFacture
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPscFacture()
     {
@@ -142,7 +142,7 @@ class Presence
     /**
      * Get pscParcours
      *
-     * @return \CEOFESABundle\Entity\Parcours 
+     * @return \CEOFESABundle\Entity\Parcours
      */
     public function getPscParcours()
     {
@@ -165,7 +165,7 @@ class Presence
     /**
      * Get pscSession
      *
-     * @return \CEOFESABundle\Entity\Session 
+     * @return \CEOFESABundle\Entity\Session
      */
     public function getPscSession()
     {

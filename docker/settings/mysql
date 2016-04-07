@@ -1,0 +1,4 @@
+MYSQL_ROOT_PASSWORD=ceofesa
+MYSQL_DATABASE=ceofesa
+MYSQL_USER=ceofesa
+MYSQL_PASSWORD=ceofesa

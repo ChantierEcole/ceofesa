@@ -24,15 +24,15 @@
                         </tr>
                         <tr>
                             <th>Date de Création</th>
-                            <td>{{ entity.devDatedevis|date('d/m/Y') }}</td>
+                            <td data-order="{{ entity.devDatedevis.timestamp|default(0) }}">{{ entity.devDatedevis|date('d/m/Y')|default() }}</td>
                         </tr>
                         <tr>
                             <th>Date de Début</th>
-                            <td>{{ entity.devDatedebut|date('d/m/Y') }}</td>
+                            <td data-order="{{ entity.devDatedebut.timestamp|default(0) }}">{{ entity.devDatedebut|date('d/m/Y')|default() }}</td>
                         </tr>
                         <tr>
                             <th>Date de Fin</th>
-                            <td>{{ entity.devDatefin|date('d/m/Y') }}</td>
+                            <td data-order="{{ entity.devDatefin.timestamp|default(0) }}">{{ entity.devDatefin|date('d/m/Y')|default() }}</td>
                         </tr>
                         <tr>
                             <th>Nombre de stagiaires</th>
@@ -83,7 +83,7 @@
                         </button>
                     </a>
                 {% endif %}
-                
+
                 <a href="{{ path('devis') }}">
                     <button type="button" class="btn btn-light4 spacing-button">
                         Retour à la liste

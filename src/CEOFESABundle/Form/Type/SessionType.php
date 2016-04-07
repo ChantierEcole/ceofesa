@@ -2,23 +2,38 @@
 
 namespace CEOFESABundle\Form\Type;
 
+use CEOFESABundle\Entity\Animation;
+use CEOFESABundle\Entity\Structure;
+use CEOFESABundle\Entity\Tiers;
+use CEOFESABundle\Form\Transformer\FloatToTimeTransformer;
+use CEOFESABundle\Repository\TiersRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use CEOFESABundle\Repository\StructureRepository;
-use CEOFESABundle\Repository\ModuleRepository;
-use CEOFESABundle\Repository\ModuleTRepository;
 use CEOFESABundle\Entity\Session;
 
 class SessionType extends AbstractType
 {
+    /** @var int */
     protected $idUser;
 
-    public function __construct ($idUser)
+    /** @var \CEOFESABundle\Repository\StructureRepository */
+    protected $structureRepository;
+
+    /** @var \CEOFESABundle\Entity\Structure */
+    protected $currentStructure;
+
+    /**
+     * @param \CEOFESABundle\Repository\StructureRepository $structureRepository
+     * @param int                                           $idUser
+     */
+    public function __construct (StructureRepository $structureRepository, $idUser)
     {
         $this->idUser = $idUser;
+        $this->structureRepository = $structureRepository;
     }
 
     /**
@@ -27,107 +42,101 @@ class SessionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $id = $this->idUser;
+        $currentStructure = $this->getCurrentStructure();
 
         $builder
-            ->add('sesDate','date',array(
-                'label' => "Date"
+            ->add('sesDate', 'date',array(
+                'label' => 'Date',
+                'years' => [2015, 2016, 2017, 2018, 2019, 2020],
             ))
-            ->add('sesHeuredebut','time',array(
-                'label' => "Heure début",
+            ->add('sesHeuredebut', 'time',array(
+                'label'  => 'Heure début',
                 'widget' => 'text',
                 'input'  => 'string',
             ))
-            ->add('sesHeurefin','time',array(
-                'label' => "Heure fin",
+            ->add('sesHeurefin', 'time',array(
+                'label'  => 'Heure fin',
                 'widget' => 'text',
                 'input'  => 'string',
             ))
-            ->add('sesDuree','number', array(
-                'precision' => 2,
-                'label' => "Durée"
+            ->add('sesDuree', 'duration', array(
+                'label'     => 'Durée'
             ))
-            ->add('sesStructure','entity', array(
-                'class' => 'CEOFESABundle\Entity\Structure',
-                'property' => 'strNom',
-                'label' => "Structure",
-                'multiple' => false,
-                'read_only' => true,
-                'query_builder' => function(StructureRepository $repo) use ($id) {
-                    return $repo->getUserStructure($id);
-                },
+            ->add('sesModule', 'entity', array(
+                'class'        => 'CEOFESABundle\Entity\Module',
+                'choice_label' => 'modCode',
+                'label'        => 'Module',
+                'multiple'     => false,
             ))
-            ->add('sesModule','entity', array(
-                'class' => 'CEOFESABundle\Entity\Module',
-                'property' => 'modCode',
-                'label' => "Module",
-                'multiple' => false,
+            ->add('sesMtype', 'entity', array(
+                'class'        => 'CEOFESABundle\Entity\ModuleT',
+                'choice_label' => 'mtyType',
+                'label'        => 'Type de Module',
+                'multiple'     => false,
             ))
-            ->add('sesMtype','entity', array(
-                'class' => 'CEOFESABundle\Entity\ModuleT',
-                'property' => 'mtyType',
-                'label' => "Type de Module",
-                'multiple' => false,
-            ))
-            ->add('sesOf','entity', array(
-                'class' => 'CEOFESABundle\Entity\Structure',
-                'property' => 'strNom',
-                'label' => "OF",
-                'multiple' => false,
-                'query_builder' => function(StructureRepository $repo) {
+            ->add('sesOf', 'entity', array(
+                'class'         => 'CEOFESABundle\Entity\Structure',
+                'choice_label'  => 'strNom',
+                'label'         => 'OF',
+                'multiple'      => false,
+                'query_builder' => function (StructureRepository $repo) {
                     return $repo->getOFPrincipal();
                 },
             ))
-            ->add('sesStype','entity', array(
-                'class' => 'CEOFESABundle\Entity\SessionT',
-                'property' => 'styType',
-                'label' => "Type de Session",
-                'multiple' => false 
+            ->add('sesStype', 'entity', array(
+                'class'        => 'CEOFESABundle\Entity\SessionT',
+                'choice_label' => 'styType',
+                'label'        => 'Type de Session',
+                'multiple'     => false
             ))
-            ->add('sesFtype','entity', array(
-                'class' => 'CEOFESABundle\Entity\FormationT',
-                'property' => 'ftyType',
-                'label' => "Type de Formation",
-                'multiple' => false 
+            ->add('sesFtype', 'entity', array(
+                'class'        => 'CEOFESABundle\Entity\FormationT',
+                'choice_label' => 'ftyType',
+                'label'        => 'Type de Formation',
+                'multiple'     => false
             ))
-            ->add('enregistrer','submit', array(
+            ->add('formateur', 'entity', array(
+                'class'         => Tiers::class,
+                'choice_label'  => 'trsNomPrenom',
+                'query_builder' => function (TiersRepository $repo) use ($currentStructure) {
+                    return $repo->getStructureFormateurs($currentStructure->getStrId());
+                },
+            ))
+            ->add('enregistrer', 'submit', array(
                 'attr' => array('class' => 'btn-primary')
             ))
         ;
-
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function(FormEvent $event) {
 
                 $form = $event->getForm();
-
                 $data = $event->getData();
 
-                if($data != null && $data->getSesMtype()){
+                $type = 'INTRA';
+                if ($data !== null && $data->getSesMtype()){
                     $type = $data->getSesMtype()->getMtyType();
-                } else {
-                    $type = "INTRA";
                 }
 
-                if($type == "INTRA") {
-                    $form->add('sesOf','entity',array(
-                        'class' => 'CEOFESABundle\Entity\Structure',
-                        'property' => 'strNom',
-                        'label' => 'OF',
-                        'multiple' => false,
-                        'query_builder' => function(StructureRepository $repo){
+                if ($type == 'INTRA') {
+                    $form->add('sesOf', 'entity',array(
+                        'class'         => 'CEOFESABundle\Entity\Structure',
+                        'choice_label'  => 'strNom',
+                        'label'         => 'OF',
+                        'multiple'      => false,
+                        'query_builder' => function (StructureRepository $repo) {
                             return $repo->getIntra();
                         }
                     ));
-                } elseif($type == "EXTERNE") {
+                } elseif ($type == 'EXTERNE') {
                     $id = $this->idUser;
-                    $form->add('sesOf','entity',array(
-                        'class' => 'CEOFESABundle\Entity\Structure',
-                        'property' => 'strNom',
-                        'label' => 'OF',
-                        'multiple' => false,
-                        'query_builder' => function(StructureRepository $repo) use ($id){
+                    $form->add('sesOf', 'entity',array(
+                        'class'         => 'CEOFESABundle\Entity\Structure',
+                        'choice_label'  => 'strNom',
+                        'label'         => 'OF',
+                        'multiple'      => false,
+                        'query_builder' => function (StructureRepository $repo) use ($id) {
                             return $repo->getSoustraitants($id);
                         }
                     ));
@@ -141,7 +150,7 @@ class SessionType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $session = $event->getData();
 
-            if($session === null || $session->getSesId() === null)
+            if ($session === null || $session->getSesId() === null)
                 return;
 
 
@@ -162,14 +171,14 @@ class SessionType extends AbstractType
         $data = $event->getData();
 
         $ofId = $data['sesOf'];
-        if($ofId != null){
+        if ($ofId !== null){
             $form->remove('sesOf');
-            $form->add('sesOf','entity',array(
-                'class' => 'CEOFESABundle\Entity\Structure',
-                'property' => 'strNom',
-                'label' => 'OF',
-                'multiple' => false,
-                'query_builder' => function(StructureRepository $repo) use($ofId) {
+            $form->add('sesOf', 'entity',array(
+                'class'         => 'CEOFESABundle\Entity\Structure',
+                'choice_label'  => 'strNom',
+                'label'         => 'OF',
+                'multiple'      => false,
+                'query_builder' => function (StructureRepository $repo) use ($ofId) {
                     return $repo->getSoustraitant($ofId);
                 }
             ));
@@ -192,5 +201,22 @@ class SessionType extends AbstractType
     public function getName()
     {
         return 'ceofesabundle_session';
+    }
+
+    /**
+     * @return \CEOFESABundle\Entity\Structure|mixed
+     */
+    protected function getCurrentStructure()
+    {
+        if ($this->currentStructure === null) {
+            $this->currentStructure = $this
+                ->structureRepository
+                ->getUserStructure($this->idUser)
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getSingleResult();
+        }
+
+        return $this->currentStructure;
     }
 }

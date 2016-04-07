@@ -1,0 +1,59 @@
+front:
+    build: docker/front
+    volumes_from:
+        - data
+    links:
+        - app
+    ports:
+        - 80:80
+
+app:
+    build: docker/app
+    links:
+        - db
+        - mailcatcher
+    volumes_from:
+        - data
+    env_file:
+        - docker/settings/env
+        - docker/settings/env_access
+    environment:
+        - PHP_IDE_CONFIG=serverName=ceofesa.app
+
+data:
+    image: busybox
+    volumes:
+        - .:/var/www/html
+
+db:
+    image: mysql:5.5
+    volumes:
+        - ./docker/var/mysql/data:/var/lib/mysql
+        - ./docker/var/mysql/load-dump:/docker-entrypoint-initdb.d
+    env_file:
+        - docker/settings/mysql
+    ports:
+        - 3306:3306
+tools:
+    build: docker/tools
+    links:
+        - db
+        - mailcatcher
+    volumes:
+        - $SSH_AUTH_SOCK:/tmp/agent.sock
+        - ~/.gitconfig:/var/www/.gitconfig
+        - ~/.composer:/var/www/.composer
+        - ~/.ssh:/var/www/.ssh
+    environment:
+        - SSH_AUTH_SOCK=/tmp/agent.sock
+    volumes_from:
+        - data
+    env_file:
+        - docker/settings/env
+        - docker/settings/env_access
+        - docker/settings/mysql
+
+mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+        - 1080:1080

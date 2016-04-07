@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 
 /**
- * DCont
+ * DCont (Devis Cont)
  *
  * @ORM\Table(name="tb_DCont", indexes={@ORM\Index(name="unq_dcont", columns={"cnt_DAF", "cnt_Tiers"})})
  * @ORM\Entity
@@ -81,7 +81,7 @@ class DCont
     /**
      * Get cntId
      *
-     * @return integer 
+     * @return integer
      */
     public function getCntId()
     {
@@ -104,7 +104,7 @@ class DCont
     /**
      * Get cntDatesortie
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCntDatesortie()
     {
@@ -150,7 +150,7 @@ class DCont
     /**
      * Get cntTiers
      *
-     * @return \CEOFESABundle\Entity\Tiers 
+     * @return \CEOFESABundle\Entity\Tiers
      */
     public function getCntTiers()
     {

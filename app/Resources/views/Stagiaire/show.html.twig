@@ -56,7 +56,9 @@
                         </tr>
                         <tr>
                             <th>Date de Naissance</th>
-                            <td>{{ entity.trsDatenaissance|date('Y-m-d') }}</td>
+                            <td data-order="{{ entity.trsDatenaissance.timestamp|default(0) }}">
+                                {{ entity.trsDatenaissance|date('Y-m-d')|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Lieu de Naissance</th>

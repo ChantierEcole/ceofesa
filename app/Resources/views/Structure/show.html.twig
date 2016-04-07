@@ -72,27 +72,39 @@
                         </tr>
                         <tr>
                             <th>Date agrement</th>
-                            <td>{{ entity.strDateagrement is empty ? "" : entity.strDateagrement|date("d-m-Y") }}</td>
+                            <td data-order="{{ entity.strDateagrement.timestamp|default(0) }}">
+                                {{ entity.strDateagrement|date("d-m-Y")|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Date fin</th>
-                            <td>{{ entity.strDatefin is empty ? "" : entity.strDatefin|date("d-m-Y") }}</td>
+                            <td data-order="{{ entity.strDatefin.timestamp|default(0) }}">
+                                {{ entity.strDatefin|date("d-m-Y")|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Date envoi convention</th>
-                            <td>{{ entity.strDateenvoiconvention is empty ? "" : entity.strDateenvoiconvention|date("d-m-Y") }}</td>
+                            <td data-order="{{ entity.strDateenvoiconvention.timestamp|default(0) }}">
+                                {{ entity.strDateenvoiconvention|date("d-m-Y")|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Date retour convention</th>
-                            <td>{{ entity.strDateretourconvention is empty ? "" : entity.strDateretourconvention|date("d-m-Y") }}</td>
+                            <td data-order="{{ entity.strDateretourconvention.timestamp|default(0) }}">
+                                {{ entity.strDateretourconvention|date("d-m-Y")|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Date envoi avenant</th>
-                            <td>{{ entity.strDateenvoiavenant is empty ? "" : entity.strDateenvoiavenant|date("d-m-Y") }}</td>
+                            <td data-order="{{ entity.strDateenvoiavenant.timestamp|default(0) }}">
+                                {{ entity.strDateenvoiavenant|date("d-m-Y")|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Date retour avenant</th>
-                            <td>{{ entity.strDateretouravenant is empty ? "" : entity.strDateretouravenant|date("d-m-Y") }}</td>
+                            <td data-order="{{ entity.strDateretouravenant.timestamp|default(0) }}">
+                                {{ entity.strDateretouravenant|date("d-m-Y")|default() }}
+                            </td>
                         </tr>
                         <tr>
                             <th>Reponsable</th>

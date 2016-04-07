@@ -4,6 +4,11 @@ services:
         tags:
             - { name: form.type, alias: ceofesa_registration }
 
+    ceofesa.form.type.duration:
+        class: CEOFESABundle\Form\Type\DurationType
+        tags:
+            - { name: form.type, alias: duration }
+
     validator.unique.parcours:
         class: CEOFESABundle\Validator\Constraints\ParcoursValidator
         arguments: ["%max_heures%","@doctrine.orm.entity_manager"]
@@ -16,6 +21,12 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: max_heures_dparcours }
 
+    ceofesa.validator.class_session:
+        class: CEOFESABundle\Validator\Constraints\SessionValidator
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: ceofesa.validator.class_session }
+
     kernel.listener.login_listener:
         class: CEOFESABundle\EventListener\LoginListener
         arguments: ['@security.context', '@session']
@@ -26,3 +37,8 @@ services:
        class: Twig_Extensions_Extension_Intl
        tags:
            - { name: twig.extension }
+
+    twig.extension.duration:
+        class: CEOFESABundle\Twig\DurationTwigExtension
+        tags:
+            - { name: twig.extension }

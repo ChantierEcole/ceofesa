@@ -35,10 +35,10 @@
     <body>
         <!-- Start: Header -->
         <header class="navbar navbar-fixed-top">
-            <div class="pull-left"> 
+            <div class="pull-left">
                 <a class="navbar-brand" href="{{ path('dashboard') }}">
                     <div class="navbar-logo"><img src="{{ asset('img/logos/logo-ceofesa.png') }}" class="img-responsive" alt="logo"/></div>
-                </a> 
+                </a>
             </div>
             <div class="pull-right header-btns">
             	{% if is_granted('ROLE_ADMIN') %}
@@ -71,9 +71,9 @@
                 </div>
             </div>
         </header>
-        <!-- End: Header --> 
+        <!-- End: Header -->
         <!-- Start: Main -->
-        <div id="main"> 
+        <div id="main">
         <!-- Start: Sidebar -->
             <aside id="sidebar">
                 <div id="sidebar-search">
@@ -235,13 +235,16 @@
                 </div>
             </section>
         </div>
-        <!-- End: Content --> 
-        <!-- Core Javascript - via CDN --> 
+        <!-- End: Content -->
+        <!-- Core Javascript - via CDN -->
+
+        {% include ':Modal:modal-confirm.html.twig' %}
 
         <script type="text/javascript" src="{{ asset('js/plugin/jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/plugin/bootstrap.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/plugin/dataTable.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/plugin/chosen.jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/plugin/bootstrap-confirm.js') }}"></script>
 
         <!-- View Javascript -->
         {% block javascripts %}{% endblock %}
