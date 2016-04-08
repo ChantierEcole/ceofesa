@@ -7,8 +7,14 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libpng12-dev \
     libmcrypt-dev \
-    wkhtmltopdf \
+    wget \
+    xz-utils \
+    libxrender1 \
+    libfontconfig1 \
     && rm -rf /var/lib/apt/lists/*
+
+RUN cd / && wget -q http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz -O - | tar xvJ \
+    && apt-get remove -y wget && cp -r /wkhtmltox/* /usr/ && rm -rf /wkhtmltox
 
 RUN apt-get install -y libmcrypt-dev
 RUN docker-php-ext-install intl mbstring zip mysql pdo_mysql json mcrypt gd

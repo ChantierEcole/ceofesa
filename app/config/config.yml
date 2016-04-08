@@ -34,6 +34,8 @@ twig:
     form:
         resources:
             - "form_table_layout.html.twig"
+    globals:
+        webRootDir: "%kernel.root_dir%/../web"
 
 # Assetic Configuration
 assetic:
