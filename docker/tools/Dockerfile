@@ -8,8 +8,15 @@ RUN apt-get update && apt-get install -y \
     mysql-client \
     libpng12-dev \
     libmcrypt-dev \
-    wkhtmltopdf \
-    rubygems
+    wget \
+    xz-utils \
+    libxrender1 \
+    libfontconfig1 \
+    rubygems \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN cd / && wget -q http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz -O - | tar xvJ \
+    && apt-get remove -y wget && cp -r /wkhtmltox/* /usr/ && rm -rf /wkhtmltox
 
 RUN docker-php-ext-install intl mbstring zip mysql pdo_mysql json mcrypt gd
 
@@ -25,10 +32,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Access right
 RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www
-
-#RUN cp /usr/bin/nodejs /usr/bin/node
-
-#RUN npm install less uglify-js2 uglifycss
 
 RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
 
