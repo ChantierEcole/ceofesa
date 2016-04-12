@@ -370,20 +370,21 @@ $(document).ready(function() {
 	};
 
 	function addParticipant(idsession,idparcours,nbHeures,nbMinutes) {
-		var duree = nbHeures+'.'+nbMinutes;
 		var dureeParticipant = parseFloat(nbHeures) + parseFloat(nbMinutes)/60;
+		var elDureeSession = $('input.DureeSession');
+		var dureeSession = parseFloat(elDureeSession.attr('data-hour')) + parseFloat(elDureeSession.attr('data-minute'))/60;
 
 		if (isNaN(nbHeures) == true || isNaN(nbMinutes) == true ) {
 			alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
 		} else if($("input.TypeSeance").val() == 'Individuel' && $( ".listParticipant tr" ).length != 0) {
 			alert('Cette session est de type \'Individuel\' et ne peut donc pas comporter plus d\'un participant');
-		} else if(parseFloat($("input.DureeSession").val()) < dureeParticipant) {
+		} else if(dureeSession < dureeParticipant) {
 			alert('Le nombre d\'heures ne doit pas dépasser la durée de la session');
 		} else {
 			$.ajax({
 	            type: "POST",
 	            url: "{{ path('participant_add_ajax') }}",
-	            data: {'idsession':idsession,'idparcours':idparcours,'duree':duree},
+	            data: {'idsession':idsession,'idparcours':idparcours,'duree':dureeParticipant},
 	            timeout: 10000,
 	            success: function(data){
 	            	listParticipant(data);
