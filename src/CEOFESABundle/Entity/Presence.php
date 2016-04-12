@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Entity;
 
+use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="tb_Presence", uniqueConstraints={@ORM\UniqueConstraint(name="unq_presence", columns={"psc_Session", "psc_Parcours"})})
  * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\PresenceRepository")
+ *
+ * @CeofesaAssert\Presence
  */
 class Presence
 {
