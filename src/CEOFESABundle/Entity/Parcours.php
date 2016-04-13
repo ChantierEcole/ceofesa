@@ -86,6 +86,11 @@ class Parcours
      */
     private $prcPresence;
 
+    public function __construct()
+    {
+        $this->prcPresence = new ArrayCollection();
+    }
+
     /**
      * Get prcId
      *
@@ -253,11 +258,13 @@ class Parcours
     /**
      * @return int
      */
-    public function getTotalHeures()
+    public function getTotalHeures(\DateTime $date)
     {
         $total = 0;
         foreach ($this->getPrcPresence() as $presence) {
-          $total +=  $presence->getPscDuree();
+            if ($presence->getPscSession()->getSesDate()->format('Y-m') <= $date->format('Y-m')) {
+                $total += $presence->getPscDuree();
+            }
         }
 
         return $total;
@@ -271,9 +278,8 @@ class Parcours
         $total = 0;
         foreach ($this->getPrcPresence() as $presence) {
             $sessionDate = $presence->getPscSession()->getSesDate();
-            if ($sessionDate
-                && $sessionDate->format('Y-m-d') >= $date->format('Y-m-01')
-                && $sessionDate->format('Y-m-d') <= $date->format('Y-m-t')) {
+
+            if ($sessionDate && $sessionDate->format('Y-m') === $date->format('Y-m')) {
                 $total += $presence->getPscDuree();
             }
         }

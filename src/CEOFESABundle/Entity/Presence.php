@@ -27,7 +27,10 @@ class Presence
     /**
      * @var \Session
      *
-     * @ORM\ManyToOne(targetEntity="Session", inversedBy="presence")
+     * @ORM\ManyToOne(
+     *     targetEntity = "Session",
+     *     inversedBy = "presences"
+     * )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Session", referencedColumnName="ses_ID", nullable=false)
      * })
@@ -99,7 +102,7 @@ class Presence
     /**
      * Get pscDuree
      *
-     * @return string
+     * @return float
      */
     public function getPscDuree()
     {

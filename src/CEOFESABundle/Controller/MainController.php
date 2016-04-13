@@ -47,18 +47,20 @@ class MainController extends Controller
      *       path="/dashboard/structure",
      *       name="structure_dashboard"
      * )
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function dashboardStructureAction(Request $request)
     {
-        $id             = $this->get('session')->get('structure');
-        $em             = $this->getDoctrine()->getManager();
-        $structure      = $em->getRepository('CEOFESABundle:Structure')->find($id);
+        $id = $this->get('session')->get('structure');
+        $em = $this->getDoctrine()->getManager();
+        $structure = $em->getRepository('CEOFESABundle:Structure')->find($id);
 
         $form = $this->createForm(new DashboardType());
 
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $data = $form->getData();
             $date = $data['date'];
 
@@ -72,26 +74,27 @@ class MainController extends Controller
                 ));
 
                 $response= new Response();
-                $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html, array('orientation' => 'Portrait','page-size' => 'A4')));
+                $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+                    'orientation' => 'Portrait',
+                    'page-size' => 'A4'
+                )));
                 $response->headers->set('Content-Type', 'application/pdf');
-                $response->headers->set('Content-disposition', 'filename=SyntheseMensuelle-'.$date->format('m-Y').'.pdf');
+                $response->headers->set(
+                    'Content-disposition',
+                    'filename=SyntheseMensuelle-'.$date->format('m-Y').'.pdf'
+                );
 
                 return $response;
             }
-
         } else {
-            $date = new \DateTime('now');
-            $form->get('date')->setData($date);
+            $form->get('date')->setData($date = new \DateTime());
         }
 
-        $participants = $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate($id, $date);
-
         return $this->render("Main/structure_dashboard.html.twig", array(
-            'date'          => $date,
-            'participants'  => $participants,
-            'structure'     => $structure,
-            'form'          => $form->createView()
+            'date'         => $date,
+            'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate($id, $date),
+            'structure'    => $structure,
+            'form'         => $form->createView(),
         ));
     }
-
 }
