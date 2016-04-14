@@ -805,37 +805,35 @@ class SessionController extends Controller
 
         return $reponse;
     }
-
+    
     /**
-     * Traitement backoffice de l'AJAX
-     * -> affichage liste de session en fonction du stagiaire choisi
+     * @param \CEOFESABundle\Entity\Parcours $parcours
      *
-     * @Route("/stagiaire-list-ajax", name="stagiaire_list_ajax")
+     * @Route(
+     *     path         = "/stagiaire-list-ajax/{id}",
+     *     name         = "stagiaire_list_ajax",
+     *     requirements = { "id" = "\d+" },
+     *     options      = { "expose" = true }
+     * )
      *
+     * @Template("::Session\_sessionTable.html.twig")
+     *
+     * @return array
      */
-    public function stagiaireListAjaxAction(Request $request)
+    public function stagiaireListAjaxAction(Parcours $parcours)
     {
-        $parcoursId = $request->request->get('idParcours');
-        $em = $this->getDoctrine()->getManager();
-        $presences = $em->getRepository('CEOFESABundle:Presence')->getPresencesParcours($parcoursId)->getQuery()->getResult();
-        $reponse = array();
-
-        $right = $this->get('security.context')->isGranted('ROLE_ADMIN');
-
-        foreach ($presences as $presence) {
-            $p = array();
-            $session = $presence->getPscSession();
-            $p['id']            = $session->getSesId();
-            $p['presenceId']    = $presence->getPscId();
-            $p['date']          = $session->getSesDate()->format('d-m-Y');
-            $p['type']          = $session->getSesStype()->getStyType();
-            $p['validate']      = $presence->isPscValidate();
-            $p['duree']         = CeoHelper::DurationFloatToArray($presence->getPscDuree());
-            $p['right']         = $right;
-            $reponse[]          = $p;
-        }
-
-        return new JsonResponse($reponse);
+        $presences = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('CEOFESABundle:Presence')
+            ->getPresencesParcours($parcours->getPrcId())
+            ->getQuery()
+            ->getResult();
+        
+        return array(
+            'presences' => $presences,
+            'parcours'  => $parcours,
+        );
     }
 
 
