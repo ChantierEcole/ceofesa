@@ -16,6 +16,10 @@
                             <th>Siret</th>
                             <th>Reponsable</th>
                             <th>OF</th>
+                            <th>Convention envoyée</th>
+                            <th>Convention revenue</th>
+                            <th>Avenant envoyé</th>
+                            <th>Avenant revenu</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -26,6 +30,45 @@
                             <td>{{ entity.relSoustraitant.strSiret }}</td>
                             <td>{{ entity.relSoustraitant.strReponsable }}</td>
                             <td>{{ entity.relOf.strNom }}</td>
+                            {% if entity.relEnvoiConvention %}
+                                {% if entity.relDateenvoiconvention %}
+                                    <td>{{ entity.relDateenvoiconvention|date("d/m/Y") }}</td>
+                                 {% else %}
+                                    <td>envoyée</td>
+                                {% endif %}
+                            {% else %}
+                                <td>non envoyée</td>
+                            {% endif %}
+
+                            {% if entity.relRetourConvention %}
+                                {% if entity.relDateretourconvention %}
+                                    <td>{{ entity.relDateretourconvention|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>reçue</td>
+                                {% endif %}
+                            {% else %}
+                                <td>non reçue</td>
+                            {% endif %}
+
+                            {% if entity.relEnvoiavenant %}
+                                {% if entity.relDateenvoiavenant %}
+                                    <td>{{ entity.relDateenvoiavenant|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>envoyé</td>
+                                {% endif %}
+                            {% else %}
+                                <td>non envoyé</td>
+                            {% endif %}
+
+                            {% if entity.relRetouravenant %}
+                                {% if entity.relDateretouravenant %}
+                                    <td>{{ entity.relDateretouravenant|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>reçu</td>
+                                {% endif %}
+                            {% else %}
+                                <td>non reçu</td>
+                            {% endif %}
                             <td class="text-center">
                                 <a href="{{ path('soustraitant_show', { 'id': entity.relSoustraitant.strId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
@@ -33,7 +76,8 @@
                                     </button>
                                 </a>
 
-                                <a href="{{ path('structure_edit', { 'id': entity.relSoustraitant.strId }) }}">
+                                <!-- <a href="{{ path('structure_edit', { 'id': entity.relSoustraitant.strId }) }}"> -->
+                                <a href="{{ path('soustraitant_edit', { 'id': entity.relId }) }}">
                                     <button type="button" class="btn btn-blue4 btn-xs">
                                         <i class="fa fa-pencil"></i> Editer
                                     </button>
