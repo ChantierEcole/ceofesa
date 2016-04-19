@@ -6,6 +6,7 @@ use CEOFESABundle\Entity\Parcours;
 use CEOFESABundle\Form\Type\DashboardType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,5 +97,22 @@ class MainController extends Controller
             'structure'    => $structure,
             'form'         => $form->createView(),
         ));
+    }
+
+    /**
+     * @Route(
+     *     path = "/ma-structure",
+     *     name = "detail_ma_structure"
+     * )
+     *
+     * @Template("::Main\detail_ma_structure.html.twig")
+     *
+     * @return array
+     */
+    public function detailMaStructureAction()
+    {
+        $structure = $this->get('security.context')->getToken()->getUser()->getStructure();
+
+        return array('entity' => $structure);
     }
 }
