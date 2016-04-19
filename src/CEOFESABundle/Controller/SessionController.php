@@ -7,6 +7,7 @@ use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\PresenceType;
 use CEOFESABundle\Helper\CeoHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -315,7 +316,7 @@ class SessionController extends Controller
                 },
             ))
             ->add('nbHeures','time',array(
-                'label' => "Nombre d'heures",
+                'label'  => "Nombre d'heures",
                 'widget' => 'text',
                 'input'  => 'string',
             ))
@@ -380,16 +381,17 @@ class SessionController extends Controller
     */
     private function createEditForm(Session $entity)
     {
-        $idstructure = $this->get('session')->get('structure');
+        $id = $this->get('session')->get('structure');
         $idsession = $entity->getSesId();
-        $module = $entity->getSesModule()->getModId();
-        $type = $entity->getSesMtype()->getMtyId();
-        $of = $entity->getSesOf()->getStrId();
 
-        $form = $this->createForm(new SessionType($idstructure,$module,$type,$of), $entity, array(
-            'action' => $this->generateUrl('session_edit', array('id' => $idsession)),
-            'method' => 'POST',
-        ));
+        $form = $this->createForm(
+            new SessionType($this->getDoctrine()->getRepository(Structure::class), $id),
+            $entity,
+            array(
+                'action' => $this->generateUrl('session_edit', array('id' => $idsession)),
+                'method' => 'POST',
+            )
+        );
 
         return $form;
     }
@@ -724,9 +726,11 @@ class SessionController extends Controller
      * Edit presence sur une session
      *
      * @Route("/participant-edit-ajax", name="participant_edit_ajax")
+     *
      * @Template("::Session\editPresence.html.twig")
      */
-    public function editPresenceAjaxAction(Request $request){
+    public function editPresenceAjaxAction(Request $request)
+    {
         $presenceId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $presence = $em->getRepository('CEOFESABundle:Presence')->find($presenceId);
@@ -739,17 +743,19 @@ class SessionController extends Controller
 
         $form = $this->createForm(new PresenceType(), $presence);
 
-        $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $em->persist($presence);
             $em->flush();
 
-            return $this->render("::Session\presence.html.twig", array('presence' => $presence));
+            return $this->render(
+                '::Session\presence.html.twig', array(
+                    'presence' => CeoHelper::DurationFloatToArray($presence->getPscDuree())
+            ));
         }
 
         return array(
             'presence'  => $presence,
-            'form'      => $form->createView()
+            'form'      => $form->createView(),
         );
     }
 
@@ -768,21 +774,25 @@ class SessionController extends Controller
         $type = $session->getSesStype()->getStyType();
         $idparcours = $request->request->get('idparcours');
         $parcours = $em->getRepository('CEOFESABundle:Parcours')->find($idparcours);
-        $dureeOK = preg_match("/(^[01]?[0-9]|2[0-3])\.[0-5][0-9]/", $duree);
-        $presenceExist = $em->getRepository('CEOFESABundle:Presence')->getPresence($idsession,$parcours->getPrcDcont()->getCntTiers())->getQuery()->getResult();
+        $presenceExist = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getPresence($idsession, $parcours->getPrcDcont()->getCntTiers())
+            ->getQuery()
+            ->getResult();
         $limiteOK = $this->checkTotalHeures($parcours,$duree);
-        $isParticipants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($idsession)->getQuery()->getResult();
+        $isParticipants = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getPresencesSession($idsession)
+            ->getQuery()
+            ->getResult();
 
-
-        if(!$dureeOK){ // vérifie que la durée est bien au format HH:MM (entre 00:00 et 23:59)
-            $reponse = new JsonResponse('duree', 419);
-        }elseif($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
+        if ($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
             $reponse = new JsonResponse('doublon', 419);
-        }elseif(!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de sa DAF
+        } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de sa DAF
             $reponse = new JsonResponse('limite', 419);
-        }elseif($type == 'Individuel' && $isParticipants) {
+        } elseif ($type == 'Individuel' && $isParticipants) {
                 $reponse = new JsonResponse('individuel', 419);
-        }else{ // si ok : rajout de la présence en base
+        } else { // si ok : rajout de la présence en base
             $presence = new Presence();
             $presence->setPscDuree($duree);
             $presence->setPscFacture(0);

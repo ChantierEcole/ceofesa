@@ -27,6 +27,11 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: ceofesa.validator.class_session }
 
+    ceofesa.validator.class_presence:
+       class: CEOFESABundle\Validator\Constraints\PresenceValidator
+       tags:
+           - { name: validator.constraint_validator, alias: ceofesa.validator.class_presence }
+
     kernel.listener.login_listener:
         class: CEOFESABundle\EventListener\LoginListener
         arguments: ['@security.context', '@session']
@@ -42,3 +47,4 @@ services:
         class: CEOFESABundle\Twig\DurationTwigExtension
         tags:
             - { name: twig.extension }
+
