@@ -24,6 +24,7 @@ class ParcoursRepository extends EntityRepository
 
     /**
      * @param $idStructure
+     * 
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getParcoursByStructure($idStructure)
@@ -38,15 +39,15 @@ class ParcoursRepository extends EntityRepository
     }
 
     /**
-     * @param $idStructure
-     * @param $date
+     * @param int       $idStructure
+     * @param \DateTime $date
+     * 
      * @return array
      */
     public function getParcoursByStructureAndDate($idStructure, $date)
     {
         return $this
             ->createQueryBuilder('par')
-            ->select('par, dcnt, daf', 'psc')
             ->innerJoin('par.prcDcont','dcnt')
             ->innerJoin('dcnt.cntDaf','daf')
             ->leftJoin('par.prcPresence', 'psc')
