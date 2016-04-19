@@ -104,15 +104,23 @@
                         </tr>
                         <tr>
                             <th>Date envoi avenant</th>
+                            {% if entity.strEnvoiavenant %}
                             <td data-order="{{ entity.strDateenvoiavenant.timestamp|default(0) }}">
                                 {{ entity.strDateenvoiavenant|date("d-m-Y")|default() }}
                             </td>
+                            {% else %}
+                            <td>Non envoyé</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Date retour avenant</th>
+                            {% if entity.strRetouravenant %}
                             <td data-order="{{ entity.strDateretouravenant.timestamp|default(0) }}">
                                 {{ entity.strDateretouravenant|date("d-m-Y")|default() }}
                             </td>
+                            {% else %}
+                            <td>Non reçu</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Reponsable</th>
