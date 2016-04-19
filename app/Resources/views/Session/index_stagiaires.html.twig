@@ -34,7 +34,7 @@
 					                		<td>{{ participant.prcType.mtyType }}</td>
 					                		<td>{{ participant.prcDcont.cntDaf.dafOF.strNom }}</td>
 					                		<td>
-	                                			<button type="button" class="btn btn-blue3 btn-xs js-btn-voir" data-entityid="{{ participant.prcid }}">
+												<button type="button" class="btn btn-blue3 btn-xs js-btn-voir" data-entityid="{{ participant.prcId }}">
 	                                    			<i class="fa fa-eye"></i> Détails
 	                                			</button>
 					                		</td>
@@ -81,22 +81,8 @@
 			            </div>
 		            </div>
 		            <div class="col-md-12">
-		            	<h3>Liste des sessions du stagiaire :</h3>
-						<div class="table-responsive list-session" id="table_sessions">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Date</th>
-										<th>Type</th>
-										<th>Durée</th>
-										<th>Validé</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
+						 <div class="table-responsive list-session" id="table_sessions">
+
 						</div>
 		            </div>
 		            <div class="col-md-12 infos-session">
@@ -188,21 +174,24 @@ $(document).ready(function() {
 	};
 
 	function listSessions(idParcours) {
-		$.ajax({
-	    	type: "POST",
-	    	url: "{{ path('stagiaire_list_ajax') }}",
-	    	data: 'idParcours=' + idParcours,
-        	dataType: 'json',
-        	timeout: 30000,
-        	success: function (data) {
-        		$( "#table_sessions tbody" ).html('');
-     			$.each(data, function(index){
-     				$( "#table_sessions tbody" ).append('<tr><td>'+data[index].id+'</td><td>'+data[index].date+'</td><td>'+data[index].type+'</td><td class="js-length">'+data[index].duree['display']+'</td><td class="js-validate">'+(data[index].validate ? 'Oui' : 'Non')+'</td><td class="text-center">'+ (data[index].validate == false && data[index].right ? '<button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="'+data[index].presenceId+'"><i class="fa fa-check"></i> Valider</button>' : '') + (data[index].validate == false ? ' <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].presenceId + '"><i class="fa fa-edit"></i> Editer</button> ' : ' ' ) +  ' <button type="button" class="btn btn-blue3 btn-xs btn-voir" data-entityid="'+data[index].id+'"><i class="fa fa-eye"></i> Détails</button></td></tr>');
-     			});
-        	},
-        	error: function(exception){
-          		alert(exception.responseText);
-        	}
+        $.ajax({
+            type: "GET",
+            url: Routing.generate("stagiaire_list_ajax", {"id": idParcours}),
+            dataType: 'html',
+            timeout: 30000,
+            success: function (data) {
+                $("#table_sessions").html(data);
+                $('.js-data-table').dataTable({
+                    "language": {
+                        "url": '//cdn.datatables.net/plug-ins/1.10.10/i18n/French.json'
+                    },
+                    "aaSorting": [],
+                    retrieve: true
+                });
+            },
+            error: function (exception) {
+                alert(exception.responseText);
+            }
         });
 	};
 

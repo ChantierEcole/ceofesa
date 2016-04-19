@@ -245,6 +245,8 @@
         <script type="text/javascript" src="{{ asset('js/plugin/dataTable.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/plugin/chosen.jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/plugin/bootstrap-confirm.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
         <!-- View Javascript -->
         {% block javascripts %}{% endblock %}

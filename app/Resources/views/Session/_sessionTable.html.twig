@@ -1,0 +1,58 @@
+<h3>Liste des sessions du stagiaire
+    {% if presences %}
+        {{ presences[0].pscParcours.prcDcont.cntTiers.trsPrenom }}
+        {{ presences[0].pscParcours.prcDcont.cntTiers.trsNom }}
+        pour le module {{ presences[0].pscParcours.prcModule.modCode }}
+        ({{ presences[0].pscParcours.prcModule.modIntitule }}) :
+    {% else %}
+        {{ parcours.prcDcont.cntTiers.trsPrenom }}
+        {{ parcours.prcDcont.cntTiers.trsNom }}
+        pour le module {{ parcours.prcModule.modCode }}
+        ({{ parcours.prcModule.modIntitule }}) :
+    {% endif %}
+</h3>
+<div class="col-md-12">
+    <table class="table js-data-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Durée</th>
+            <th>Validé</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in presences %}
+            <tr>
+                <td>{{ p.pscSession.sesId }}</td>
+                <td data-order="{{ p.pscSession.sesDate.timestamp }}">{{ p.pscSession.sesDate|date("d/m/Y") }}</td>
+                <td>{{ p.pscSession.sesSType.styType }}</td>
+                <td>{{ p.pscDuree|ceo_duration }}</td>
+                {% if p.pscValidate %}
+                    <td>Oui</td>
+                {% else %}
+                    <td>Non</td>
+                {% endif %}
+                <td>
+                    <button class="btn btn-blue3 btn-xs btn-voir" type="button"
+                            data-entityid="{{ p.pscSession.sesId }}">
+                        <i class="fa fa-eye"></i>Détails
+                    </button>
+                    {% if is_granted('ROLE_ADMIN') and not p.pscValidate %}
+                        <button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="{{ p.pscId }}">
+                            <i class="fa fa-check"></i> Valider
+                        </button>
+                    {% endif %}
+                    {% if not p.pscValidate %}
+                        <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="{{ p.pscId }}">
+                            <i class="fa fa-edit"></i> Editer
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
