@@ -6,6 +6,7 @@ use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Session
@@ -141,7 +142,13 @@ class Session
      */
     private $deletedAt;
 
-    /** @var \CEOFESABundle\Entity\Tiers */
+    /**
+     * @var \CEOFESABundle\Entity\Tiers
+     *
+     * @Assert\NotNull(
+     *     message = "Vous devez choisir un formateur"
+     * )
+     */
     private $formateur;
 
     public function __construct()
