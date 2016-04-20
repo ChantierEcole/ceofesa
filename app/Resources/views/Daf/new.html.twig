@@ -1,0 +1,195 @@
+{% extends '::layout.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible new-daf">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-download"></span>Générer une DAF</div>
+            </div>
+            <div class="panel-body padding-bottom-none">
+
+            {{ form_start(form) }}
+                    {{ form_errors(form) }}
+
+                    <div class="col-md-6">
+                        {{ form_row(form.dafDossier) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dafTauxhoraire) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dafDatedebut) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dafDatefin) }}
+                    </div>
+                    <div class="col-md-12 parcours-forms">
+                        {{ form_row(form.dafDcont) }}
+                    </div>
+                    <div class="col-md-12">
+                      <a class="pull-left" href="{{ path('stagiaire_create') }}">
+                        <button type="button" class="btn btn-light2 modif-alert">
+                            Créer un nouveau stagiaire
+                        </button>
+                      </a>
+                      <div style="float: right;">
+                        {{ form_row(form.enregistrer) }}
+                      </div>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+        
+{% block javascripts %}
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+    var $container = $('div#ceofesabundle_daf_dafDcont');
+
+    // On ajoute un lien pour ajouter une nouvelle catégorie
+    var $addLink = $('<a href="#" id="add_category" class="btn btn-dark2">Ajouter un Stagiaire</a>');
+    $container.after($addLink);
+
+    // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+    $addLink.click(function(e) {
+      addCategory($container);
+      e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+      return false;
+    });
+
+    // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+    var index = $container.children('.form-group').length;
+
+    /* set des labels */
+    $container.children('.form-group').each(function() {
+      var data = $(this).children('label').text();
+      data =  parseInt(data)+1;
+      $(this).children('label').text("Stagiaire n° "+data);
+    });
+    
+    // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un
+    if (index == 0) {
+      addCategory($container);
+    } else {
+        // Pour chaque catégorie déjà existante, on ajoute un lien de suppression
+        $container.children('div').each(function() {
+            addDeleteLink($(this));
+        });
+
+        /* ajout du lien de delete sur les parcours */
+        $container.find('.parcours-widget > .form-group').each(function() {
+            addDeleteLink($(this));
+        });
+
+        $container.find('.parcours-widget').each(function() {
+            addAddLink($(this));
+        });
+    }
+    
+
+    // La fonction qui ajoute un formulaire Parcours
+
+    function addCategory($container) {
+
+      var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Stagiaire n°' + (index+1))
+          .replace(/__name__/g, index));
+
+      // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+      addDeleteLink($prototype);
+
+      // On ajoute le prototype modifié à la fin de la balise <div>
+      $container.append($prototype);
+
+      addAddLink($prototype.find('.parcours-widget'));
+
+      // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+      index++;
+
+
+    }
+
+  // La fonction qui ajoute un formulaire Parcours
+  function addParcours($container) {
+
+      var parcoursIndex = $container.children('.form-group').length;
+
+      var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Parcours n°' + (parcoursIndex+1))
+              .replace(/__name__/g, parcoursIndex));
+
+      addDeleteLink($prototype);
+      $container.append($prototype);
+  }
+
+  function addAddLink($prototype) {
+      var $addLink = $('<div class="form-group"><a href="#" id="add_parcours">Ajouter un parcours</a></div>');
+      $prototype.after($addLink);
+
+      $addLink.find('a').click(function() {
+          addParcours($prototype);
+          return false;
+      });
+  }
+
+    // La fonction qui ajoute un lien de suppression d'une catégorie
+    function addDeleteLink($prototype) {
+
+      // Création du lien
+
+      $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+      // Ajout du lien
+
+      $prototype.append($deleteLink);
+      // Ajout du listener sur le clic du lien
+
+      $deleteLink.click(function(e) {
+        $prototype.remove();
+        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+        return false;
+      });
+
+    }
+
+
+    // Modification dynamique du champ "OF" du formulaire en fonction du champ "Type"
+    var url             = "{{ path('devis_ajax') }}";
+    var typeSelect     = 'select[id^="ceofesabundle_daf_dafDcont"][id$="_prcType"]';
+
+    $('#ceofesabundle_daf_dafDcont').on('change', typeSelect, function(){
+
+      var type_id = $(this).val();
+      var select_id = $(this).attr("id").split("_")[3];
+      var select_second_id = $(this).attr("id").split("_")[5];
+      var ofElement = 'select[id="ceofesabundle_daf_dafDcont_'+select_id+'_cntParcours_'+select_second_id+'_prcStructure"]';
+
+      $.ajax({  type: "POST",
+        url: url,
+        data: {'type_id':type_id},
+        dataType: 'json',
+        timeout: 30000,
+        success: function (data) {
+          console.log(data);          
+          //réinitialise la liste des sous-traitants
+          $(ofElement).html('');
+
+          //met à jour la liste des sous-traitants
+          $.each(data, function(index){
+            var id      = data[index].id;
+            var name    = data[index].nom;
+            $(ofElement).append('<option value="'+id+'">'+name+'</option>');
+          });
+        },
+        error: function(exception){
+          alert('Erreur, la connexion au serveur a été interrompue');
+        }
+      });
+    });
+  });
+
+</script>
+{% endblock %}

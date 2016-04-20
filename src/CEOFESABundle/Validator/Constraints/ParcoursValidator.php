@@ -21,15 +21,14 @@ class ParcoursValidator extends ConstraintValidator
         $i = 0;
         $parcours = [];
         $stagiaires = [];
-        $totalh = 0;
 
         foreach ($value->toArray() as $parcour)
         {
             // Récupération des données pour l'unicité
-            $data[0] = $parcour->getDprType()->getMtyType();
-            $data[1] = $parcour->getDprModule()->getModCode();
-            $data[2] = $parcour->getDprTiers()->getTrsNomPrenom();
-            $data[3] = $parcour->getDprStructure()->getStrId();
+            $data[0] = $parcour->getPrcType()->getMtyType();
+            $data[1] = $parcour->getPrcModule()->getModCode();
+            $data[2] = $parcour->getPrctiersdaf();
+            $data[3] = $parcour->getPrcStructure()->getStrId();
 
             // création d'une chaine de données pour l'entrée
             $result = implode(",", $data);
@@ -52,46 +51,7 @@ class ParcoursValidator extends ConstraintValidator
             }
 
             // Ajout du nombe d'heure au stagiaire (total Heures/Stagiaire)
-            $stagiaires[$data[2]] += $parcour->getDprNombreheure();
-
-            ///
-
-            if($data[0] == "EXTERNE")
-            {
-                $idModule = $parcour->getDprModule()->getModId();
-                $sousTraitant = $parcour->getDprStructure()->getStrNom();
-
-                $idStructure = $parcour->getDprDevis()->getDevStructure();
-                $idOF = $parcour->getDprDevis()->getDevOf();
-                $idSousTraitant = $parcour->getDprStructure()->getStrId();
-
-                //On vérifie si la relation OF/Structure/Sous-traitant existe bien et on prend son ID
-                $relation = $this->em->getRepository('CEOFESABundle:Relation')->getRelation($idStructure,$idSousTraitant,$idOF)->getQuery()->getOneOrNullResult();
-                if($relation){
-                    $idRelation = $relation->getRelId();
-                } else {
-                    $this->context->addViolation($constraint->message3, array('%sousTraitant%' => $sousTraitant));
-                }
-
-                //On vérifie si le sous-traitant s'occupe bien du module choisi
-                $modules = $this->em->getRepository('CEOFESABundle:RCont')->getModules($idRelation)->getQuery()->getResult();
-
-                if(!$modules){
-                    $this->context->addViolation($constraint->message4, array('%moduleid%' => 'pas de module', '%sousTraitant%' => $sousTraitant));
-                } else {
-                    $valid = 'false';
-                    foreach ($modules as $module) {
-                        $RelationModId = $module->getRncModule()->getModId();
-                        if($RelationModId == $idModule){
-                            $valid = 'true';
-                        }
-                    }
-                    if($valid == 'false'){
-                        $this->context->addViolation($constraint->message4, array('%moduleid%' => $idModule, '%sousTraitant%' => $sousTraitant));
-                    }
-                }
-            }
-            
+            $stagiaires[$data[2]] += $parcour->getPrcNombreheure();
         }
 
         foreach ($stagiaires as $stagiaire => $heures) {

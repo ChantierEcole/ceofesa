@@ -2,13 +2,14 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Parcours
  *
  * @ORM\Table(name="tb_Parcours", uniqueConstraints={@ORM\UniqueConstraint(name="unq_parcours", columns={"prc_DCont", "prc_Module", "prc_Type", "prc_Structure"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\ParcoursRepository")
  */
 class Parcours
 {
@@ -24,7 +25,7 @@ class Parcours
     /**
      * @var \DCont
      *
-     * @ORM\ManyToOne(targetEntity="DCont")
+     * @ORM\ManyToOne(targetEntity="DCont", inversedBy="cntParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_DCont", referencedColumnName="cnt_ID", nullable=false)
      * })
@@ -32,7 +33,7 @@ class Parcours
     private $prcDcont;
 
     /**
-     * @var \ModuleT
+     * @var ModuleT
      *
      * @ORM\ManyToOne(targetEntity="ModuleT")
      * @ORM\JoinColumns({
@@ -42,9 +43,9 @@ class Parcours
     private $prcType;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity="Structure", inversedBy="strParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -52,7 +53,7 @@ class Parcours
     private $prcStructure;
 
     /**
-     * @var \Module
+     * @var Module
      *
      * @ORM\ManyToOne(targetEntity="Module")
      * @ORM\JoinColumns({
@@ -78,12 +79,22 @@ class Parcours
      */
     private $prcImpdevis;
 
+    /**
+     * @var \Presence
+     *
+     * @ORM\OneToMany(targetEntity="Presence", mappedBy="pscParcours")
+     */
+    private $prcPresence;
 
+    public function __construct()
+    {
+        $this->prcPresence = new ArrayCollection();
+    }
 
     /**
      * Get prcId
      *
-     * @return integer 
+     * @return integer
      */
     public function getPrcId()
     {
@@ -106,7 +117,7 @@ class Parcours
     /**
      * Get prcNombreheure
      *
-     * @return string 
+     * @return string
      */
     public function getPrcNombreheure()
     {
@@ -129,7 +140,7 @@ class Parcours
     /**
      * Get prcDcont
      *
-     * @return \CEOFESABundle\Entity\DCont 
+     * @return \CEOFESABundle\Entity\DCont
      */
     public function getPrcDcont()
     {
@@ -152,7 +163,7 @@ class Parcours
     /**
      * Get prcStructure
      *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getPrcStructure()
     {
@@ -175,7 +186,7 @@ class Parcours
     /**
      * Get prcModule
      *
-     * @return \CEOFESABundle\Entity\Module 
+     * @return \CEOFESABundle\Entity\Module
      */
     public function getPrcModule()
     {
@@ -221,10 +232,68 @@ class Parcours
     /**
      * Get prcImpdevis
      *
-     * @return \CEOFESABundle\Entity\DParcours 
+     * @return \CEOFESABundle\Entity\DParcours
      */
     public function getPrcImpdevis()
     {
         return $this->prcImpdevis;
+    }
+
+    /**
+     * @return Presence[]|ArrayCollection
+     */
+    public function getPrcPresence()
+    {
+        return $this->prcPresence;
+    }
+
+    /**
+     * @param Presence[]|ArrayCollection $prcPresence
+     */
+    public function setPrcPresence($prcPresence)
+    {
+        $this->prcPresence = $prcPresence;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalHeures(\DateTime $date)
+    {
+        $total = 0;
+        foreach ($this->getPrcPresence() as $presence) {
+            if ($presence->getPscSession()->getSesDate()->format('Y-m') <= $date->format('Y-m')) {
+                $total += $presence->getPscDuree();
+            }
+        }
+
+        return $total;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalHeuresInMonth(\DateTime $date)
+    {
+        $total = 0;
+        foreach ($this->getPrcPresence() as $presence) {
+            $sessionDate = $presence->getPscSession()->getSesDate();
+
+            if ($sessionDate && $sessionDate->format('Y-m') === $date->format('Y-m')) {
+                $total += $presence->getPscDuree();
+            }
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get prctiersdaf
+     *
+     * @return string
+     */
+    public function getPrctiersdaf()
+    {
+        return $this->prcDcont->getCntTiers()->getTrsNom().' '.$this->prcDcont->getCntTiers()->getTrsPrenom().' - DAF : '.$this->prcDcont->getCntDaf()->getDafDossier();
     }
 }

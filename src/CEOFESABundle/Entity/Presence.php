@@ -2,13 +2,16 @@
 
 namespace CEOFESABundle\Entity;
 
+use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Presence
  *
  * @ORM\Table(name="tb_Presence", uniqueConstraints={@ORM\UniqueConstraint(name="unq_presence", columns={"psc_Session", "psc_Parcours"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\PresenceRepository")
+ *
+ * @CeofesaAssert\Presence
  */
 class Presence
 {
@@ -24,7 +27,10 @@ class Presence
     /**
      * @var \Session
      *
-     * @ORM\ManyToOne(targetEntity="Session")
+     * @ORM\ManyToOne(
+     *     targetEntity = "Session",
+     *     inversedBy = "presences"
+     * )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Session", referencedColumnName="ses_ID", nullable=false)
      * })
@@ -34,7 +40,7 @@ class Presence
     /**
      * @var \Parcours
      *
-     * @ORM\ManyToOne(targetEntity="Parcours")
+     * @ORM\ManyToOne(targetEntity="Parcours", inversedBy="prcPresence")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Parcours", referencedColumnName="prc_ID", nullable=false)
      * })
@@ -55,12 +61,25 @@ class Presence
      */
     private $pscFacture;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="psc_Validate", type="boolean", nullable=false, options={"default" = 0})
+     */
+    private $pscValidate;
 
+    /**
+     * Presence constructor.
+     */
+    public function __construct()
+    {
+        $this->pscValidate = false;
+    }
 
     /**
      * Get pscId
      *
-     * @return integer 
+     * @return integer
      */
     public function getPscId()
     {
@@ -83,7 +102,7 @@ class Presence
     /**
      * Get pscDuree
      *
-     * @return string 
+     * @return float
      */
     public function getPscDuree()
     {
@@ -106,7 +125,7 @@ class Presence
     /**
      * Get pscFacture
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPscFacture()
     {
@@ -129,7 +148,7 @@ class Presence
     /**
      * Get pscParcours
      *
-     * @return \CEOFESABundle\Entity\Parcours 
+     * @return \CEOFESABundle\Entity\Parcours
      */
     public function getPscParcours()
     {
@@ -152,10 +171,26 @@ class Presence
     /**
      * Get pscSession
      *
-     * @return \CEOFESABundle\Entity\Session 
+     * @return \CEOFESABundle\Entity\Session
      */
     public function getPscSession()
     {
         return $this->pscSession;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPscValidate()
+    {
+        return $this->pscValidate;
+    }
+
+    /**
+     * @param boolean $sesValidate
+     */
+    public function setPscValidate($pscValidate)
+    {
+        $this->pscValidate = $pscValidate;
     }
 }

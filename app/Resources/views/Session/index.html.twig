@@ -1,0 +1,495 @@
+{% extends '::layout.html.twig' %}
+{# @var entities \CEOFESABundle\Entity\Session[] #}
+
+{% block body %}
+    <div class="row select-session-form">
+        <div class="col-md-12">
+            <div class="panel panel-visible">
+                <div class="panel-heading">
+                    <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Choisir un
+                        module à consulter
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    {% form_theme choose_form 'bootstrap_3_layout.html.twig' %}
+                    {{ form_start(choose_form) }}
+                    {{ form_errors(choose_form) }}
+
+                    <div class="row">
+                        <div class="col-md-3" id="select_module">
+                            {{ form_label(choose_form.module) }}
+                            {{ form_widget(choose_form.module) }}
+                            {{ form_errors(choose_form.module) }}
+                        </div>
+                        <div class="col-md-3" id="select_typemod">
+                            {{ form_label(choose_form.type) }}
+                            {{ form_widget(choose_form.type) }}
+                            {{ form_errors(choose_form.type) }}
+                        </div>
+                        <div class="col-md-3" id="select_OF">
+                            {{ form_label(choose_form.of) }}
+                            {{ form_widget(choose_form.of) }}
+                            {{ form_errors(choose_form.of) }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ form_row(choose_form.voir) }}
+                        </div>
+                    </div>
+
+                    {{ form_end(choose_form) }}
+                    <div class="alert alert-warning no-result">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if entities is defined and of is defined and module is defined and type is defined %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-visible margin-bottom-none">
+                    <div class="panel-heading">
+                        <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Résultats
+                            pour le module {{ module.modCode }} avec le type {{ type.mtyType }} pour
+                            l'OF {{ of.strNom }} </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="clearfix"></div>
+
+                        {% if entities is empty %}
+                            <p>Il n'y a pas de données</p>
+                        {% else %}
+                            <div class="col-md-4">
+                                <div class="table-responsive list-session">
+                                    <table class="table js-data-table">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Durée</th>
+                                            <th>Inscrits</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for entity in entities %}
+                                            <tr>
+                                                <td>{{ entity.sesId }}</td>
+                                                <td data-order="{{ entity.sesDate.timestamp|default(0) }}">{{ entity.sesDate|date('d-m-Y')|default() }}</td>
+                                                <td>{{ entity.sesStype.styType }}</td>
+                                                <td>
+                                                    {% if entity.sesDuree != "0.00" %}
+                                                        {{ entity.sesDuree|ceo_duration }}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if entity.presences|length <= 0 %}
+                                                        <strong class="text-danger">{{ entity.presences|length }}</strong>
+                                                    {% else %}
+                                                        {{ entity.presences|length }}
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-blue3 btn-xs btn-voir"
+                                                            data-entityid="{{ entity.sesId|default('') }}">
+                                                        <i class="fa fa-eye"></i> Détails
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-8 infos-session">
+                                <div class="jumbotron">
+                                    <h3>Informations de la session n°<span class="idSession"></span></h3>
+                                    <div class="row detail-session">
+                                        <div class="col-md-4">
+                                            <label>Date :</label>
+                                            <input disabled class="dateSession"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Heure de début :</label>
+                                            <input disabled class="HDebutSession"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Heure de fin :</label>
+                                            <input disabled class="HFinSession"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Durée :</label>
+                                            <input disabled class="DureeSession" data-hour="0" data-minute="0"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Séance :</label>
+                                            <input disabled class="TypeSeance"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Type de Formation :</label>
+                                            <input disabled class="TypeFormation"/>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="modifDetailBtn"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="jumbotron">
+                                    <h3>Formateur</h3>
+                                    <div class="row formateur-session">
+                                        <div class="listFormateur table-responsive"></div>
+                                        <p>
+                                            Changer de formateur :
+                                            <select id="nomFormateur">
+                                                {% for formateur in formateurs %}
+                                                    <option value="{{ formateur.trsId }}">{{ formateur.trsNom }} {{ formateur.trsPrenom }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="button" class="btn btn-blue3 btn-xs btn-add-formateur"
+                                                    data-sessionid="">
+                                                Ajouter
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="jumbotron">
+                                    <h3>Participants</h3>
+                                    <table class="table table-responsive table-hover participant-session">
+                                        <thead>
+                                        <tr>
+                                            <th>Stagiaire</th>
+                                            <th>Nombre d'heures effectuées</th>
+                                            <th>DAF</th>
+                                            <th>Validé</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="listParticipant">
+                                        </tbody>
+                                    </table>
+                                    <div class="ajout-participant">
+                                        <h4>Ajouter un participant : </h4>
+                                        {% form_theme participant_form 'bootstrap_3_horizontal_layout.html.twig' %}
+                                        {{ form_start(participant_form) }}
+                                        <div id="form">
+                                            {{ form_row(participant_form.participant) }}
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label required">Nombre d'heures</label>
+                                                <div class="col-sm-10">
+                                                    <div id="form_nbHeures" class="form-inline">
+                                                        {{ form_widget(participant_form.nbHeures.hour, {'attr': {'maxlength' : 2 }}) }}
+                                                        :
+                                                        {{ form_widget(participant_form.nbHeures.minute, {'attr': {'maxlength' : 2 }}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{ form_rest(participant_form) }}
+                                        </div>
+                                        {{ form_end(participant_form) }}
+                                        <button type="button" class="btn btn-blue3 btn-xs btn-add-participant"
+                                                data-sessionid="">
+                                            Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // Modification dynamique du champ "OF" du formulaire en fonction du champ "Type" et "Module"
+            var modSelect = $("#select_module select");
+            var typeSelect = $("#select_typemod select");
+            var OFSelect = $("#select_OF select");
+            $(".infos-session").hide();
+
+            //affichage du détail si une session est indiquée dans l'URL
+            {% if session is defined %}
+            var idSession = "{{ session }}";
+            detailSession(idSession);
+            listFormateur(idSession);
+            listParticipant(idSession);
+            $(".infos-session").show();
+            {% endif %}
+
+            function changeOF(modSelect, typeSelect) {
+                $(".no-result").hide();
+                var module_id = modSelect.val();
+                var type_id = typeSelect.val();
+
+                $.ajax({
+                    type:     "POST",
+                    url:      "{{ path('session_ajax') }}",
+                    data:     {'module_id': module_id, 'type_id': type_id},
+                    dataType: 'json',
+                    timeout:  30000,
+                    success:  function (data) {
+                        var noResult = 1;
+                        $(OFSelect).html('');
+                        $.each(data, function (index) {
+                            var id = data[index].id;
+                            var name = data[index].nom;
+                            $(OFSelect).append('<option value="' + id + '">' + name + '</option>');
+                            noResult = 0;
+                        });
+                        if (noResult == 1) {
+                            $(".no-result").html('Pas de Sessions existantes pour le module M' + modSelect.val() + ' avec ce type');
+                            $(".no-result").show();
+                        }
+                    },
+                    error:    function (exception) {
+                        alert('Erreur, la connexion au serveur a été interrompue');
+                    }
+                });
+            };
+
+            function detailSession(id) {
+                $.ajax({
+                    type:    "POST",
+                    url:     "{{ path('details_session_ajax') }}",
+                    data:    'id=' + id,
+                    timeout: 10000,
+                    success: function (data) {
+                        var id = data['id'];
+                        $("span.idSession").html(id);
+                        $("input.dateSession").val(data['date']);
+                        $("input.HDebutSession").val(data['hDebut']);
+                        $("input.HFinSession").val(data['hFin']);
+
+                        $("input.DureeSession").val(data['duree']['display']); // input hidden to store raw value ?
+                        $("input.DureeSession").attr('data-hour', data['duree']['hour']);
+                        $("input.DureeSession").attr('data-minute', data['duree']['minute']);
+
+                        $("input.TypeSeance").val(data['seance']);
+                        $("input.TypeFormation").val(data['formation']);
+                        var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
+                        button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
+                        button = button.replace(new RegExp("variable", 'g'), id);
+                        $(".modifDetailBtn").html(button);
+                        $(".btn-add-formateur").attr("data-sessionid", id);
+                        $(".btn-add-formateur").data("sessionid", id);
+                        $(".btn-add-participant").attr("data-sessionid", id);
+                        $(".btn-add-participant").data("sessionid", id);
+                    },
+                    error:   function (xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText); //Ce code affichera le message d'erreur.
+                    }
+                });
+            };
+
+            function listFormateur(id) {
+                $.ajax({
+                    type:    "POST",
+                    url:     "{{ path('formateurs_session_ajax') }}",
+                    data:    'id=' + id,
+                    timeout: 10000,
+                    success: function (data) {
+                        var noResult = 1;
+                        $("div.listFormateur").html('<table><tbody>');
+                        $.each(data, function (index) {
+                            var id = data[index].id;
+                            var tiers = data[index].tiers;
+                            $("div.listFormateur").append('<tr><td>' + tiers + '</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button></td></tr>');
+                            noResult = 0;
+                        });
+                        $("div.listFormateur").append('</tbody></table>');
+                        if (noResult == 1) {
+                            $("div.listFormateur").html('Pas de formateur inscrit pour cette session');
+                        }
+                    },
+                    error:   function (xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText); //Ce code affichera le message d'erreur.
+                    }
+                });
+            };
+
+            function listParticipant(id) {
+                $.ajax({
+                    type:    "POST",
+                    url:     "{{ path('participants_session_ajax') }}",
+                    data:    'id=' + id,
+                    timeout: 10000,
+                    success: function (data) {
+                        $("tbody.listParticipant").html("");
+                        $.each(data, function (index) {
+                            var id = data[index].id;
+
+                            var vTab = $("tbody.listParticipant");
+                            vTab.append('<tr>');
+
+                            var tr = $("tbody.listParticipant tr:last-child");
+                            tr.append('<td>' + data[index].stagiaire + '</td>');
+                            tr.append('<td class="js-length">' + data[index].nbheures['display'] + '</td>');
+                            tr.append('<td>' + data[index].daf + '</td>');
+                            tr.append('<td class="js-validate">' + (data[index].validate ? 'Oui' : 'Non') + '</td>');
+
+                            if (data[index].validate == false && data[index].right == true) {
+                                tr.append('<td><button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="' + data[index].id + '"><i class="fa fa-check"></i> Valider</button> <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+                            } else if (data[index].validate == false) {
+                                tr.append('<td><button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+                            } else {
+                                tr.append('<td></td>');
+                            }
+                        });
+
+                        // TODO Handle this
+                        var $inputDureeSession = $("input.DureeSession");
+                        $("input#form_nbHeures_hour").val($inputDureeSession.attr('data-hour'));
+                        $("input#form_nbHeures_minute").val($inputDureeSession.attr('data-minute'));
+                    },
+                    error:   function (xhr, ajaxOptions, thrownError) {
+                        alert('FATAL ERROR'); //Ce code affichera le message d'erreur.
+                    }
+                });
+            };
+
+            function addFormateur(idsession, idformateur) {
+                if ($("div.listFormateur").html() != "Pas de formateur inscrit pour cette session") {
+                    alert('Il ne peut y avoir qu\'un seul formateur par session. Supprimez le formateur actuel pour en rajouter un nouveau')
+                } else {
+                    $.ajax({
+                        type:    "POST",
+                        url:     "{{ path('formateur_add_ajax') }}",
+                        data:    {'idsession': idsession, 'idformateur': idformateur},
+                        timeout: 10000,
+                        success: function (data) {
+                            listFormateur(data);
+                        },
+                        error:   function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.responseText); //Ce code affichera le message d'erreur.
+                        }
+                    });
+                }
+            };
+
+            function deleteFormateur(id) {
+                $.ajax({
+                    type:    "POST",
+                    url:     "{{ path('formateur_delete_ajax') }}",
+                    data:    'id=' + id,
+                    timeout: 10000,
+                    success: function (data) {
+                        listFormateur(data);
+                    },
+                    error:   function (xhr, ajaxOptions, thrownError) {
+                        alert('Le formateur ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
+                    }
+                });
+            };
+
+            function addParticipant(idsession, idparcours, nbHeures, nbMinutes) {
+                var dureeParticipant = parseFloat(nbHeures) + parseFloat(nbMinutes) / 60;
+                var elDureeSession = $('input.DureeSession');
+                var dureeSession = parseFloat(elDureeSession.attr('data-hour')) + parseFloat(elDureeSession.attr('data-minute')) / 60;
+
+                if (isNaN(nbHeures) == true || isNaN(nbMinutes) == true) {
+                    alert('Le champ "Nombre d\'heure" ne doit contenir que des nombres');
+                } else if ($("input.TypeSeance").val() == 'Individuel' && $(".listParticipant tr").length != 0) {
+                    alert('Cette session est de type \'Individuel\' et ne peut donc pas comporter plus d\'un participant');
+                } else if (dureeSession < dureeParticipant) {
+                    alert('Le nombre d\'heures ne doit pas dépasser la durée de la session');
+                } else {
+                    $.ajax({
+                        type:    "POST",
+                        url:     "{{ path('participant_add_ajax') }}",
+                        data:    {'idsession': idsession, 'idparcours': idparcours, 'duree': dureeParticipant},
+                        timeout: 10000,
+                        success: function (data) {
+                            listParticipant(data);
+                        },
+                        error:   function (request, status, error) {
+                            var erreur = request.responseJSON;
+                            if (erreur == 'duree') {
+                                alert('Erreur : La durée doit etre au format HH:MM');
+                            } else if (erreur == 'doublon') {
+                                alert('Erreur : Ce stagiaire est déjà inscrit dans cette session');
+                            } else if (erreur == 'limite') {
+                                alert('Erreur : Ce stagiaire a atteint sa limite d\'heures prises en charge pour ce parcours');
+                            } else if (erreur == 'individuel') {
+                                alert('Erreur : Cette formation est individuelle et ne peut comporter plusieurs participants');
+                            } else {
+                                //alert('Un erreur est survenue lors de l\'enregistrement');
+                                alert(request.responseText);
+                            }
+                        }
+                    });
+                }
+            };
+
+            function deleteParticipant(id) {
+                $.ajax({
+                    type:    "POST",
+                    url:     "{{ path('participant_delete_ajax') }}",
+                    data:    'id=' + id,
+                    timeout: 10000,
+                    success: function (data) {
+                        listParticipant(data);
+                    },
+                    error:   function (xhr, ajaxOptions, thrownError) {
+                        alert('Le participant ne semble plus être rattaché à cette session de formation. Veuillez recharger la page.'); //Ce code affichera le message d'erreur.
+                    }
+                });
+            };
+
+            changeOF(modSelect, typeSelect);
+
+            typeSelect.change(function () {
+                changeOF(modSelect, typeSelect);
+            });
+
+            modSelect.change(function () {
+                changeOF(modSelect, typeSelect);
+            });
+
+            $("body").on("click", ".btn-voir", function () {
+                var entityid = $(this).data("entityid");
+                detailSession(entityid);
+                listFormateur(entityid);
+                listParticipant(entityid);
+                $(".infos-session").show();
+            });
+
+            $("body").on("click", ".btn-delete-formateur", function () {
+                var entityid = $(this).data("animationid");
+                deleteFormateur(entityid);
+            });
+
+            $("body").on("click", ".btn-delete-participant", function () {
+                var entityid = $(this).data("presenceid");
+                deleteParticipant(entityid);
+            });
+
+            $("body").on("click", ".btn-add-formateur", function () {
+                var idsession = $(this).data("sessionid");
+                var idformateur = $('#nomFormateur').val();
+                addFormateur(idsession, idformateur);
+            });
+
+            $("body").on("click", ".btn-add-participant", function () {
+                var idsession = $(this).data("sessionid");
+                var idparcours = $('#form_participant').val();
+                var nbHeures = $('#form_nbHeures_hour').val();
+                var nbMinutes = $('#form_nbHeures_minute').val();
+
+                addParticipant(idsession, idparcours, nbHeures, nbMinutes);
+            });
+        });
+    </script>
+
+    {% include '::Session/session_js.html.twig' %}
+
+{% endblock %}

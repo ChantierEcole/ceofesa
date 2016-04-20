@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use CEOFESABundle\Validator\Constraints as CeofesaAssert;
@@ -10,12 +11,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Structure
  *
- * @ORM\Table(name="tb_Structure")
+ * @ORM\Table(name="tb_Structure", options={"collate"="utf8_general_ci"})
  * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\StructureRepository")
  * @UniqueEntity(fields="strSiret", message="L'Organisme de Formation avec le numéro SIRET indiqué est déjà enregistré.")
  */
 class Structure
 {
+    const TYPE_STRUCTURE        = 1;
+    const TYPE_OF_PRINCIPAL     = 2;
+    const TYPE_OF_SOUSTRAITANT  = 3;
+
+    const OFESA_ID = 2;
+
     /**
      * @var integer
      *
@@ -214,12 +221,33 @@ class Structure
      */
     private $strFonction;
 
+    /**
+     * @var \Relation
+     *
+     * @ORM\OneToMany(targetEntity="Relation", mappedBy="relStructure")
+     */
+    private $strRelations;
 
+    /**
+     * @var Parcours
+     *
+     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcStructure")
+     */
+    private $strParcours;
+
+    /**
+     * Structure constructor.
+     */
+    public function __construct()
+    {
+        $this->strRelations = new ArrayCollection();
+        $this->strParcours = new ArrayCollection();
+    }
 
     /**
      * Get strId
      *
-     * @return integer 
+     * @return integer
      */
     public function getStrId()
     {
@@ -242,7 +270,7 @@ class Structure
     /**
      * Get strNom
      *
-     * @return string 
+     * @return string
      */
     public function getStrNom()
     {
@@ -265,7 +293,7 @@ class Structure
     /**
      * Get strAdresse1
      *
-     * @return string 
+     * @return string
      */
     public function getStrAdresse1()
     {
@@ -288,7 +316,7 @@ class Structure
     /**
      * Get strAdresse2
      *
-     * @return string 
+     * @return string
      */
     public function getStrAdresse2()
     {
@@ -311,7 +339,7 @@ class Structure
     /**
      * Get strCp
      *
-     * @return string 
+     * @return string
      */
     public function getStrCp()
     {
@@ -334,7 +362,7 @@ class Structure
     /**
      * Get strVille
      *
-     * @return string 
+     * @return string
      */
     public function getStrVille()
     {
@@ -357,7 +385,7 @@ class Structure
     /**
      * Get strIncom
      *
-     * @return string 
+     * @return string
      */
     public function getStrIncom()
     {
@@ -380,7 +408,7 @@ class Structure
     /**
      * Get strSiret
      *
-     * @return string 
+     * @return string
      */
     public function getStrSiret()
     {
@@ -403,11 +431,11 @@ class Structure
     /**
      * Get strNumof
      *
-     * @return string 
+     * @return string
      */
     public function getStrNumof()
     {
-        return $this->strNumof;
+        return $this->strNumof === null ? 0 : str_replace(' ', '', $this->strNumof);
     }
 
     /**
@@ -426,7 +454,7 @@ class Structure
     /**
      * Get strAdherent
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getStrAdherent()
     {
@@ -449,7 +477,7 @@ class Structure
     /**
      * Get strTelephone
      *
-     * @return string 
+     * @return string
      */
     public function getStrTelephone()
     {
@@ -472,7 +500,7 @@ class Structure
     /**
      * Get strEmail
      *
-     * @return string 
+     * @return string
      */
     public function getStrEmail()
     {
@@ -495,7 +523,7 @@ class Structure
     /**
      * Get strEnvoiconvention
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getStrEnvoiconvention()
     {
@@ -518,7 +546,7 @@ class Structure
     /**
      * Get strEnvoiavenant
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getStrEnvoiavenant()
     {
@@ -541,7 +569,7 @@ class Structure
     /**
      * Get strRetourconvention
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getStrRetourconvention()
     {
@@ -564,7 +592,7 @@ class Structure
     /**
      * Get strRetouravenant
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getStrRetouravenant()
     {
@@ -587,7 +615,7 @@ class Structure
     /**
      * Get strDateagrement
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStrDateagrement()
     {
@@ -610,7 +638,7 @@ class Structure
     /**
      * Get strDatefin
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStrDatefin()
     {
@@ -633,7 +661,7 @@ class Structure
     /**
      * Get strDateenvoiconvention
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStrDateenvoiconvention()
     {
@@ -656,7 +684,7 @@ class Structure
     /**
      * Get strDateretourconvention
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStrDateretourconvention()
     {
@@ -679,7 +707,7 @@ class Structure
     /**
      * Get strDateenvoiavenant
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStrDateenvoiavenant()
     {
@@ -702,7 +730,7 @@ class Structure
     /**
      * Get strDateretouravenant
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStrDateretouravenant()
     {
@@ -725,7 +753,7 @@ class Structure
     /**
      * Get strReponsable
      *
-     * @return string 
+     * @return string
      */
     public function getStrReponsable()
     {
@@ -748,7 +776,7 @@ class Structure
     /**
      * Get strFonction
      *
-     * @return string 
+     * @return string
      */
     public function getStrFonction()
     {
@@ -771,7 +799,7 @@ class Structure
     /**
      * Get strRegion
      *
-     * @return \CEOFESABundle\Entity\Region 
+     * @return \CEOFESABundle\Entity\Region
      */
     public function getStrRegion()
     {
@@ -799,6 +827,38 @@ class Structure
     public function getStrType()
     {
         return $this->strType;
+    }
+
+    /**
+     * @return \Relation
+     */
+    public function getStrRelations()
+    {
+        return $this->strRelations;
+    }
+
+    /**
+     * @param \Relation $strRelations
+     */
+    public function setStrRelations($strRelations)
+    {
+        $this->strRelations = $strRelations;
+    }
+
+    /**
+     * @return Parcours
+     */
+    public function getStrParcours()
+    {
+        return $this->strParcours;
+    }
+
+    /**
+     * @param Parcours $strParcours
+     */
+    public function setStrParcours($strParcours)
+    {
+        $this->strParcours = $strParcours;
     }
 
     public function __toString()

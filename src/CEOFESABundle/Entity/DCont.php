@@ -2,16 +2,21 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 
 /**
- * DCont
+ * DCont (Devis Cont)
  *
  * @ORM\Table(name="tb_DCont", indexes={@ORM\Index(name="unq_dcont", columns={"cnt_DAF", "cnt_Tiers"})})
  * @ORM\Entity
  */
 class DCont
 {
+    const DEFAULT_SORTIE_ID = 0;
+
     /**
      * @var integer
      *
@@ -24,7 +29,7 @@ class DCont
     /**
      * @var \DAF
      *
-     * @ORM\ManyToOne(targetEntity="DAF")
+     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="dafDcont")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cnt_DAF", referencedColumnName="daf_ID", nullable=false)
      * })
@@ -58,12 +63,25 @@ class DCont
      */
     private $cntMotifsortie;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcDcont", cascade={"persist"}, orphanRemoval=true)
+     * @Assert\Valid
+     * @CeofesaAssert\Parcours
+     */
+    protected $cntParcours;
 
+    /**
+     * DCont constructor.
+     */
+    public function __construct()
+    {
+        $this->cntParcours = new ArrayCollection();
+    }
 
     /**
      * Get cntId
      *
-     * @return integer 
+     * @return integer
      */
     public function getCntId()
     {
@@ -86,7 +104,7 @@ class DCont
     /**
      * Get cntDatesortie
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCntDatesortie()
     {
@@ -132,7 +150,7 @@ class DCont
     /**
      * Get cntTiers
      *
-     * @return \CEOFESABundle\Entity\Tiers 
+     * @return \CEOFESABundle\Entity\Tiers
      */
     public function getCntTiers()
     {
@@ -160,5 +178,39 @@ class DCont
     public function getCntMotifsortie()
     {
         return $this->cntMotifsortie;
+    }
+
+    /**
+     * Add cntParcours
+     *
+     * @param \CEOFESABundle\Entity\Parcours $cntParcours
+     * @return DCont
+     */
+    public function addCntParcour(\CEOFESABundle\Entity\Parcours $cntParcours)
+    {
+        $cntParcours->setPrcDcont($this);
+        $this->cntParcours[] = $cntParcours;
+
+        return $this;
+    }
+
+    /**
+     * Remove cntParcours
+     *
+     * @param \CEOFESABundle\Entity\Parcours $cntParcours
+     */
+    public function removeCntParcour(\CEOFESABundle\Entity\Parcours $cntParcours)
+    {
+        $this->cntParcours->removeElement($cntParcours);
+    }
+
+    /**
+     * Get cntParcours
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCntParcours()
+    {
+        return $this->cntParcours;
     }
 }

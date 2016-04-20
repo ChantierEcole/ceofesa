@@ -7,3 +7,7 @@ web/bundles
 web/uploads
 
 bin/
+
+docker-compose.override.yml
+docker/settings/env_access
+docker/var

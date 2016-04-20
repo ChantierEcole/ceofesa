@@ -1,0 +1,92 @@
+{% extends '::layout.html.twig' %}
+
+{% block body -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du Formateur </div>
+            </div>
+            <div class="panel-body">
+                <table class="record_properties table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ entity.trsNom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prenom</th>
+                            <td>{{ entity.trsPrenom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adresse1</th>
+                            <td>{{ entity.trsAdresse1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adresse2</th>
+                            <td>{{ entity.trsAdresse2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Code Postal</th>
+                            <td>{{ entity.trsCp }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ville</th>
+                            <td>{{ entity.trsVille }}</td>
+                        </tr>
+                        <tr>
+                            <th>Téléphone 1</th>
+                            <td>{{ entity.trsTel1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Téléphone 2</th>
+                            <td>{{ entity.trsTel2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Téléphone Portable</th>
+                            <td>{{ entity.trsPortable }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ entity.trsEmail }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fonction</th>
+                            <td>{{ entity.trsFonction }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Naissance</th>
+                            <td data-order="{{ entity.trsDatenaissance.timestamp|default(0) }}">{{ entity.trsDatenaissance|date('Y-m-d')|default() }}</td>
+                        </tr>
+                        <tr>
+                            <th>Lieu de Naissance</th>
+                            <td>{{ entity.trsLieunaissance }}</td>
+                        </tr>
+                        <tr>
+                            <th>Numéro de Sécurité Sociale</th>
+                            <td>{{ entity.trsNumsecu }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br/>
+
+                <a href="{{ path('formateur_edit', { 'id': entity.trsId }) }}">
+                    <button type="button" class="btn btn-blue4">
+                        Modifier
+                    </button>
+                </a>
+
+                <a href="{{ path('formateur_list') }}">
+                    <button type="button" class="btn btn-light4">
+                        Retour à la liste
+                    </button>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

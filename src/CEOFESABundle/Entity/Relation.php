@@ -24,7 +24,7 @@ class Relation
     /**
      * @var \Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity="Structure", inversedBy="strRelations")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="rel_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -164,6 +164,11 @@ class Relation
     private $relDatetarif2 = '';
 
 
+    public function __construct()
+    {
+        $this->relDatetarif1 = new \DateTime('2012-10-01 00:00:00');
+        $this->relDatetarif2 = new \DateTime('2013-04-01 00:00:00');
+    }
 
     /**
      * Get relId

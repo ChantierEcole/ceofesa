@@ -1,0 +1,75 @@
+{% extends '::layout.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-user"></span>Modification d'une Session</div>
+            </div>
+            <div class="panel-body padding-bottom-none">
+                {{ form(edit_form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('body').on('change','#ceofesabundle_session_sesHeuredebut input, #ceofesabundle_session_sesHeurefin input',function(){
+
+            var heureDebut = $("#ceofesabundle_session_sesHeuredebut_hour").val();
+            var heureFin = $("#ceofesabundle_session_sesHeurefin_hour").val();
+            var minuteDebut = $("#ceofesabundle_session_sesHeuredebut_minute").val();
+            var minuteFin = $("#ceofesabundle_session_sesHeurefin_minute").val();
+            var url = "{{ path('auto_heure_ajax') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {'heureDebut':heureDebut,'heureFin':heureFin,'minuteDebut':minuteDebut,'minuteFin':minuteFin},
+                dataType: 'json',
+                timeout: 30000,
+                success: function (data) {
+                    $("#ceofesabundle_session_sesDuree_hour").val(data.hour);
+                    $("#ceofesabundle_session_sesDuree_minute").val(data.minute);
+                },
+                error: function(exception){
+                    alert(exception.responseText);
+                }
+            });
+        });
+
+        $('#ceofesabundle_session_sesMtype').change(function(){
+
+            var type_id = $(this).val();
+            var ofElement = '#ceofesabundle_session_sesOf';
+
+            $.ajax({  type: "POST",
+                url: '{{ path('devis_ajax') }}',
+                data: {'type_id':type_id},
+                dataType: 'json',
+                timeout: 30000,
+                success: function (data) {
+                    console.log(data);
+                    //réinitialise la liste des sous-traitants
+                    $(ofElement).html('');
+
+                    //met à jour la liste des sous-traitants
+                    $.each(data, function(index){
+                        var id      = data[index].id;
+                        var name    = data[index].nom;
+                        $(ofElement).append('<option value="'+id+'">'+name+'</option>');
+                    });
+                },
+                error: function(exception){
+                    alert('Erreur, la connexion au serveur a été interrompue');
+                }
+            });
+        });
+
+    });
+
+</script>
+{% endblock %}

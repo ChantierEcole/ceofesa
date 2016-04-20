@@ -16,7 +16,7 @@ security:
             logout: true
             remember_me:
                 key:             %secret%        # On définit la clé pour le remember_me (%secret% est un parametre de parameters.yml)
-                lifetime:        10800
+                lifetime:        2629743
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -29,8 +29,5 @@ security:
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/users/, role: ROLE_ADMIN }
         - { path: ^/structure/, role: ROLE_ADMIN }
-        - { path: ^/dashboard/, role: ROLE_USER }
-        - { path: ^/devis/, role: ROLE_USER }
-        - { path: ^/stagiaire/, role: ROLE_USER }
-        - { path: ^/soustraitant/, role: ROLE_USER }
+        - { path: ^/, role: ROLE_USER }
 

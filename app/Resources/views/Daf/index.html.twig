@@ -1,0 +1,64 @@
+{% extends '::layout.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-list"></span> Liste des Daf </div>
+            </div>
+            <div class="panel-body">
+                <div class="clearfix"></div>
+
+                <table class="table table-striped table-bordered table-hover dataTable records_list js-data-table" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>Numero</th>
+                            <th>Date de debut</th>
+                            <th>Date de fin</th>
+                            <th>Nombre d'heures</th>
+                            <th>Nombre de salariés</th>
+                            <th>Montant (HT)</th>
+                            <th>Taux horaire</th>
+                            <th>OF</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for daf in dafs %}
+                        <tr>
+                            <td>{{ daf.dafDossier }}</td>
+                            <td data-order="{{ daf.dafDatedebut.timestamp|default(0) }}">{{ daf.dafDatedebut|date('d/m/Y')|default() }}</td>
+                            <td data-order="{{ daf.dafDatefin.timestamp|default(0) }}">{{ daf.dafDatefin|date('d/m/Y')|default() }}</td>
+                            <td>{{ daf.dafNbheure }}</td>
+                            <td>{{ daf.dafNbsalarie }}</td>
+                            <td>{{ daf.dafMontant }}</td>
+                            <td>{{  daf.dafTauxhoraire }}</td>
+                            <td>{{  daf.dafOf.strNom }}</td>
+                            <td>
+                                <a href="{{ path('daf_show', { 'id': daf.dafId }) }}">
+                                    <button type="button" class="btn btn-green3 btn-xs">
+                                        <i class="fa fa-eye"></i> Voir
+                                    </button>
+                                </a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('edit_daf', { 'id': daf.dafId }) }}">
+                                    <button type="button" class="btn btn-blue4 btn-xs">
+                                        <i class="fa fa-pencil"></i> Editer
+                                    </button>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

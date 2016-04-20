@@ -1,3 +1,5 @@
+{# Vue de détail d'un devis dans la partie Administration #}
+
 {% extends '::layout.html.twig' %}
 
 {% block body -%}
@@ -24,15 +26,15 @@
                         </tr>
                         <tr>
                             <th>Date de Création</th>
-                            <td>{{ entity.devDatedevis|date('Y-m-d') }}</td>
+                            <td data-order="{{ entity.devDatedevis.timestamp|default(0) }}">{{ entity.devDatedevis|date('Y-m-d')|default() }}</td>
                         </tr>
                         <tr>
                             <th>Date de Début</th>
-                            <td>{{ entity.devDatedebut|date('Y-m-d') }}</td>
+                            <td data-order="{{ entity.devDatedebut.timestamp|default(0) }}">{{ entity.devDatedebut|date('Y-m-d')|default() }}</td>
                         </tr>
                         <tr>
                             <th>Date de Fin</th>
-                            <td>{{ entity.devDatefin|date('Y-m-d') }}</td>
+                            <td data-order="{{ entity.devDatefin.timestamp|default(0) }}">{{ entity.devDatefin|date('Y-m-d')|default() }}</td>
                         </tr>
                         <tr>
                             <th>Nombre de stagiaires</th>
@@ -76,7 +78,7 @@
                     {% endfor %}
                 </table>
                 <br/>
-                
+
                 <a href="{{ path('devis_gestion') }}">
                     <button type="button" class="btn btn-light4 spacing-button">
                         Retour à la liste
@@ -84,7 +86,7 @@
                 </a>
 
                 {% if entity.devStatut == "en cours" %}
-                                    
+
                         <button type="button" class="btn btn-green3 btn-valid pull-right" data-entityid="{{entity.devId|default('')}}">
                             <i class="fa fa-check"></i> Valider
                         </button>
@@ -103,7 +105,7 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-        
+
         $("body").on("click",".btn-valid", function(){
 
             var entityid = $(this).data("entityid");
@@ -122,7 +124,7 @@
                 error: function(){
                     alert("Erreur : le devis ne s'est pas validé dans la base de données")
                 }
-            }); 
+            });
         });
 
         $("body").on("click",".btn-refuse", function(){
@@ -137,14 +139,14 @@
                 url: "{{ path('devis_refuse') }}",
                 data: { 'id':entityid , 'raison':raison },
                 timeout: 10000,
-                success: function(data){ 
+                success: function(data){
                     $('.statut').html('Refusé');
                     alert("Devis refusé :" + data);
                 },
                 error: function(){
                     alert("Erreur : l'opération ne s'est pas enregistrée dans la base de données")
                 }
-            }); 
+            });
         });
     });
 

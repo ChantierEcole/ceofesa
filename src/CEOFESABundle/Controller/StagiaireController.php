@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CEOFESABundle\Entity\Tiers;
-use CEOFESABundle\Form\Type\StagiaireType;
+use CEOFESABundle\Form\Type\TiersType;
 
 /**
  * Tiers controller.
@@ -29,7 +29,7 @@ class StagiaireController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
-        $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureTiers($id)->getQuery()->getResult();
+        $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureStagiaires($id)->getQuery()->getResult();
         return array(
             'entities' => $entities,
         );
@@ -48,6 +48,11 @@ class StagiaireController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            
+            $typeStagiaire = $this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:TiersT')->getStagiaireType()->getQuery()->getSingleResult();
+            $entity->setTrsType($typeStagiaire);
+            $entity->setTrsFonction("Salarié Polyvalent");
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -72,7 +77,7 @@ class StagiaireController extends Controller
     {
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new StagiaireType($id), $entity, array(
+        $form = $this->createForm(new TiersType($id), $entity, array(
             'action' => $this->generateUrl('stagiaire_create'),
             'method' => 'POST',
         ));
@@ -161,7 +166,7 @@ class StagiaireController extends Controller
     {
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new StagiaireType($id), $entity, array(
+        $form = $this->createForm(new TiersType($id), $entity, array(
             'action' => $this->generateUrl('stagiaire_update', array('id' => $entity->getTrsId())),
             'method' => 'PUT',
         ));

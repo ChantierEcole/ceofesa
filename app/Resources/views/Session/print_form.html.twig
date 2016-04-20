@@ -1,0 +1,57 @@
+{% extends '::layout.html.twig' %}
+
+{% form_theme printForm 'bootstrap_3_layout.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible margin-bottom-none">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-print"></span>Imprimer les feuilles d'émargement pour tous les stagiaires du module et du mois choisis :</div>
+            </div>
+            <div class="panel-body">
+
+                {{ form_start(printForm) }}
+                <div class="row">
+                    <div class="col-md-3 col-sm-offset-1">
+                        {{ form_label(printForm.module) }}
+                        {{ form_widget(printForm.module) }}
+                        {{ form_errors(printForm.module) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_label(printForm.type) }}
+                        {{ form_widget(printForm.type) }}
+                        {{ form_errors(printForm.type) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_label(printForm.of) }}
+                        {{ form_widget(printForm.of) }}
+                        {{ form_errors(printForm.of) }}
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-sm-1 col-sm-offset-2">
+                        {{ form_label(printForm.date) }}
+                    </div>
+                    {{ form_widget(printForm.date.day, { 'attr': { 'style': 'display:none' }} )  }}
+                    <div class="col-sm-2">
+                        {{ form_widget(printForm.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_widget(printForm.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="submit" value="Valider" class="btn btn-primary" />
+                    </div>
+                </div>
+
+                {{ form_end(printForm) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

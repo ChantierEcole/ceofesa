@@ -82,67 +82,81 @@
         width: 100%;
     }
 
-#ceofesabundle_devis_devParcours {
+.collection-group .form-group {
+    position: relative;
+    width: auto;
+    border: 1px solid;
+    margin-top: 10px;
 }
-    #ceofesabundle_devis_devParcours .form-group {
-        position: relative;
-        width: auto;
-        border: 1px solid;
-        margin-top: 10px;
-    }
-        #ceofesabundle_devis_devParcours .form-group .form-group {
-            border: none;
-            margin: 0px;
-            display: inline-block;
-            margin-bottom: 2px;
-            height: auto;
-        }
-            #ceofesabundle_devis_devParcours .form-group .form-group:first-child {
-                width: 0%;
-            }
-            #ceofesabundle_devis_devParcours .form-group .form-group:last-child .col-sm-10 {
-                width: 300px;
-            }
 
-        #ceofesabundle_devis_devParcours .form-group .col-sm-10 {
-            width: 100%;
-            padding: 10px;
-            text-align: center;
-        }
+.collection-group .form-group .form-group {
+    border: none;
+    margin: 0px;
+    display: inline-block;
+    margin-bottom: 2px;
+    height: auto;
+    display: inline-block;
+}
 
-            #ceofesabundle_devis_devParcours .form-group .form-group .col-sm-10 {
-                padding-top: 0px;
-                border: none;
-            }
-                #ceofesabundle_devis_devParcours .form-group .form-group .col-sm-10 input[type=text] {
-                    width: 80px;
-                }
+.collection-group .form-group .col-sm-10 {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
 
+.collection-group .form-group .form-group .col-sm-10 {
+    padding-top: 0px;
+    border: none;
+}
 
-        #ceofesabundle_devis_devParcours .form-group .col-sm-2 {
-            padding: 7px 10px;
-            background: #555;
-            color: #fff;
-        }
+.collection-group .form-group .form-group .col-sm-10 input[type=text] {
+    width: 80px;
+}
 
-            #ceofesabundle_devis_devParcours .form-group .form-group .col-sm-2 {
-                background: none;
-                padding: 0;
-                color: #bbb;
-                position: absolute;
-                bottom: -10px;
-                left: 0px;
-                text-align: center;
-            }
+.collection-group .form-group .col-sm-2 {
+    padding: 7px 10px;
+    background: #555;
+    color: #fff;
+}
 
-        #ceofesabundle_devis_devParcours .form-group .btn {
-            height: 5px;
-            padding: 10px;
-            line-height: 1px;
-            position: absolute;
-            right: 16px;
-            top: 3px;
-        }
+.collection-group .form-group .form-group .col-sm-2 {
+    background: none;
+    padding: 0;
+    color: #bbb;
+    position: absolute;
+    bottom: -10px;
+    left: 0px;
+    text-align: center;
+}
+
+.collection-group .form-group .btn {
+    height: 5px;
+    padding: 8px 10px 12px;
+    line-height: 1px;
+    position: absolute;
+    right: 16px;
+    top: 3px;
+}
+
+.collection-group .form-group .form-group .col-sm-2.stagiaire-label {
+    bottom: 0;
+    position: relative;
+    padding: 7px 10px;
+}
+
+.collection-group .form-group .parcours-widget > .form-group {
+    display: block;
+}
+
+.new-daf .collection-group > .form-group > div > div > .form-group {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.new-daf .collection-group > .form-group > div > div > .form-group:first-child {
+    width: 20%;
+}
 
 .form-horizontal > .form-group {
     margin-bottom: 0px;
@@ -169,6 +183,82 @@
     padding-right: 10px;
 }
 
+.select-session-form #form_voir {
+    margin-top: 23px;
+}
+.select-session-form .panel .form-horizontal .control-label {
+    margin: 5px 0;
+    text-align: left;
+}
+
+.list-session{}
+    .list-session th, .list-session td {
+        text-align: center;
+    }
+    .list-session .table-responsive {
+        max-height: 600px;
+        overflow: auto;
+    }
+
+.detail-session {}
+    .detail-session label {
+        margin: 10px 0 5px;
+    }
+    .detail-session input {
+        width: 100%;
+    }
+    .detail-session .modifDetailBtn{
+        padding-top: 20px;
+        float: right;
+    }
+
+.listFormateur {
+    margin: 20px 0;
+}
+    .listFormateur td {
+        width: 100%;
+        padding: 5px 0;
+        border-bottom: 1px solid #999;
+    }
+    .formateur-session p {
+        font-size: 12px;
+    }
+
 .info-accueil .alert {
     margin: 0;
+}
+
+.participant-session {}
+.participant-session td {
+    padding: 5px 0px;
+}
+
+.ajout-participant {
+    background: #fff;
+    border: #999 solid 0.5px;
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.ajout-participant #form_nbHeures {
+    float:left;
+    width: 120px;
+}
+.ajout-participant #form_nbHeures input {
+    width: 50px;
+}
+.ajout-participant button {
+    width: 100%;
+}
+
+.ta-right {
+    text-align: right;
+}
+
+input.ofe-time {
+    width: 50px;
+    display: inline-block;
 }

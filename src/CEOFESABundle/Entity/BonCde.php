@@ -2,13 +2,14 @@
 
 namespace CEOFESABundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * BonCde
  *
  * @ORM\Table(name="tb_BonCde", uniqueConstraints={@ORM\UniqueConstraint(name="unq_boncde", columns={"bcd_Annee", "bcd_Numero", "bcd_Relation"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\BonCdeRepository")
  */
 class BonCde
 {
@@ -52,7 +53,35 @@ class BonCde
      */
     private $bcdRelation;
 
+    /**
+     * @var DAF
+     *
+     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="bcdBonCdes")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="bcd_DAF", referencedColumnName="daf_ID", nullable=true)
+     * })
+     */
+    private $bcdDAF;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="bcdSent", type="boolean", nullable=false, options={"default" = 0})
+     */
+    private $bcdSent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="BParcours", mappedBy="bprBonCde", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $bcdBParcours;
+
+    /**
+     * BonCde constructor.
+     */
+    public function __construct()
+    {
+        $this->bcdBParcours = new ArrayCollection();
+    }
 
     /**
      * Get bcdId
@@ -154,5 +183,99 @@ class BonCde
     public function getBcdRelation()
     {
         return $this->bcdRelation;
+    }
+
+    /**
+     * Add bcdBParcours
+     *
+     * @param BParcours $bcdBParcours
+     * @return DCont
+     */
+    public function addBcdBParcour(BParcours $bcdBParcours)
+    {
+        $bcdBParcours->setBprBonCde($this);
+        $this->bcdBParcours[] = $bcdBParcours;
+
+        return $this;
+    }
+
+    /**
+     * Remove bcdBParcours
+     *
+     * @param BParcours $bcdBParcours
+     */
+    public function removeBcdBParcour(BParcours $bcdBParcours)
+    {
+        $this->bcdBParcours->removeElement($bcdBParcours);
+    }
+
+    /**
+     * Get bcdBParcours
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBcdBParcours()
+    {
+        return $this->bcdBParcours;
+    }
+
+    /**
+     * @return DAF
+     */
+    public function getBcdDAF()
+    {
+        return $this->bcdDAF;
+    }
+
+    /**
+     * @param DAF $bcdDAF
+     */
+    public function setBcdDAF($bcdDAF)
+    {
+        $this->bcdDAF = $bcdDAF;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getBcdSent()
+    {
+        return $this->bcdSent;
+    }
+
+    /**
+     * @param boolean $bcdSent
+     */
+    public function setBcdSent($bcdSent)
+    {
+        $this->bcdSent = $bcdSent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalHeures()
+    {
+        $total = 0;
+
+        foreach ($this->bcdBParcours as $parcours) {
+            $total += $parcours->getBprNombreheure();
+        }
+
+        return $total;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalMontant()
+    {
+        $total = 0;
+
+        foreach ($this->bcdBParcours as $parcours) {
+            $total += $parcours->getMontant();
+        }
+
+        return $total;
     }
 }

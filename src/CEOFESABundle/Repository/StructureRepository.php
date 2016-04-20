@@ -2,10 +2,22 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\ModuleT;
+use CEOFESABundle\Entity\Structure;
 use Doctrine\ORM\EntityRepository;
 
 class StructureRepository extends EntityRepository
 {
+
+    public function getStructure($id)
+    {
+        return $this
+        ->createQueryBuilder('s')
+        ->where('s.strId = :ofId')
+        ->setParameter('ofId',$id)
+        ;
+    }
+
     public function getUserStructure($id)
     {
         return $this
@@ -22,6 +34,15 @@ class StructureRepository extends EntityRepository
         ->createQueryBuilder('o')
         ->where('o.strId = 2')
         ;
+    }
+
+    public function getOFPrincipal()
+    {
+        return $this
+            ->createQueryBuilder('f')
+            ->where('f.strType = 2')
+            ->orderBy('f.strNom','DESC')
+            ;
     }
 
     public function getOF()
@@ -47,13 +68,13 @@ class StructureRepository extends EntityRepository
         $qb2 = $this->_em->createQueryBuilder();
         $qb2->select('IDENTITY(rl.relSoustraitant)')
             ->from('CEOFESABundle\Entity\Relation', 'rl')
-            ->where('rl.relStructure = :test')
+            ->where('rl.relStructure = :id')
         ;
 
         $qb = $this->createQueryBuilder('st');
         $qb ->where('st.strType = 3')
             ->andWhere($qb->expr()->in('st.strId', $qb2->getDQL()))
-            ->setParameter('test',$id)
+            ->setParameter('id', $id)
             ->orderBy('st.strNom','ASC')
         ;
 
@@ -63,9 +84,9 @@ class StructureRepository extends EntityRepository
     public function getIntra()
     {
         return $this
-        ->createQueryBuilder('s')
-        ->where('s.strType = 2')
-        ->orderBy('s.strNom','DESC')
+            ->createQueryBuilder('s')
+            ->where('s.strId = :id')
+            ->setParameter('id', Structure::OFESA_ID)
         ;
     }
 
@@ -77,6 +98,23 @@ class StructureRepository extends EntityRepository
         ->setParameter('ofId',$id)
         ->orderBy('s.strNom','ASC')
         ;
+    }
+
+    public function findDAFSousTraitants($dafId)
+    {
+        $qb = $this
+            ->createQueryBuilder('s')
+            ->join('s.strParcours', 'prc')
+            ->join('prc.prcType', 'mty')
+            ->join('prc.prcDcont', 'cnt')
+            ->where('cnt.cntDaf = :dafId')
+            ->andWhere('mty.mtyType = :externType')
+            ->setParameter('dafId', $dafId)
+            ->setParameter('externType', ModuleT::EXTER)
+            ->orderBy('s.strNom','ASC')
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getAllStructures()

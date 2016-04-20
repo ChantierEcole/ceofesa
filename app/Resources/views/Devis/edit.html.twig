@@ -1,5 +1,8 @@
+{# Vue pour l'édition d'un devis #}
+
 {% extends '::layout.html.twig' %}
 {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
 {% block body %}
 <div class="row">
     <div class="col-md-12">
@@ -17,6 +20,15 @@
                     </div>
                     <div class="col-md-6">
                         {{ form_row(edit_form.devDatefin) }}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(edit_form.devTauxhoraire) }}
+                            {{ form_errors(edit_form.devTauxhoraire) }}
+                            <div class="col-sm-2">
+                                {{ form_widget(edit_form.devTauxhoraire) }}
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-12 parcours-forms">
                       <div class="patate">{{ form_row(edit_form.devParcours) }}</div>

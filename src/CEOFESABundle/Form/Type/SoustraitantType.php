@@ -41,7 +41,7 @@ class SoustraitantType extends AbstractType
                 'property' => 'styType',
                 'multiple' => false,
                 'query_builder' => function(StructureTRepository $repo) {
-                    return $repo->getSoustraitantTypeBuilder();
+                    return $repo->getSoustraitantType();
                 },
                 'attr' => array('class' => 'hide'),
                 'label' => false

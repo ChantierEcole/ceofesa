@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+    {{ form_widget(form.pscDuree.hour, {'attr' : {'class' : 'form-control ofe-time', 'maxlength': 2}}) }} :
+    {{ form_widget(form.pscDuree.minute, {'attr' : {'class' : 'form-control ofe-time', 'maxlength': 2}}) }}
+    <button data-entityid="{{ presence.pscId }}" type="submit" class="btn btn-blue3 btn-xs js-submit-edit-length"><i class="fa fa-save"></i> Enregister</button>
+    {{ form_errors(form.pscDuree) }}
+    {{ form_rest(form) }}
+{{ form_end(form) }}

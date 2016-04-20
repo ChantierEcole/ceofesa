@@ -1,0 +1,51 @@
+{% extends '::layout.html.twig' %}
+
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicon glyphicon-user"></span>Modification du Formateur</div>
+            </div>
+            <div class="panel-body">
+                {{ form_start(edit_form) }}
+                    {{ form_errors(edit_form) }}
+
+                    <div class="col-md-6">
+                        {{ form_row(edit_form.trsCivilite) }}
+                        {{ form_row(edit_form.trsNom) }}
+                        {{ form_row(edit_form.trsPrenom) }}
+                        {{ form_row(edit_form.trsAdresse1) }}
+                        {{ form_row(edit_form.trsAdresse2) }}
+                        {{ form_row(edit_form.trsCp) }}
+                        {{ form_row(edit_form.trsVille) }}
+                        
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(edit_form.trsEmail) }}
+                        {{ form_row(edit_form.trsTel1) }}
+                        {{ form_row(edit_form.trsTel2) }}
+                        {{ form_row(edit_form.trsPortable) }}
+                        {{ form_row(edit_form.trsDatenaissance) }}
+                        {{ form_row(edit_form.trsLieunaissance) }}
+                        {{ form_row(edit_form.trsNumsecu) }}
+                    </div>
+                    <div class="col-md-12">
+                        {% block form_row %}
+                            {{ form_widget(edit_form.enregistrer) }}
+                        {% endblock form_row %}
+                        <a href="{{ path('formateur_show', { 'id': entity.trsId }) }}">
+                            <button type="button" class="btn btn-light4 spacing-button">
+                                Retour
+                            </button>
+                        </a>
+                    </div>
+                {{ form_end(edit_form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

@@ -1,0 +1,86 @@
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("body").on("click", ".js-btn-check", function () {
+            validateSession($(this));
+        });
+
+        $("body").on("click", ".js-btn-edit", function() {
+           editSession($(this));
+        });
+
+        $("body").on("click", ".js-submit-edit-length", function() {
+            sendEditForm($(this));
+            return false;
+        });
+
+    });
+
+    function sendEditForm(button) {
+        var id = button.data("entityid");
+        button.find('i').attr('class', 'fa fa-spinner fa-spin');
+
+        $.ajax({
+            type: "POST",
+            url: "{{ path('participant_edit_ajax') }}",
+            data: button.closest('form').serialize() + '&id=' + id,
+            timeout: 10000,
+            success: function(data){
+                button.find('i').attr('class', 'fa fa-edit');
+                button.closest('tr').find('.js-length').html(data);
+            },
+            error: function(exception){
+                button.find('i').attr('class', 'fa fa-save');
+                alert(exception.responseText);
+            }
+        });
+    }
+
+    function editSession(button) {
+        var id = button.data("entityid");
+        button.find('i').attr('class', 'fa fa-spinner fa-spin');
+
+        $.ajax({
+            type: "POST",
+            url: "{{ path('participant_edit_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+                button.find('i').attr('class', 'fa fa-edit');
+
+                button.closest('tr').find('.js-length').html(data);
+            },
+            error: function(exception){
+                button.find('i').attr('class', 'fa fa-edit');
+                alert(exception.responseText);
+            }
+        });
+
+    }
+
+    function validateSession(button) {
+        var id = button.data("entityid");
+
+        button.find('i').attr('class', 'fa fa-spinner fa-spin');
+
+        $.ajax({
+            type: "POST",
+            url: "{{ path('validate_presence_ajax') }}",
+            data: 'id=' + id,
+            timeout: 10000,
+            success: function(data){
+                button.closest('tr').find('.js-validate').html('Oui');
+                button.closest('tr').find('.js-btn-delete').remove();
+                button.closest('tr').find('.js-btn-edit').remove();
+
+                button.remove();
+            },
+            error: function(exception){
+                button.find('i').attr('class', 'fa fa-check');
+                alert(exception.responseText);
+            }
+        });
+    }
+
+</script>

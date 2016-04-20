@@ -1,3 +1,5 @@
+{# Vue "liste des devis" dans la partie Devis #}
+
 {% extends '::layout.html.twig' %}
 
 {% block body %}
@@ -10,11 +12,11 @@
             <div class="panel-body">
                 <div class="clearfix"></div>
 
-                <table class="table table-striped table-bordered table-hover dataTable records_list" id="datatable">
+                <table class="table table-striped table-bordered table-hover dataTable records_list js-data-table" id="datatable">
                     <thead>
                         <tr>
                             <th>Année</th>
-                            <th>Numero</th>
+                            <th>Numéro</th>
                             <th>Date du devis</th>
                             <th>Date de debut</th>
                             <th>Date de fin</th>
@@ -23,33 +25,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for entity in entities %}
+                    {% for devi in devis %}
                         <tr>
-                            <td>{{ entity.devAnnee }}</td>
-                            <td>{{ entity.devNumero }}</td>
-                            <td>{% if entity.devDatedevis %}{{ entity.devDatedevis|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if entity.devDatedebut %}{{ entity.devDatedebut|date('Y-m-d') }}{% endif %}</td>
-                            <td>{% if entity.devDatefin %}{{ entity.devDatefin|date('Y-m-d') }}{% endif %}</td>
-                            <td>{{ entity.devStatut }}</td>
+                            <td>{{ devi.devAnnee }}</td>
+                            <td>{{ devi.devNumero }}</td>
+                            <td data-order="{{ devi.devDatedevis.timestamp|default(0) }}">{{ devi.devDatedevis|date('d/m/Y')|default() }}</td>
+                            <td data-order="{{ devi.devDatedebut.timestamp|default(0) }}">{{ devi.devDatedebut|date('d/m/Y')|default() }}</td>
+                            <td data-order="{{ devi.devDatefin.timestamp|default(0) }}">{{ devi.devDatefin|date('d/m/Y')|default() }}</td>
+                            <td>{{ devi.devStatut }}</td>
                             <td class="text-center">
-                                <a href="{{ path('devis_show', { 'id': entity.devId }) }}">
+                                <a href="{{ path('devis_show', { 'id': devi.devId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
-                                {% if entity.devStatut != "Validé" %}
-                                    <a href="{{ path('devis_edit', { 'id': entity.devId }) }}">
+                                {% if devi.devStatut != "Validé" %}
+                                    <a href="{{ path('devis_edit', { 'id': devi.devId }) }}">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-pencil"></i> Editer
                                         </button>
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('devis_print', { 'id': entity.devId }) }}" target="_blank">
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('new_daf', { 'id': devi.devId }) }}">
+                                        <button type="button" class="btn btn-blue btn-xs">
+                                            <i class="fa fa-folder"></i> Créer une DAF
+                                        </button>
+                                    </a>
+                                    {% endif %}
+                                    <a href="{{ path('devis_print', { 'id': devi.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-print"></i> Imprimer Devis
                                         </button>
                                     </a>
-                                     <a href="{{ path('attestation_print', { 'id': entity.devId }) }}" target="_blank">
+                                     <a href="{{ path('attestation_print', { 'id': devi.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue2 btn-xs">
                                             <i class="fa fa-print"></i> Imprimer Attestation
                                         </button>

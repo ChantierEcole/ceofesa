@@ -11,7 +11,7 @@ class Parcours extends Constraint
 {
     public function validatedBy()
     {
-        return 'max_heures';
+        return 'max_heures_parcours';
     }
 
     public $message1 = "Attention : Il ne peut y avoir le même type de module avec la même structure pour un stagiaire.\n\r Merci de vérifier vos informations.";

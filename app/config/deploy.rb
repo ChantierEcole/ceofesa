@@ -11,9 +11,9 @@ set :keep_releases, 5
 
 set :scm,         :git
 set :scm_verbose, true
-set :repository,  "git@github.com:ChantierEcole/ceofesa.git"
+set :repository,  "file:///var/www/ceofesa"
 
-set :deploy_via, :remote_cache
+set :deploy_via, :copy
 set :deploy_to,  "/var/www/ceofesa/preprod"
 
 set :use_sudo,         false
@@ -41,6 +41,7 @@ role :db,         domain, :primary => true
 before "symfony:assetic:dump", "symfony:assets:update_version"
 after "deploy", "deploy:cleanup"
 after "deploy", "symfony:clear_apc"
+after "deploy", "symfony:doctrine:migrations:migrate"
 after "deploy:rollback:cleanup", "symfony:clear_apc"
 
 # Be more verbose by uncommenting the following line

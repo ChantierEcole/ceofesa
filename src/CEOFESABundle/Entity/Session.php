@@ -2,13 +2,21 @@
 
 namespace CEOFESABundle\Entity;
 
+use CEOFESABundle\Validator\Constraints as CeofesaAssert;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Session
  *
  * @ORM\Table(name="tb_Session")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CEOFESABundle\Repository\SessionRepository")
+ *
+ * @CeofesaAssert\Session
+ *
+ * @Gedmo\SoftDeleteable(fieldName = "deletedAt")
  */
 class Session
 {
@@ -22,7 +30,7 @@ class Session
     private $sesId;
 
     /**
-     * @var \Structure
+     * @var \CEOFESABundle\Entity\Structure
      *
      * @ORM\ManyToOne(targetEntity="Structure")
      * @ORM\JoinColumns({
@@ -32,7 +40,7 @@ class Session
     private $sesStructure;
 
     /**
-     * @var \Structure
+     * @var \CEOFESABundle\Entity\Structure
      *
      * @ORM\ManyToOne(targetEntity="Structure")
      * @ORM\JoinColumns({
@@ -42,7 +50,7 @@ class Session
     private $sesOf;
 
     /**
-     * @var \ModuleT
+     * @var \CEOFESABundle\Entity\ModuleT
      *
      * @ORM\ManyToOne(targetEntity="ModuleT")
      * @ORM\JoinColumns({
@@ -52,7 +60,7 @@ class Session
     private $sesMtype = "0";
 
     /**
-     * @var \Module
+     * @var \CEOFESABundle\Entity\Module
      *
      * @ORM\ManyToOne(targetEntity="Module")
      * @ORM\JoinColumns({
@@ -90,7 +98,7 @@ class Session
     private $sesDuree = '0.00';
 
     /**
-     * @var \SessionT
+     * @var \CEOFESABundle\Entity\SessionT
      *
      * @ORM\ManyToOne(targetEntity="SessionT")
      * @ORM\JoinColumns({
@@ -100,7 +108,7 @@ class Session
     private $sesStype = '0';
 
     /**
-     * @var \FormationT
+     * @var \CEOFESABundle\Entity\FormationT
      *
      * @ORM\ManyToOne(targetEntity="FormationT")
      * @ORM\JoinColumns({
@@ -109,12 +117,49 @@ class Session
      */
     private $sesFtype = '0';
 
+    /**
+     * @var \CEOFESABundle\Entity\Animation
+     *
+     * @ORM\OneToMany(targetEntity="Animation", mappedBy="aniSession")
+     */
+    private $sesAnimations;
 
+    /**
+     * @var \CEOFESABundle\Entity\Presence[]|\Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\CEOFESABundle\Entity\Presence", mappedBy="pscSession")
+     */
+    private $presences;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(
+     *     name     = "deleted_at",
+     *     type     = "datetime",
+     *     nullable = true
+     * )
+     */
+    private $deletedAt;
+
+    /**
+     * @var \CEOFESABundle\Entity\Tiers
+     *
+     * @Assert\NotNull(
+     *     message = "Vous devez choisir un formateur"
+     * )
+     */
+    private $formateur;
+
+    public function __construct()
+    {
+        $this->presences = new ArrayCollection();
+    }
 
     /**
      * Get sesId
      *
-     * @return integer 
+     * @return integer
      */
     public function getSesId()
     {
@@ -137,7 +182,7 @@ class Session
     /**
      * Get sesDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getSesDate()
     {
@@ -145,9 +190,8 @@ class Session
     }
 
     /**
-     * Set sesHeuredebut
-     *
      * @param string $sesHeuredebut
+     *
      * @return Session
      */
     public function setSesHeuredebut($sesHeuredebut)
@@ -158,9 +202,7 @@ class Session
     }
 
     /**
-     * Get sesHeuredebut
-     *
-     * @return string 
+     * @return string
      */
     public function getSesHeuredebut()
     {
@@ -168,9 +210,8 @@ class Session
     }
 
     /**
-     * Set sesHeurefin
-     *
      * @param string $sesHeurefin
+     *
      * @return Session
      */
     public function setSesHeurefin($sesHeurefin)
@@ -181,9 +222,7 @@ class Session
     }
 
     /**
-     * Get sesHeurefin
-     *
-     * @return string 
+     * @return string
      */
     public function getSesHeurefin()
     {
@@ -191,9 +230,8 @@ class Session
     }
 
     /**
-     * Set sesDuree
-     *
      * @param string $sesDuree
+     *
      * @return Session
      */
     public function setSesDuree($sesDuree)
@@ -204,9 +242,7 @@ class Session
     }
 
     /**
-     * Get sesDuree
-     *
-     * @return string 
+     * @return string
      */
     public function getSesDuree()
     {
@@ -214,12 +250,11 @@ class Session
     }
 
     /**
-     * Set sesMtype
-     *
      * @param \CEOFESABundle\Entity\ModuleT $sesMtype
+     *
      * @return Session
      */
-    public function setSesMtype(\CEOFESABundle\Entity\ModuleT $sesMtype = null)
+    public function setSesMtype(ModuleT $sesMtype = null)
     {
         $this->sesMtype = $sesMtype;
 
@@ -227,8 +262,6 @@ class Session
     }
 
     /**
-     * Get sesMtype
-     *
      * @return \CEOFESABundle\Entity\ModuleT
      */
     public function getSesMtype()
@@ -237,12 +270,11 @@ class Session
     }
 
     /**
-     * Set sesStype
-     *
      * @param \CEOFESABundle\Entity\SessionT $sesStype
+     *
      * @return Session
      */
-    public function setSesStype(\CEOFESABundle\Entity\SessionT $sesStype = null)
+    public function setSesStype(SessionT $sesStype = null)
     {
         $this->sesStype = $sesStype;
 
@@ -250,8 +282,6 @@ class Session
     }
 
     /**
-     * Get sesStype
-     *
      * @return \CEOFESABundle\Entity\SessionT
      */
     public function getSesStype()
@@ -260,12 +290,11 @@ class Session
     }
 
     /**
-     * Set sesFtype
-     *
      * @param \CEOFESABundle\Entity\FormationT $sesFtype
+     *
      * @return Session
      */
-    public function setSesFtype(\CEOFESABundle\Entity\FormationT $sesFtype = null)
+    public function setSesFtype(FormationT $sesFtype = null)
     {
         $this->sesFtype = $sesFtype;
 
@@ -273,8 +302,6 @@ class Session
     }
 
     /**
-     * Get sesFtype
-     *
      * @return \CEOFESABundle\Entity\FormationT
      */
     public function getSesFtype()
@@ -283,12 +310,11 @@ class Session
     }
 
     /**
-     * Set sesModule
-     *
      * @param \CEOFESABundle\Entity\Module $sesModule
+     *
      * @return Session
      */
-    public function setSesModule(\CEOFESABundle\Entity\Module $sesModule = null)
+    public function setSesModule(Module $sesModule = null)
     {
         $this->sesModule = $sesModule;
 
@@ -296,9 +322,7 @@ class Session
     }
 
     /**
-     * Get sesModule
-     *
-     * @return \CEOFESABundle\Entity\Module 
+     * @return \CEOFESABundle\Entity\Module
      */
     public function getSesModule()
     {
@@ -306,12 +330,11 @@ class Session
     }
 
     /**
-     * Set sesStructure
-     *
      * @param \CEOFESABundle\Entity\Structure $sesStructure
+     *
      * @return Session
      */
-    public function setSesStructure(\CEOFESABundle\Entity\Structure $sesStructure = null)
+    public function setSesStructure(Structure $sesStructure = null)
     {
         $this->sesStructure = $sesStructure;
 
@@ -319,9 +342,7 @@ class Session
     }
 
     /**
-     * Get sesStructure
-     *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getSesStructure()
     {
@@ -329,12 +350,11 @@ class Session
     }
 
     /**
-     * Set sesOf
-     *
      * @param \CEOFESABundle\Entity\Structure $sesOf
+     *
      * @return Session
      */
-    public function setSesOf(\CEOFESABundle\Entity\Structure $sesOf = null)
+    public function setSesOf(Structure $sesOf = null)
     {
         $this->sesOf = $sesOf;
 
@@ -342,12 +362,74 @@ class Session
     }
 
     /**
-     * Get sesOf
-     *
-     * @return \CEOFESABundle\Entity\Structure 
+     * @return \CEOFESABundle\Entity\Structure
      */
     public function getSesOf()
     {
         return $this->sesOf;
+    }
+
+    /**
+     * @return \CEOFESABundle\Entity\Animation
+     */
+    public function getSesAnimations()
+    {
+        return $this->sesAnimations;
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\Animation $sesAnimations
+     */
+    public function setSesAnimations($sesAnimations)
+    {
+        $this->sesAnimations = $sesAnimations;
+    }
+
+    /**
+     * @return \CEOFESABundle\Entity\Presence[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPresences()
+    {
+        return $this->presences;
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\Presence[]|\Doctrine\Common\Collections\ArrayCollection $presences
+     */
+    public function setPresences($presences)
+    {
+        $this->presences = $presences;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @param \DateTime $deletedAt
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * @return \CEOFESABundle\Entity\Tiers
+     */
+    public function getFormateur()
+    {
+        return $this->formateur;
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\Tiers $formateur
+     */
+    public function setFormateur(Tiers $formateur)
+    {
+        $this->formateur = $formateur;
     }
 }

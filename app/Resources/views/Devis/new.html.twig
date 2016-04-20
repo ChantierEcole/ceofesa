@@ -18,6 +18,15 @@
                     <div class="col-md-6">
                         {{ form_row(form.devDatefin) }}
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form_label(form.devTauxhoraire) }}
+                            {{ form_errors(form.devTauxhoraire) }}
+                            <div class="col-sm-2">
+                                {{ form_widget(form.devTauxhoraire) }}
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-12 parcours-forms">
                         {{ form_row(form.devParcours) }}
                     </div>

@@ -1,0 +1,53 @@
+{% extends "::layout.html.twig" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"> <span class="glyphicons glyphicons-e-mail"></span> Envoyer un e-mail </div>
+            </div>
+            <div class="panel-body padding-bottom-none">
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.users) }}
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.sujet) }}
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(form.message) }}
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="col-md-12">
+                    <div style="float: right;">
+                        {{ form_row(form.envoyer) }}
+                    </div>
+                </div>
+
+                <br />
+                <br />
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}
