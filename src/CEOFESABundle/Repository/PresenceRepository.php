@@ -2,6 +2,9 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\DAF;
+use CEOFESABundle\Entity\Presence;
+use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Entity\Tiers;
 use Doctrine\ORM\EntityRepository;
 
@@ -81,5 +84,51 @@ class PresenceRepository extends EntityRepository
         ->where('s.pscParcours = :idparcours')
         ->setParameter('idparcours', $idparcours)
         ;
+    }
+
+    public function getPresences(DAF $daf, Structure $structure)
+    {
+        return $this
+            ->createQueryBuilder('p')
+            ->leftJoin('p.pscParcours', 'parc')
+            ->leftJoin('parc.prcDcont', 'd')
+            ->leftJoin('parc.prcStructure', 's')
+            ->leftJoin('parc.prcType', 'm')
+            ->leftJoin('d.cntDaf', 'daf')
+            ->andWhere('daf.dafId = :dafId')
+            ->andWhere('m.mtyType = :type')
+            ->andWhere('s.strId = :structure')
+            ->setParameter('dafId', $daf)
+            ->setParameter('type', 'EXTERNE')
+            ->setParameter('structure', $structure)
+            ;
+    }
+
+    public function checkBill(DAF $daf, Structure $structure)
+    {
+        $presences =  $this->getPresences($daf, $structure)->getQuery()->getResult();
+        
+        /** @var Presence $presence */
+        foreach ($presences as $presence) {
+            if (!$presence->getPscFacture()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public function checkPaid(DAF $daf, Structure $structure)
+    {
+        $presences =  $this->getPresences($daf, $structure)->getQuery()->getResult();
+
+        /** @var Presence $presence */
+        foreach ($presences as $presence) {
+            if (!$presence->isPscPayee()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

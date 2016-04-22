@@ -198,9 +198,9 @@ class Structure
     private $strDateretouravenant;
 
     /**
-     * @var \StructureT
+     * @var StructureT
      *
-     * @ORM\ManyToOne(targetEntity="StructureT")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\StructureT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="str_Type", referencedColumnName="sty_ID", nullable=false)
      * })
@@ -222,16 +222,16 @@ class Structure
     private $strFonction;
 
     /**
-     * @var \Relation
+     * @var Relation
      *
-     * @ORM\OneToMany(targetEntity="Relation", mappedBy="relStructure")
+     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\Relation", mappedBy="relStructure")
      */
     private $strRelations;
 
     /**
      * @var Parcours
      *
-     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcStructure")
+     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\Parcours", mappedBy="prcStructure")
      */
     private $strParcours;
 

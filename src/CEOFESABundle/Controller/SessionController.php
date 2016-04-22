@@ -6,6 +6,7 @@ use CEOFESABundle\Entity\Parcours;
 use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\PresenceType;
 use CEOFESABundle\Helper\CeoHelper;
+use CEOFESABundle\Entity\DAF;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -182,8 +183,16 @@ class SessionController extends Controller
         }
 
         try {
-            $this->getDoctrine()->getManager()->remove($session);
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
+            if($em
+                ->getRepository(Presence::class)
+                ->checkBill(
+                    $em->getRepository(DAF::class)->getDaf($session),
+                    $session->getSesOf())
+            ) {
+                $this->getDoctrine()->getManager()->remove($session);
+                $this->getDoctrine()->getManager()->flush();
+            }
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur est survenue');
         }
@@ -334,8 +343,12 @@ class SessionController extends Controller
     /**
      * Displays a form to edit an existing Session entity.
      *
-     * @Route("/edit/{id}", name="session_edit")
+     * @Route(
+     *     "/edit/{id}",
+     *     name="session_edit"
+     * )
      * @Method({"GET","POST"})
+     *
      * @Template("::Session\edit.html.twig")
      */
     public function editAction(Request $request,$id)
@@ -355,12 +368,19 @@ class SessionController extends Controller
 
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
+        if (
+            $editForm->isValid()
+            && $em
+                ->getRepository(Presence::class)
+                ->checkBill(
+                    $em->getRepository(DAF::class)->getDaf($entity),
+                    $entity->getSesOf())
+        ) {
             $em->flush();
             return $this->redirect($this->generateUrl('session_list2', array(
-                'module' => $entity->getSesModule()->getModId(),
-                'type' => $entity->getSesMtype()->getMtyId(),
-                'of' => $entity->getSesOf()->getStrId(),
+                'module'  => $entity->getSesModule()->getModId(),
+                'type'    => $entity->getSesMtype()->getMtyId(),
+                'of'      => $entity->getSesOf()->getStrId(),
                 'session' => $entity->getSesId(),
             )));
         }
@@ -551,15 +571,22 @@ class SessionController extends Controller
     {
         $sessionId = $request->request->get('id');
         $session = $this->getDoctrine()->getManager()->getRepository('CEOFESABundle:Session')->find($sessionId);
-
+        $em = $this->getDoctrine()->getManager();
+        $notFullyBilled = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf());
         return new JsonResponse([
-            'id'             => $sessionId,
-            'date'           => date_format($session->getSesDate(), 'd-m-Y'),
-            'hDebut'         => $session->getSesHeuredebut(),
-            'hFin'           => $session->getSesHeurefin(),
-            'duree'          => CeoHelper::DurationFloatToArray($session->getSesDuree()),
-            'seance'         => $session->getSesStype()->getStyType(),
-            'formation'      => $session->getSesFtype()->getFtyType(),
+            'id'              => $sessionId,
+            'date'            => date_format($session->getSesDate(), 'd-m-Y'),
+            'hDebut'          => $session->getSesHeuredebut(),
+            'hFin'            => $session->getSesHeurefin(),
+            'duree'           => CeoHelper::DurationFloatToArray($session->getSesDuree()),
+            'seance'          => $session->getSesStype()->getStyType(),
+            'formation'       => $session->getSesFtype()->getFtyType(),
+            'hasPresence'     => count($session->getPresences()) > 0,
+            'notFullyBilled' => $notFullyBilled,
         ]);
     }
 
@@ -609,8 +636,17 @@ class SessionController extends Controller
             $p['tiers'] = $formateur->getAniTiers()->getTrsNom().' '.$formateur->getAniTiers()->getTrsPrenom();
             $reponse[] = $p;
         }
+        $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionId));
+        $reponse2 = array();
+        $reponse2['formateurs'] = $reponse;
+        $reponse2['notFullyBilled'] = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf()
+            );
 
-        return new JsonResponse($reponse);
+        return new JsonResponse($reponse2);
     }
 
     /**
@@ -642,7 +678,7 @@ class SessionController extends Controller
             $p['daf'] = $participant->getPscParcours()->getPrcDcont()->getCntDaf()->getDafDossier();
             $response[] = $p;
         }
-
+        
         return new JsonResponse($response);
     }
 
@@ -653,7 +689,8 @@ class SessionController extends Controller
      * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")
      *
      */
-    public function formateursDeleteAjaxAction(Request $request){
+    public function formateursDeleteAjaxAction(Request $request)
+    {
         $animationId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $animation = $em->getRepository('CEOFESABundle:Animation')->find($animationId);
@@ -665,8 +702,18 @@ class SessionController extends Controller
         }
 
         $sessionid = $animation->getAniSession()->getSesId();
-        $em->remove($animation);
-        $em->flush();
+        $session = $em->getRepository(Session::class)->findOneBy(array('sesId' =>$sessionid));
+        $notFullyBilled = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf()
+            );
+
+        if ($notFullyBilled) {
+            $em->remove($animation);
+            $em->flush();
+        }
 
         return new JsonResponse($sessionid);
     }
@@ -686,7 +733,17 @@ class SessionController extends Controller
         $session = $em->getRepository('CEOFESABundle:Session')->find($sessionid);
         $formateur = $em->getRepository('CEOFESABundle:Tiers')->find($formateurid);
 
-        if (!$em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionid)->getQuery()->getResult()) {
+        $notFullyBilled = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf()
+            );
+
+        if (
+            !$em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionid)->getQuery()->getResult()
+            && $notFullyBilled
+        ) {
             $animation = new Animation();
             $animation->setAniTiers($formateur);
             $animation->setAniSession($session);
@@ -716,8 +773,19 @@ class SessionController extends Controller
         }
 
         $sessionid = $presence->getPscSession()->getSesId();
-        $em->remove($presence);
-        $em->flush();
+        $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionid));
+
+        $notFullyBilled = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf()
+            );
+
+        if ($notFullyBilled) {
+            $em->remove($presence);
+            $em->flush();
+        }
 
         return new JsonResponse($sessionid);
     }
@@ -743,7 +811,14 @@ class SessionController extends Controller
 
         $form = $this->createForm(new PresenceType(), $presence);
 
-        if ($form->handleRequest($request)->isValid()) {
+        $notFullyBilled = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($presence->getPscSession()),
+                $presence->getPscSession()->getSesOf()
+            );
+
+        if ($form->handleRequest($request)->isValid() && $notFullyBilled) {
             $em->persist($presence);
             $em->flush();
 
@@ -786,12 +861,20 @@ class SessionController extends Controller
             ->getQuery()
             ->getResult();
 
+        $notFullyBilled = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf());
+
         if ($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
             $reponse = new JsonResponse('doublon', 419);
         } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de sa DAF
             $reponse = new JsonResponse('limite', 419);
         } elseif ($type == 'Individuel' && $isParticipants) {
-                $reponse = new JsonResponse('individuel', 419);
+            $reponse = new JsonResponse('individuel', 419);
+        } elseif ($notFullyBilled) {
+            $reponse = new JsonResponse('Facture validée', 419);
         } else { // si ok : rajout de la présence en base
             $presence = new Presence();
             $presence->setPscDuree($duree);

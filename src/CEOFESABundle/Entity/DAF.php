@@ -74,9 +74,9 @@ class DAF
     private $dafTauxhoraire;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="daf_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -84,9 +84,9 @@ class DAF
     private $dafStructure;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="daf_OF", referencedColumnName="str_ID", nullable=false)
      * })
@@ -94,16 +94,16 @@ class DAF
     private $dafOf;
 
     /**
-     * @var \DCont
+     * @var DCont
      *
-     * @ORM\OneToMany(targetEntity="DCont", mappedBy="cntDaf", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\DCont", mappedBy="cntDaf", cascade={"persist"})
      */
     private $dafDcont;
 
     /**
-     * @var \DCont
+     * @var DCont
      *
-     * @ORM\OneToMany(targetEntity="BonCde", mappedBy="bcdDAF", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\BonCde", mappedBy="bcdDAF", cascade={"persist"})
      */
     private $bcdBonCdes;
 
@@ -334,7 +334,7 @@ class DAF
     }
 
     /**
-     * @return \DCont
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getDafDcont()
     {

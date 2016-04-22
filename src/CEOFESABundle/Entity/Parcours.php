@@ -23,9 +23,9 @@ class Parcours
     private $prcId;
 
     /**
-     * @var \DCont
+     * @var DCont
      *
-     * @ORM\ManyToOne(targetEntity="DCont", inversedBy="cntParcours")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\DCont", inversedBy="cntParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_DCont", referencedColumnName="cnt_ID", nullable=false)
      * })
@@ -35,7 +35,7 @@ class Parcours
     /**
      * @var ModuleT
      *
-     * @ORM\ManyToOne(targetEntity="ModuleT")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\ModuleT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_Type", referencedColumnName="mty_ID", nullable=false)
      * })
@@ -45,7 +45,7 @@ class Parcours
     /**
      * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure", inversedBy="strParcours")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Structure", inversedBy="strParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -55,7 +55,7 @@ class Parcours
     /**
      * @var Module
      *
-     * @ORM\ManyToOne(targetEntity="Module")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Module")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_Module", referencedColumnName="mod_ID", nullable=false)
      * })
@@ -70,9 +70,9 @@ class Parcours
     private $prcNombreheure;
 
     /**
-     * @var \DParcours
+     * @var DParcours
      *
-     * @ORM\ManyToOne(targetEntity="DParcours")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\DParcours")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="prc_ImpDevis", referencedColumnName="dpr_ID")
      * })
@@ -80,9 +80,9 @@ class Parcours
     private $prcImpdevis;
 
     /**
-     * @var \Presence
+     * @var Presence
      *
-     * @ORM\OneToMany(targetEntity="Presence", mappedBy="pscParcours")
+     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\Presence", mappedBy="pscParcours")
      */
     private $prcPresence;
 

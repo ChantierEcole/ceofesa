@@ -27,9 +27,9 @@ class DCont
     private $cntId;
 
     /**
-     * @var \DAF
+     * @var DAF
      *
-     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="dafDcont")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\DAF", inversedBy="dafDcont")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cnt_DAF", referencedColumnName="daf_ID", nullable=false)
      * })
@@ -37,9 +37,9 @@ class DCont
     private $cntDaf;
 
     /**
-     * @var \Tiers
+     * @var Tiers
      *
-     * @ORM\ManyToOne(targetEntity="Tiers")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Tiers")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cnt_Tiers", referencedColumnName="trs_ID", nullable=false)
      * })
@@ -54,9 +54,9 @@ class DCont
     private $cntDatesortie;
 
     /**
-     * @var \SortieT
+     * @var SortieT
      *
-     * @ORM\ManyToOne(targetEntity="SortieT")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\SortieT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cnt_MotifSortie", referencedColumnName="srt_ID", nullable=false)
      * })
@@ -64,7 +64,9 @@ class DCont
     private $cntMotifsortie;
 
     /**
-     * @ORM\OneToMany(targetEntity="Parcours", mappedBy="prcDcont", cascade={"persist"}, orphanRemoval=true)
+     * @var Parcours
+     * 
+     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\Parcours", mappedBy="prcDcont", cascade={"persist"}, orphanRemoval=true)
      * @Assert\Valid
      * @CeofesaAssert\Parcours
      */

@@ -7,6 +7,7 @@ use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\DCont;
 use CEOFESABundle\Entity\Devis;
 use CEOFESABundle\Entity\ModuleT;
+use CEOFESABundle\Entity\Presence;
 use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\DafType;
 use Proxies\__CG__\CEOFESABundle\Entity\BParcours;
@@ -204,10 +205,19 @@ class DafController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $bonCdes = $em->getRepository('CEOFESABundle:BonCde')->findBy(array('bcdDAF' => $daf));
+        
+        $sousTraitants = $em
+            //->getRepository('CEOFESABundle:DAF')
+            //->getSoustraitantsHeuresTotal($daf)
+            ->getRepository(Structure::class)
+            ->getSousTraitantsNbHeures($daf)
+            ->getQuery()
+            ->getResult();
 
         return array(
-            'bonCdes' => $bonCdes,
-            'daf'     => $daf
+            'bonCdes'       => $bonCdes,
+            'daf'           => $daf,
+            'sousTraitants' => $sousTraitants,
         );
     }
 
@@ -233,5 +243,62 @@ class DafController extends Controller
         return $response;
     }
 
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $s
+     *
+     * @Route(
+     *     path = "/facturer/{id}/{s}",
+     *     name = "facturer_heures"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function facturerHeuresAction(DAF $daf, Structure $s)
+    {
+        $presences = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Presence::class)
+            ->getPresences($daf, $s)
+            ->getQuery()
+            ->getResult();
 
+        /** @var \CEOFESABundle\Entity\Presence $presence */
+        foreach ($presences as $presence){
+            $presence->setPscFacture(true);
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirect($this->generateUrl('daf_show', array('id' => $daf->getDafId())));
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $s
+     *
+     * @Route(
+     *     path = "/payer/{id}/{s}",
+     *     name = "payer_heures"
+     * )
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function marquerHeurePayeeAction(DAF $daf, Structure $s)
+    {
+        $presences = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Presence::class)
+            ->getPresences($daf, $s)
+            ->getQuery()
+            ->getResult();
+
+        /** @var \CEOFESABundle\Entity\Presence $presence */
+        foreach ($presences as $presence){
+            $presence->setPscPayee(true);
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirect($this->generateUrl('daf_show', array('id' => $daf->getDafId())));
+    }
 }

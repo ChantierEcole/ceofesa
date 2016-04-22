@@ -276,8 +276,12 @@
 
                         $("input.TypeSeance").val(data['seance']);
                         $("input.TypeFormation").val(data['formation']);
-                        var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
-                        button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
+                        if(data['notFullyBilled']) {
+                            var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
+                            if (!data['hasPresence']) {
+                                button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
+                            }
+                        }
                         button = button.replace(new RegExp("variable", 'g'), id);
                         $(".modifDetailBtn").html(button);
                         $(".btn-add-formateur").attr("data-sessionid", id);
@@ -300,10 +304,15 @@
                     success: function (data) {
                         var noResult = 1;
                         $("div.listFormateur").html('<table><tbody>');
-                        $.each(data, function (index) {
-                            var id = data[index].id;
-                            var tiers = data[index].tiers;
-                            $("div.listFormateur").append('<tr><td>' + tiers + '</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button></td></tr>');
+                        $.each(data['formateurs'], function (index) {
+                            var id = data['formateurs'][index].id;
+                            var tiers = data['formateurs'][index].tiers;
+
+                            var del = data['notFullyBilled'] === true ? '<button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button>' : '';
+
+                            $("div.listFormateur").append(
+                                    '<tr><td>' + tiers + '</td><td>' + del +  '</td></tr>'
+                            );
                             noResult = 0;
                         });
                         $("div.listFormateur").append('</tbody></table>');

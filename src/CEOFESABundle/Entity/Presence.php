@@ -25,11 +25,11 @@ class Presence
     private $pscId;
 
     /**
-     * @var \Session
+     * @var Session
      *
      * @ORM\ManyToOne(
-     *     targetEntity = "Session",
-     *     inversedBy = "presences"
+     *     targetEntity = "CEOFESABundle\Entity\Session",
+     *     inversedBy   = "presences"
      * )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Session", referencedColumnName="ses_ID", nullable=false)
@@ -38,9 +38,9 @@ class Presence
     private $pscSession;
 
     /**
-     * @var \Parcours
+     * @var Parcours
      *
-     * @ORM\ManyToOne(targetEntity="Parcours", inversedBy="prcPresence")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Parcours", inversedBy="prcPresence")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="psc_Parcours", referencedColumnName="prc_ID", nullable=false)
      * })
@@ -59,22 +59,21 @@ class Presence
      *
      * @ORM\Column(name="psc_Facture", type="boolean", nullable=false, options={"default" = 0})
      */
-    private $pscFacture;
+    private $pscFacture = false;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="psc_Validate", type="boolean", nullable=false, options={"default" = 0})
      */
-    private $pscValidate;
+    private $pscValidate = false;
 
     /**
-     * Presence constructor.
+     * @var boolean
+     *
+     * @ORM\Column(name = "psc_payee", type = "boolean", nullable = false)
      */
-    public function __construct()
-    {
-        $this->pscValidate = false;
-    }
+    private $pscPayee = false;
 
     /**
      * Get pscId
@@ -187,10 +186,26 @@ class Presence
     }
 
     /**
-     * @param boolean $sesValidate
+     * @param boolean $pscValidate
      */
     public function setPscValidate($pscValidate)
     {
         $this->pscValidate = $pscValidate;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPscPayee()
+    {
+        return $this->pscPayee;
+    }
+
+    /**
+     * @param boolean $pscPayee
+     */
+    public function setPscPayee($pscPayee)
+    {
+        $this->pscPayee = $pscPayee;
     }
 }

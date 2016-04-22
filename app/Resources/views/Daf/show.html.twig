@@ -76,6 +76,44 @@
                     </table>
                 {% endif %}
 
+                <h3>Sous traitants</h3>
+                {% for st in sousTraitants %}
+                    {% if loop.first %}
+                        <table class="table table-bordered table-condensed table-hover">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Nombre d'heures total</th>
+                                <th>Action</th>
+                            </tr>
+                    {% endif %}
+                        <tr>
+                            <td>{{ st.structure.strNom }}</td>
+                            <td>{{ st.nbHeures }}</td>
+                            <td>
+                                {% if verif_facture(daf, st.structure) %}
+                                    <a href="{{ path('facturer_heures', {'id':  daf.dafId, 's': st.structure.strId }) }}">
+                                        <button type="button" class="btn btn-blue3 btn-xs">
+                                            Valider les factures
+                                        </button>
+                                     </a>
+                                {% elseif verif_payee(daf, st.structure) %}
+                                    <a href="{{ path('payer_heures', {'id':  daf.dafId, 's': st.structure.strId }) }}">
+                                        <button type="button" class="btn btn-blue3 btn-xs">
+                                            Payer les factures
+                                        </button>
+                                    </a>
+                                {% else %}
+                                    Heures payées
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% if loop.last %}
+                        </table>
+                    {% endif %}
+                {% else %}
+                    <p> Aucun sous traitant</p>
+                {% endfor %}
+
                 <h3>Parcours de stagiaire</h3>
                 <table class="table table-bordered table-condensed table-hover">
                     <tr>
