@@ -661,7 +661,7 @@ class SessionController extends Controller
         $sessionId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $participants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($sessionId)->getQuery()->getResult();
-        $response = array();
+        $participantsA = array();
 
         $right = $this->get('security.context')->isGranted('ROLE_ADMIN');
 
@@ -676,10 +676,20 @@ class SessionController extends Controller
             $p['stagiaire'] = $stagiaire->getTrsNom().' '.$stagiaire->getTrsPrenom();
             $p['nbheures'] = CeoHelper::DurationFloatToArray($participant->getPscDuree());
             $p['daf'] = $participant->getPscParcours()->getPrcDcont()->getCntDaf()->getDafDossier();
-            $response[] = $p;
+            $participantsA[] = $p;
         }
         
-        return new JsonResponse($response);
+        $reponse = array();
+        $reponse['participants'] = $participantsA;
+        $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionId));
+        $reponse['notFullyBilled'] = $em
+            ->getRepository(Presence::class)
+            ->checkBill(
+                $em->getRepository(DAF::class)->getDaf($session),
+                $session->getSesOf()
+            );
+        
+        return new JsonResponse($reponse);
     }
 
     /**
