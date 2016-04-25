@@ -111,9 +111,9 @@ class Tiers
     private $trsFonction;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="trs_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -121,9 +121,9 @@ class Tiers
     private $trsStructure;
 
     /**
-     * @var \TiersT
+     * @var TiersT
      *
-     * @ORM\ManyToOne(targetEntity="TiersT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\TiersT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="trs_Type", referencedColumnName="tty_ID", nullable=false)
      * })
@@ -147,9 +147,9 @@ class Tiers
     private $trsLieunaissance;
 
     /**
-     * @var \CiviliteT
+     * @var CiviliteT
      *
-     * @ORM\ManyToOne(targetEntity="CiviliteT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\CiviliteT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="trs_Civilite", referencedColumnName="cty_ID")
      * })

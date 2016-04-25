@@ -22,9 +22,12 @@ class Relation
     private $relId;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure", inversedBy="strRelations")
+     * @ORM\ManyToOne(
+     *     targetEntity = "CEOFESABundle\Entity\Structure",
+     *     inversedBy   = "strRelations"
+     * )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="rel_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -32,9 +35,9 @@ class Relation
     private $relStructure;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="rel_OF", referencedColumnName="str_ID", nullable=false)
      * })
@@ -42,9 +45,9 @@ class Relation
     private $relOf;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="rel_SousTraitant", referencedColumnName="str_ID", nullable=false)
      * })

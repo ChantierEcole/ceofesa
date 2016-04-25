@@ -22,19 +22,31 @@ class Animation
     private $aniId;
 
     /**
-     * @var \Session
+     * @var Session
      *
-     * @ORM\ManyToOne(targetEntity="Session", inversedBy="sesAnimations")
-     * @ORM\JoinColumn(name="ani_Session", referencedColumnName="ses_ID", nullable=false)
+     * @ORM\ManyToOne(
+     *     targetEntity = "CEOFESABundle\Entity\Session",
+     *     inversedBy   = "sesAnimations"
+     * )
+     *
+     * @ORM\JoinColumn(
+     *     name                 = "ani_Session",
+     *     referencedColumnName = "ses_ID",
+     *     nullable             = false
+     * )
      */
     private $aniSession;
 
     /**
-     * @var \Tiers
+     * @var Tiers
      *
-     * @ORM\ManyToOne(targetEntity="Tiers")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Tiers")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ani_Tiers", referencedColumnName="trs_ID", nullable=false)
+     *   @ORM\JoinColumn(
+     *     name                 = "ani_Tiers",
+     *     referencedColumnName = "trs_ID",
+     *     nullable             = false
+     *     )
      * })
      */
     private $aniTiers;
@@ -53,6 +65,7 @@ class Animation
      * Set aniTiers
      *
      * @param \CEOFESABundle\Entity\Tiers $aniTiers
+     * 
      * @return Animation
      */
     public function setAniTiers(Tiers $aniTiers = null)
@@ -76,6 +89,7 @@ class Animation
      * Set aniSession
      *
      * @param \CEOFESABundle\Entity\Session $aniSession
+     * 
      * @return Animation
      */
     public function setAniSession(Session $aniSession = null)

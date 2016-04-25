@@ -35,13 +35,17 @@ class SessionController extends Controller
 {
     /**
      * @Route(
-     * 	path="/",
-     * 	name="session_index"
+     *    path = "/",
+     *    name = "session_index"
      * )
+     *
      * @Method({"GET"})
+     *
      * @Template("::Session\index.html.twig")
+     *
+     * @return array
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $form = $this->createChooseForm('session_list');
 
@@ -53,7 +57,11 @@ class SessionController extends Controller
     /**
      * Creates a new Session entity.
      *
-     * @Route("/ajout", name = "session_create")
+     * @Route(
+     *     path = "/ajout",
+     *     name = "session_create"
+     * )
+     *
      * @Method({ "GET", "POST" })
      *
      * @Template("::Session\new.html.twig")
@@ -106,10 +114,12 @@ class SessionController extends Controller
         $id = $this->get('session')->get('structure');
         $entity->setSesStructure($this->getDoctrine()->getRepository(Structure::class)->find($id));
 
-        $form = $this
-            ->createForm(new SessionType($this->getDoctrine()->getRepository(Structure::class), $id), $entity, array(
-            'action' => $this->generateUrl('session_create'),
-            'method' => 'POST',
+        $form = $this->createForm(
+            new SessionType($this->getDoctrine()->getRepository(Structure::class), $id),
+            $entity,
+            array(
+                'action' => $this->generateUrl('session_create'),
+                'method' => 'POST',
         ));
 
         return $form;
@@ -119,9 +129,10 @@ class SessionController extends Controller
      * Affiche la liste des sessions en fonction du module/moduleType/OF choisi dans le formulaire
      *
      * @Route(
-     *    path="/list",
-     *    name="session_list"
+     *    path = "/list",
+     *    name = "session_list"
      * )
+     *
      * @Method({"POST"})
      *
      * @Template("::Session\index.html.twig")
@@ -203,8 +214,8 @@ class SessionController extends Controller
      * Affiche la liste des sessions après ajout ou modification d'une session
      *
      * @Route(
-     *   path="/list/{module}/{type}/{of}/{session}",
-     *   name="session_list2"
+     *   path = "/list/{module}/{type}/{of}/{session}",
+     *   name = "session_list2"
      * )
      * @Method({"GET"})
      *
@@ -230,7 +241,11 @@ class SessionController extends Controller
         $moduleEntity = $em->getRepository('CEOFESABundle:Module')->find($module);
         $modtypeEntity = $em->getRepository('CEOFESABundle:ModuleT')->find($type);
         $ofEntity = $em->getRepository('CEOFESABundle:Structure')->find($of);
-        $sessions = $em->getRepository('CEOFESABundle:Session')->getSessions($module,$type,$of,$id)->getQuery()->getResult();
+        $sessions = $em
+            ->getRepository('CEOFESABundle:Session')
+            ->getSessions($module,$type,$of,$id)
+            ->getQuery()
+            ->getResult();
 
         $form2 = $this->createParticipantForm($of,$module,$type);
 
@@ -241,20 +256,22 @@ class SessionController extends Controller
         $monthForm->get('of')->setData($ofEntity->getStrId());
 
         return array(
-            'monthForm' => $monthForm->createView(),
-            'choose_form' => $form->createView(),
+            'monthForm'        => $monthForm->createView(),
+            'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
-            'entities' => $sessions,
-            'module' => $moduleEntity,
-            'type' => $modtypeEntity,
-            'of' => $ofEntity,
-            'formateurs' => $formateurs,
-            'session' => $session,
+            'entities'         => $sessions,
+            'module'           => $moduleEntity,
+            'type'             => $modtypeEntity,
+            'of'               => $ofEntity,
+            'formateurs'       => $formateurs,
+            'session'          => $session,
         );
     }
 
     /**
      * Création d'un formulaire pour choisir les "paramètres" des sessions à afficher
+     *
+     * @param $actionURL
      *
      * @return \Symfony\Component\Form\Form The form
      */
@@ -262,24 +279,40 @@ class SessionController extends Controller
     {
         $data = array();
         $formBuilder = $this->createFormBuilder($data)
-            ->add('module','entity',array(
-                'class' => 'CEOFESABundle\Entity\Module',
-                'property' => 'modCode',
-                'multiple' => false,
-            ))
-            ->add('type','entity',array(
-                'class' => 'CEOFESABundle\Entity\ModuleT',
-                'property' => 'mtyType',
-                'multiple' => false,
-            ))
-            ->add('of','choice',array(
-                'required'  => true,
-                'multiple'  => false,
-                'empty_value' => '',
-            ))
-            ->add('voir','submit', array(
-                'attr' => array('class' => 'btn-primary')
-            ))
+            ->add(
+                'module',
+                'entity',
+                array(
+                    'class'    => 'CEOFESABundle\Entity\Module',
+                    'property' => 'modCode',
+                    'multiple' => false,
+                )
+            )
+            ->add(
+                'type',
+                'entity',
+                array(
+                    'class'    => 'CEOFESABundle\Entity\ModuleT',
+                    'property' => 'mtyType',
+                    'multiple' => false,
+                )
+            )
+            ->add(
+                'of',
+                'choice',
+                array(
+                    'required'    => true,
+                    'multiple'    => false,
+                    'empty_value' => '',
+                )
+            )
+            ->add(
+                'voir',
+                'submit',
+                array(
+                    'attr' => array('class' => 'btn-primary'),
+                )
+            )
         ;
         $formBuilder
         	->setAction($this->generateUrl($actionURL))
@@ -291,15 +324,17 @@ class SessionController extends Controller
     		$data = $event->getData();
 
     		$ofId = isset($data['of']) ? $data['of'] : null;
-        	if($ofId != null){
+
+            if ($ofId != null) {
             $formulaire->remove('of');
-            $formulaire->add('of','entity',array(
-	                'class' => 'CEOFESABundle\Entity\Structure',
-	                'property' => 'strNom',
-	                'label' => 'OF',
-	                'multiple' => false,
-	                'query_builder' => function(StructureRepository $repo) use ($ofId) {
-	                    return $repo->getStructure($ofId);
+            $formulaire->add('of', 'entity', array(
+	                'class'         => 'CEOFESABundle\Entity\Structure',
+                    'property'      => 'strNom',
+                    'label'         => 'OF',
+                    'multiple'      => false,
+                    'query_builder' => function (StructureRepository $repo) use ($ofId) {
+
+                        return $repo->getStructure($ofId);
 	                }
 	            ));
 	        }
@@ -326,21 +361,28 @@ class SessionController extends Controller
 
         $data = array();
         $formBuilder = $this->createFormBuilder($data)
-            ->add('participant','entity',array(
-                'class' => 'CEOFESABundle\Entity\Parcours',
-                'property' => 'prctiersdaf',
-                'label' => 'Participant',
-                'multiple' => false,
-                'query_builder' => function(ParcoursRepository $repo) use ($id,$of,$module,$moduletype) {
-                    return $repo->getParcours($id,$of,$module,$moduletype);
-                },
-            ))
-            ->add('nbHeures','time',array(
-                'label'  => "Nombre d'heures",
-                'widget' => 'text',
-                'input'  => 'string',
-            ))
-        ;
+            ->add(
+                'participant',
+                'entity',
+                array(
+                    'class'         => 'CEOFESABundle\Entity\Parcours',
+                    'property'      => 'prctiersdaf',
+                    'label'         => 'Participant',
+                    'multiple'      => false,
+                    'query_builder' => function (ParcoursRepository $repo) use ($id, $of, $module, $moduletype) {
+                        return $repo->getParcours($id, $of, $module, $moduletype);
+                    },
+                )
+            )
+            ->add(
+                'nbHeures',
+                'time',
+                array(
+                    'label'  => "Nombre d'heures",
+                    'widget' => 'text',
+                    'input'  => 'string',
+                )
+            );
         $formBuilder
             ->setAction($this->generateUrl('session_list'))
             ->setMethod('POST')
@@ -391,6 +433,7 @@ class SessionController extends Controller
             && $notFullyBilled
         ) {
             $em->flush();
+            
             return $this->redirect($this->generateUrl('session_list2', array(
                 'module'  => $entity->getSesModule()->getModId(),
                 'type'    => $entity->getSesMtype()->getMtyId(),
@@ -433,7 +476,11 @@ class SessionController extends Controller
     /**
      * Deletes a Session entity.
      *
-     * @Route("/{id}/delete", name="session_delete")
+     * @Route(
+     *     path = "/{id}/delete",
+     *     name = "session_delete"
+     * )
+     * 
      * @Method("DELETE")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -475,7 +522,14 @@ class SessionController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('devis_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
+            ->add(
+                'submit',
+                'submit',
+                array(
+                    'label' => 'Supprimer',
+                    'attr'  => array('class' => 'btn btn-red2 confirmjq'),
+                )
+            )
             ->getForm()
         ;
     }
@@ -484,8 +538,8 @@ class SessionController extends Controller
     * Affiche la liste des sessions d'un stagiaire en fonction du module/moduleType/OF choisi dans le formulaire
     *
     * @Route(
-    *   path="/stagiaire/list",
-    *   name="session_stagiaire_list"
+    *   path = "/stagiaire/list",
+    *   name = "session_stagiaire_list"
     * )
     *
     * @Template("::Session\index_stagiaires.html.twig")
@@ -513,9 +567,10 @@ class SessionController extends Controller
      * Imprimer les feuilles de présence via PDF
      *
      * @Route(
-     *   path="/stagiaire/list/print",
-     *   name="session_stagiaire_list_print"
+     *   path = "/stagiaire/list/print",
+     *   name = "session_stagiaire_list_print"
      * )
+     * 
      * @Template("::Session\print_form.html.twig")
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -537,15 +592,20 @@ class SessionController extends Controller
             $id         = $this->get('session')->get('structure');
 
             $em             = $this->getDoctrine()->getManager();
-            $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
+            $participants   = $em
+                ->getRepository('CEOFESABundle:Parcours')
+                ->getParcoursAndSessions($id, $of, $module, $modType, $date);
 
             $html = $this->renderView('::Templates\emargement.html.twig', array(
                 'participants'  => $participants,
-                'date'          => $date
+                'date'          => $date,
             ));
 
             $response= new Response();
-            $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape','page-size' => 'A4')));
+            $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array(
+                'orientation' => 'Landscape',
+                'page-size' => 'A4',
+            )));
             $response->headers->set('Content-Type', 'application/pdf');
             $response->headers->set('Content-disposition', 'filename=emargement-'.$date->format('mY').'.pdf');
 
@@ -597,7 +657,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> affichage du détail d'une session choisie
      *
-     * @Route("/detail-ajax", name="details_session_ajax")
+     * @Route(
+     *     path = "/detail-ajax",
+     *     name = "details_session_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -619,7 +682,7 @@ class SessionController extends Controller
             'seance'          => $session->getSesStype()->getStyType(),
             'formation'       => $session->getSesFtype()->getFtyType(),
             'hasPresence'     => count($session->getPresences()) > 0,
-            'notFullyBilled' => $notFullyBilled,
+            'notFullyBilled'  => $notFullyBilled,
         ]);
     }
 
@@ -627,7 +690,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> recalcule la durée de la session en fonction de l'heure de début et de l'heure de fin
      *
-     * @Route("/auto-heure-ajax", name="auto_heure_ajax")
+     * @Route(
+     *     path = "/auto-heure-ajax",
+     *     name = "auto_heure_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -661,7 +727,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> affichage des formateurs d'une session choisie
      *
-     * @Route("/formateur-ajax", name="formateurs_session_ajax")
+     * @Route(
+     *     path = "/formateur-ajax",
+     *     name = "formateurs_session_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -672,7 +741,11 @@ class SessionController extends Controller
 
         $sessionId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
-        $formateursResult = $em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionId)->getQuery()->getResult();
+        $formateursResult = $em
+            ->getRepository('CEOFESABundle:Animation')
+            ->getFormateurs($sessionId)
+            ->getQuery()
+            ->getResult();
         $formateurs = array();
 
         foreach ($formateursResult as $formateur) {
@@ -697,7 +770,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> affichage des participants d'une session choisie
      *
-     * @Route("/participants-ajax", name="participants_session_ajax")
+     * @Route(
+     *     path = "/participants-ajax",
+     *     name = "participants_session_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -746,7 +822,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> suppression du formateur choisi
      *
-     * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")
+     * @Route(
+     *     path = "/formateur-delete-ajax",
+     *     name = "formateur_delete_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -780,7 +859,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> ajout d'un formateur à la session
      *
-     * @Route("/formateur-add-ajax", name="formateur_add_ajax")
+     * @Route( 
+     *     path = "/formateur-add-ajax",
+     *     name = "formateur_add_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -814,7 +896,10 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> suppression du participant choisi
      *
-     * @Route("/participant-delete-ajax", name="participant_delete_ajax")
+     * @Route(
+     *     path = "/participant-delete-ajax",
+     *     name = "participant_delete_ajax"
+     * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -847,7 +932,10 @@ class SessionController extends Controller
     /**
      * Edit presence sur une session
      *
-     * @Route("/participant-edit-ajax", name="participant_edit_ajax")
+     * @Route(
+     *     path = "/participant-edit-ajax",
+     *     name = "participant_edit_ajax"
+     * )
      *
      * @Template("::Session\editPresence.html.twig")
      *
@@ -879,8 +967,8 @@ class SessionController extends Controller
             $em->flush();
 
             return $this->render(
-                '::Session\presence.html.twig', array(
-                    'presence' => CeoHelper::DurationFloatToArray($presence->getPscDuree())
+                '::Session\presence.html.twig', 
+                array('presence' => CeoHelper::DurationFloatToArray($presence->getPscDuree())
             ));
         }
 

@@ -104,9 +104,9 @@ class Structure
     private $strAdherent;
 
     /**
-     * @var \Region
+     * @var Region
      *
-     * @ORM\ManyToOne(targetEntity="Region")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Region")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="str_Region", referencedColumnName="reg_ID")
      * })
@@ -200,7 +200,7 @@ class Structure
     /**
      * @var StructureT
      *
-     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\StructureT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\StructureT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="str_Type", referencedColumnName="sty_ID", nullable=false)
      * })
@@ -224,7 +224,9 @@ class Structure
     /**
      * @var Relation
      *
-     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\Relation", mappedBy="relStructure")
+     * @ORM\OneToMany(
+     *     targetEntity = "CEOFESABundle\Entity\Relation", 
+     *     mappedBy     = "relStructure")
      */
     private $strRelations;
 

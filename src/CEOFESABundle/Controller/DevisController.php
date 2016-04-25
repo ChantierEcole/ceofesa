@@ -24,8 +24,13 @@ class DevisController extends Controller
     /**
      * Liste des devis
      *
-     * @Route("/", name="devis")
+     * @Route(
+     *     path = "/",
+     *     name = "devis"
+     * )
+     * 
      * @Method("GET")
+     *
      * @Template("::Devis\index.html.twig")
      */
     public function indexAction()
@@ -35,17 +40,24 @@ class DevisController extends Controller
 
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisStructure($id)->getQuery()->getResult();
 
-        return array(
-            'devis' => $entities,
-        );
+        return array('devis' => $entities);
     }
 
     /**
      * Gestion de l'envoi d'un formulaire de création d'une entité Devis
      *
-     * @Route("/", name="devis_create")
+     * @Route(
+     *     path = "/",
+     *     name = "devis_create"
+     * )
+     *
      * @Method("POST")
+     *
      * @Template("::Devis\new.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createAction(Request $request)
     {
@@ -65,7 +77,12 @@ class DevisController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Demande de devis')
                 ->setFrom($this->get('session')->get('mail'))
-                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2'),$this->container->getParameter('contact_mail3'),$this->container->getParameter('contact_mail4')))
+                ->setTo(array(
+                    $this->container->getParameter('contact_mail1'), 
+                    $this->container->getParameter('contact_mail2'),
+                    $this->container->getParameter('contact_mail3'),
+                    $this->container->getParameter('contact_mail4')
+                ))
                 ->setBody($this->renderView('Mail\devis.txt.twig',array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);
@@ -92,7 +109,7 @@ class DevisController extends Controller
         $tarif = $this->container->getParameter('tarif_ofesa');
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new DevisType($id,$tarif), $entity, array(
+        $form = $this->createForm(new DevisType($id, $tarif), $entity, array(
             'action' => $this->generateUrl('devis_create'),
             'method' => 'POST',
         ));
@@ -103,8 +120,13 @@ class DevisController extends Controller
     /**
      * Affichage du formulaire pour créer une nouvelle entité Devis
      *
-     * @Route("/new", name="devis_new")
+     * @Route(
+     *     path = "/new",
+     *     name = "devis_new"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Devis\new.html.twig")
      */
     public function newAction()
@@ -120,9 +142,15 @@ class DevisController extends Controller
 
     /**
      * Traitement backoffice de l'AJAX.
-     * 
-     * @Route("/ajax", name="devis_ajax")
      *
+     * @Route(
+     *     path = "/ajax",
+     *     name = "devis_ajax"
+     * )
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function devisAjaxAction(Request $request){
 
@@ -131,11 +159,12 @@ class DevisController extends Controller
         $id = $this->get('session')->get('structure');
 
         /* sélectionne toutes les structures selon leur type (intra/externe) */
-        if($typeId == '0'){
+        if ($typeId == '0') {
             $rep = $em->getRepository('CEOFESABundle:Structure')->getIntra();
-        }elseif($typeId == '1'){
+        }elseif ($typeId == '1') {
             $rep = $em->getRepository('CEOFESABundle:Structure')->getSoustraitants($id);
         }
+        
         $structures = $rep->getQuery()->getResult();
 
         /* On créer un tableau avec l'ID et le nom de toutes les structures choisies pour le renvoyer */
@@ -146,15 +175,25 @@ class DevisController extends Controller
             $p['nom'] = $structure->getStrNom();
             $OFList[] = $p;
         }
+        
         return new JsonResponse($OFList);
     }
 
     /**
      * Affiche les détails d'une entité Devis
      *
-     * @Route("/{id}", name="devis_show")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "devis_show"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Devis\show.html.twig")
+     *
+     * @param int $id
+     *
+     * @return array
      */
     public function showAction($id)
     {
@@ -171,7 +210,7 @@ class DevisController extends Controller
 
         return array(
             'entity'      => $entity,
-            'entities' => $entities,
+            'entities'    => $entities,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -179,9 +218,18 @@ class DevisController extends Controller
     /**
      * Affiche un formulaire pour éditer une entité Devis
      *
-     * @Route("/{id}/edit", name="devis_edit")
+     * @Route(
+     *     path = "/{id}/edit",
+     *     name = "devis_edit"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Devis\edit.html.twig")
+     *
+     * @param int $id
+     *
+     * @return array
      */
     public function editAction($id)
     {
@@ -219,19 +267,30 @@ class DevisController extends Controller
         $tarif = $this->container->getParameter('tarif_ofesa');
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new DevisType($id,$tarif), $entity, array(
+        $form = $this->createForm(new DevisType($id, $tarif), $entity, array(
             'action' => $this->generateUrl('devis_update', array('id' => $entity->getDevId())),
             'method' => 'PUT',
         ));
 
         return $form;
     }
+
     /**
      * Gestion de l'envoi d'un formulaire d'édition d'une entité Devis
      *
-     * @Route("/{id}", name="devis_update")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "devis_update"
+     * )
+     *
      * @Method("PUT")
+     *
      * @Template("::Devis\edit.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function updateAction(Request $request, $id)
     {
@@ -256,8 +315,13 @@ class DevisController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Modification d\'un devis')
                 ->setFrom($this->get('session')->get('mail'))
-                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2'),$this->container->getParameter('contact_mail3'),$this->container->getParameter('contact_mail4')))
-                ->setBody($this->renderView('Mail\modifDevis.txt.twig',array('devis' => $entity)))
+                ->setTo(array(
+                    $this->container->getParameter('contact_mail1'),
+                    $this->container->getParameter('contact_mail2'),
+                    $this->container->getParameter('contact_mail3'),
+                    $this->container->getParameter('contact_mail4')
+                ))
+                ->setBody($this->renderView('Mail\modifDevis.txt.twig', array('devis' => $entity)))
             ;
             $this->get('mailer')->send($message);
 
@@ -269,11 +333,21 @@ class DevisController extends Controller
             'edit_form'   => $editForm->createView(),
         );
     }
+
     /**
      * Action de suppression d'une entité Devis
      *
-     * @Route("/{id}", name="devis_delete")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "devis_delete"
+     * )
+     *
      * @Method("DELETE")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, $id)
     {
@@ -310,15 +384,21 @@ class DevisController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('devis_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Supprimer','attr' => array('class' => 'btn btn-red2 confirmjq')))
+            ->add('submit', 'submit', array(
+                'label' => 'Supprimer', 
+                'attr'  => array('class' => 'btn btn-red2 confirmjq')
+            ))
             ->getForm()
         ;
     }
-
-    /*
-    * Fonction pour vérifer si l'id de la structure du devis correspond bien à la structure de la session
-    */
-    private function checkStructure($id){
+    
+    /**
+     * Fonction pour vérifer si l'id de la structure du devis correspond bien à la structure de la session
+     *
+     * @param int $id
+     */
+    private function checkStructure($id)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $structure = $em->getRepository('CEOFESABundle:Devis')->getStructureDevis($id);
@@ -328,10 +408,13 @@ class DevisController extends Controller
         }
     }
 
-    /*
-    * Fonction pour vérifier si le statut d'un devis est bien à "Validé"
-    */
-    private function checkValid($id){
+    /**
+     * Fonction pour vérifier si le statut d'un devis est bien à "Validé"
+     * 
+     * @param int $id
+     */
+    private function checkValid($id)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $statut = $em->getRepository('CEOFESABundle:Devis')->getStatutDevis($id);
@@ -344,7 +427,14 @@ class DevisController extends Controller
     /**
      * Génère un PDF de Devis à l'aide de la vue Templates/devis.html.twig
      *
-     * @Route("/{id}/pdf", name="devis_print")
+     * @Route(
+     *     path = "/{id}/pdf",
+     *     name = "devis_print"
+     * )
+     *
+     * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function printDevisAction($id)
     {   
@@ -354,10 +444,10 @@ class DevisController extends Controller
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
 
         $html = $this->renderView('::Templates\devis.html.twig', array(
-            'id' => $id,
+            'id'         => $id,
             'stagiaires' => $stagiaires,
-            'parcours' => $parcours,
-            'devis' => $devis,
+            'parcours'   => $parcours,
+            'devis'      => $devis,
         ));
 
         $response= new Response();
@@ -371,7 +461,14 @@ class DevisController extends Controller
     /**
      * Génère un PDF d'attestation d'inscription à l'aide de la vue Templates/attestation-inscription.html.twig
      *
-     * @Route("/{id}/pdf/attestation", name="attestation_print")
+     * @Route(
+     *     path = "/{id}/pdf/attestation",
+     *     name = "attestation_print"
+     * )
+     *
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function printAttestationAction($id)
     {   
@@ -381,14 +478,17 @@ class DevisController extends Controller
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($id); 
 
         $html = $this->renderView('::Templates\attestation-inscription.html.twig', array(
-            'id' => $id,
+            'id'         => $id,
             'stagiaires' => $stagiaires,
-            'parcours' => $parcours,
-            'devis' => $devis,
+            'parcours'   => $parcours,
+            'devis'      => $devis,
         ));
 
         $response= new Response();
-        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait')));
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml(
+            $html,
+            array('orientation' => 'Portrait')
+        ));
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-disposition', 'filename=attestation.pdf');
 

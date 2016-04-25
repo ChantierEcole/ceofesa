@@ -25,6 +25,11 @@ use CEOFESABundle\Form\Type\UtilisateurType;
 
 class RegistrationController extends BaseController
 {
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function registerAction(Request $request)
     {
         /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
@@ -66,16 +71,18 @@ class RegistrationController extends BaseController
             return $response;
         }
 
-        return $this->render('FOSUserBundle:Registration:register.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render(
+            'FOSUserBundle:Registration:register.html.twig', 
+            array('form' => $form->createView())
+        );
     }
 
     /**
     * @Route(
-    *       path="/login/new",
-    *       name="login_new"
+    *       path = "/login/new",
+    *       name = "login_new"
     * )
+     * 
     * @Method({"GET","POST"})
     */
     public function loginNewAction(Request $request)
@@ -88,7 +95,10 @@ class RegistrationController extends BaseController
             $message = \Swift_Message::newInstance()
                 ->setSubject('Demande de compte')
                 ->setFrom($this->container->getParameter('contact_mail1'))
-                ->setTo(array($this->container->getParameter('contact_mail1'),$this->container->getParameter('contact_mail2')))
+                ->setTo(array(
+                    $this->container->getParameter('contact_mail1'),
+                    $this->container->getParameter('contact_mail2')
+                ))
                 ->setBody($this->renderView('Mail\utilisateur.txt.twig',array('utilisateur' => $utilisateur)))
             ;
             $this->get('mailer')->send($message);

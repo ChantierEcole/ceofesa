@@ -22,9 +22,9 @@ class Params
     private $parId;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="par_Structure", referencedColumnName="str_ID")
      * })
@@ -61,6 +61,7 @@ class Params
      * Set parNom
      *
      * @param string $parNom
+     * 
      * @return Params
      */
     public function setParNom($parNom)
@@ -84,6 +85,7 @@ class Params
      * Set parValeur
      *
      * @param string $parValeur
+     * 
      * @return Params
      */
     public function setParValeur($parValeur)
@@ -107,6 +109,7 @@ class Params
      * Set parStructure
      *
      * @param \CEOFESABundle\Entity\Structure $parStructure
+     * 
      * @return Params
      */
     public function setParStructure(\CEOFESABundle\Entity\Structure $parStructure = null)

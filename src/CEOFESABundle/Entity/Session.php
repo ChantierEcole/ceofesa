@@ -30,9 +30,9 @@ class Session
     private $sesId;
 
     /**
-     * @var \CEOFESABundle\Entity\Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ses_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -40,9 +40,9 @@ class Session
     private $sesStructure;
 
     /**
-     * @var \CEOFESABundle\Entity\Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ses_OF", referencedColumnName="str_ID", nullable=false)
      * })
@@ -50,9 +50,9 @@ class Session
     private $sesOf;
 
     /**
-     * @var \CEOFESABundle\Entity\ModuleT
+     * @var ModuleT
      *
-     * @ORM\ManyToOne(targetEntity="ModuleT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\ModuleT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ses_MType", referencedColumnName="mty_ID", nullable=false)
      * })
@@ -60,9 +60,9 @@ class Session
     private $sesMtype = "0";
 
     /**
-     * @var \CEOFESABundle\Entity\Module
+     * @var Module
      *
-     * @ORM\ManyToOne(targetEntity="Module")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Module")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ses_Module", referencedColumnName="mod_ID", nullable=false)
      * })
@@ -98,9 +98,9 @@ class Session
     private $sesDuree = '0.00';
 
     /**
-     * @var \CEOFESABundle\Entity\SessionT
+     * @var SessionT
      *
-     * @ORM\ManyToOne(targetEntity="SessionT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\SessionT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ses_SType", referencedColumnName="sty_ID", nullable=false)
      * })
@@ -108,9 +108,9 @@ class Session
     private $sesStype = '0';
 
     /**
-     * @var \CEOFESABundle\Entity\FormationT
+     * @var FormationT
      *
-     * @ORM\ManyToOne(targetEntity="FormationT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\FormationT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ses_FType", referencedColumnName="fty_ID", nullable=false)
      * })
@@ -118,9 +118,12 @@ class Session
     private $sesFtype = '0';
 
     /**
-     * @var \CEOFESABundle\Entity\Animation
+     * @var Animation
      *
-     * @ORM\OneToMany(targetEntity="Animation", mappedBy="aniSession")
+     * @ORM\OneToMany(
+     *     targetEntity = "CEOFESABundle\Entity\Animation",
+     *     mappedBy     = "aniSession"
+     * )
      */
     private $sesAnimations;
 
