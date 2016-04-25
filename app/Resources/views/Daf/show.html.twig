@@ -90,13 +90,13 @@
                             <td>{{ st.structure.strNom }}</td>
                             <td>{{ st.nbHeures }}</td>
                             <td>
-                                {% if verif_facture(daf, st.structure) %}
+                                {% if is_fully_billed(daf, st.structure) %}
                                     <a href="{{ path('facturer_heures', {'id':  daf.dafId, 's': st.structure.strId }) }}">
                                         <button type="button" class="btn btn-blue3 btn-xs">
                                             Valider les factures
                                         </button>
                                      </a>
-                                {% elseif verif_payee(daf, st.structure) %}
+                                {% elseif is_paid(daf, st.structure) %}
                                     <a href="{{ path('payer_heures', {'id':  daf.dafId, 's': st.structure.strId }) }}">
                                         <button type="button" class="btn btn-blue3 btn-xs">
                                             Payer les factures

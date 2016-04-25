@@ -76,9 +76,13 @@ class DAF
     /**
      * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="daf_Structure", referencedColumnName="str_ID", nullable=false)
+     *   @ORM\JoinColumn(
+     *     name                 = "daf_Structure",
+     *     referencedColumnName = "str_ID",
+     *     nullable             = false
+     * )
      * })
      */
     private $dafStructure;
@@ -86,9 +90,13 @@ class DAF
     /**
      * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="daf_OF", referencedColumnName="str_ID", nullable=false)
+     *   @ORM\JoinColumn(
+     *     name                 = "daf_OF",
+     *     referencedColumnName = "str_ID",
+     *     nullable             = false
+     * )
      * })
      */
     private $dafOf;
@@ -96,14 +104,22 @@ class DAF
     /**
      * @var DCont
      *
-     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\DCont", mappedBy="cntDaf", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity = "CEOFESABundle\Entity\DCont",
+     *     mappedBy     = "cntDaf",
+     *     cascade      = {"persist"}
+     * )
      */
     private $dafDcont;
 
     /**
      * @var DCont
      *
-     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\BonCde", mappedBy="bcdDAF", cascade={"persist"})
+     * @ORM\OneToMany(
+     *     targetEntity  = "CEOFESABundle\Entity\BonCde",
+     *     mappedBy      = "bcdDAF",
+     *     cascade       = {"persist"}
+     * )
      */
     private $bcdBonCdes;
 
@@ -334,7 +350,7 @@ class DAF
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection|\CEOFESABundle\Entity\DCont[]
      */
     public function getDafDcont()
     {

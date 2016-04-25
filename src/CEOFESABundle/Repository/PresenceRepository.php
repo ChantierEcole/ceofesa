@@ -86,6 +86,12 @@ class PresenceRepository extends EntityRepository
         ;
     }
 
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $structure
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     public function getPresences(DAF $daf, Structure $structure)
     {
         return $this
@@ -104,6 +110,12 @@ class PresenceRepository extends EntityRepository
             ;
     }
 
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $structure
+     *
+     * @return bool
+     */
     public function checkBill(DAF $daf, Structure $structure)
     {
         $presences =  $this->getPresences($daf, $structure)->getQuery()->getResult();
@@ -117,7 +129,13 @@ class PresenceRepository extends EntityRepository
 
         return false;
     }
-    
+
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $structure
+     *
+     * @return bool
+     */
     public function checkPaid(DAF $daf, Structure $structure)
     {
         $presences =  $this->getPresences($daf, $structure)->getQuery()->getResult();

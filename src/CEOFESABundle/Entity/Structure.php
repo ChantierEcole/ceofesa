@@ -231,7 +231,10 @@ class Structure
     /**
      * @var Parcours
      *
-     * @ORM\OneToMany(targetEntity="CEOFESABundle\Entity\Parcours", mappedBy="prcStructure")
+     * @ORM\OneToMany(
+     *     targetEntity = "CEOFESABundle\Entity\Parcours",
+     *     mappedBy     = "prcStructure"
+     * )
      */
     private $strParcours;
 

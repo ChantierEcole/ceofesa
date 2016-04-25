@@ -40,9 +40,16 @@ class Presence
     /**
      * @var Parcours
      *
-     * @ORM\ManyToOne(targetEntity="CEOFESABundle\Entity\Parcours", inversedBy="prcPresence")
+     * @ORM\ManyToOne(
+     *     targetEntity = "CEOFESABundle\Entity\Parcours",
+     *     inversedBy   = "prcPresence"
+     * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="psc_Parcours", referencedColumnName="prc_ID", nullable=false)
+     *   @ORM\JoinColumn(
+     *     name                 = "psc_Parcours", 
+     *     referencedColumnName = "prc_ID", 
+     *     nullable             = false
+     * )
      * })
      */
     private $pscParcours;
@@ -71,7 +78,11 @@ class Presence
     /**
      * @var boolean
      *
-     * @ORM\Column(name = "psc_payee", type = "boolean", nullable = false)
+     * @ORM\Column(
+     *     name = "psc_payee", 
+     *     type = "boolean", 
+     *     nullable = false
+     * )
      */
     private $pscPayee = false;
 

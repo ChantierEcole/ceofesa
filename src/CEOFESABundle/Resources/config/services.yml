@@ -48,7 +48,7 @@ services:
         tags:
             - { name: twig.extension }
 
-    twig.extenstion.sous_traitants_heures:
+    twig.extenstion.sous_traitants_duration:
         class: CEOFESABundle\Twig\SousTraitantsHeuresTwigExtension
         arguments: ["@doctrine.orm.entity_manager"]
         tags:

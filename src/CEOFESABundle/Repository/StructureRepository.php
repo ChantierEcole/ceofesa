@@ -125,7 +125,12 @@ class StructureRepository extends EntityRepository
         ->orderBy('s.strNom','ASC')
         ;
     }
-    
+
+    /**
+     * @param \CEOFESABundle\Entity\DAF $daf
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     public function getSousTraitantsNbHeures(DAF $daf)
     {
         return $this

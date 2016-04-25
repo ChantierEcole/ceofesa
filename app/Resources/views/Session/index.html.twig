@@ -276,18 +276,17 @@
 
                         $("input.TypeSeance").val(data['seance']);
                         $("input.TypeFormation").val(data['formation']);
-                        if(data['notFullyBilled']) {
-                            var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
+                        var button = "";
+                        if (data['notFullyBilled']) {
+                            button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
                             if (!data['hasPresence']) {
                                 button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
                             }
+                            button = button.replace(new RegExp("variable", 'g'), id);
+                            $(".modifDetailBtn").html(button);
                         }
-                        button = button.replace(new RegExp("variable", 'g'), id);
-                        $(".modifDetailBtn").html(button);
                         $(".btn-add-formateur").attr("data-sessionid", id);
-                        $(".btn-add-formateur").data("sessionid", id);
                         $(".btn-add-participant").attr("data-sessionid", id);
-                        $(".btn-add-participant").data("sessionid", id);
                     },
                     error:   function (xhr, ajaxOptions, thrownError) {
                         alert(xhr.responseText); //Ce code affichera le message d'erreur.
@@ -307,14 +306,13 @@
                         $.each(data['formateurs'], function (index) {
                             var id = data['formateurs'][index].id;
                             var tiers = data['formateurs'][index].tiers;
-
-                            var del = data['notFullyBilled'] === true ? '<button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button>' : '';
-                            data['notFullyBilled'] === false ?  $('.btn-add-formateur').attr('disabled', 'disabled') : '';
-                            $("div.listFormateur").append(
-                                    '<tr><td>' + tiers + '</td><td>' + del +  '</td></tr>'
-                            );
+                            var actions = data['notFullyBilled'] === true ? '<button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button>' : '';
+                            $("div.listFormateur").append('<tr><td>' + tiers + '</td><td>' + actions +  '</td></tr>');
                             noResult = 0;
                         });
+                        if (!data['notFullyBilled']) {
+                            $('.btn-add-formateur').attr('disabled', 'disabled');
+                        }
                         $("div.listFormateur").append('</tbody></table>');
                         if (noResult == 1) {
                             $("div.listFormateur").html('Pas de formateur inscrit pour cette session');
@@ -346,16 +344,18 @@
                             tr.append('<td>' + data['participants'][index].daf + '</td>');
                             tr.append('<td class="js-validate">' + (data['participants'][index].validate ? 'Oui' : 'Non') + '</td>');
 
-                            if (data['participants'][index].validate == false && data['participants'][index].right == true) {
-                                tr.append('<td><button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-check"></i> Valider</button> <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
-                            } else if (data['participants'][index].validate == false) {
-                                tr.append('<td><button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
-                            } else {
-                                tr.append('<td></td>');
+                            if (data['notFullyBilled']) {
+                                if (data['participants'][index].validate == false && data['participants'][index].right == true) {
+                                    tr.append('<td><button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-check"></i> Valider</button> <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+                                } else if (data['participants'][index].validate == false) {
+                                    tr.append('<td><button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+                                } else {
+                                    tr.append('<td></td>');
+                                }
                             }
                         });
 
-                        if(!data['notFullyBilled']) {
+                        if (!data['notFullyBilled']) {
                             $('.btn-add-participant').attr('disabled', 'disabled');
                         }
                         // TODO Handle this

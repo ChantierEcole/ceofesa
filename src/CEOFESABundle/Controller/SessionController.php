@@ -2,29 +2,28 @@
 
 namespace CEOFESABundle\Controller;
 
-use CEOFESABundle\Entity\Parcours;
-use CEOFESABundle\Entity\Structure;
-use CEOFESABundle\Form\Type\PresenceType;
-use CEOFESABundle\Helper\CeoHelper;
+use CEOFESABundle\Entity\Animation;
 use CEOFESABundle\Entity\DAF;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use CEOFESABundle\Entity\Parcours;
+use CEOFESABundle\Entity\Presence;
+use CEOFESABundle\Entity\Session;
+use CEOFESABundle\Entity\Structure;
+use CEOFESABundle\Form\Type\MonthType;
+use CEOFESABundle\Form\Type\PresenceType;
+use CEOFESABundle\Form\Type\SessionType;
+use CEOFESABundle\Helper\CeoHelper;
+use CEOFESABundle\Repository\ParcoursRepository;
+use CEOFESABundle\Repository\StructureRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use CEOFESABundle\Repository\StructureRepository;
-use CEOFESABundle\Entity\Session;
-use CEOFESABundle\Entity\Animation;
-use CEOFESABundle\Entity\Presence;
-use CEOFESABundle\Repository\ParcoursRepository;
-use CEOFESABundle\Form\Type\SessionType;
-use CEOFESABundle\Form\Type\MonthType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -116,16 +115,21 @@ class SessionController extends Controller
         return $form;
     }
 
-   /**
-    * Affiche la liste des sessions en fonction du module/moduleType/OF choisi dans le formulaire
-    *
-    * @Route(
-    * 	path="/list",
-    * 	name="session_list"
-    * )
-    * @Method({"POST"})
-    * @Template("::Session\index.html.twig")
-    */
+    /**
+     * Affiche la liste des sessions en fonction du module/moduleType/OF choisi dans le formulaire
+     *
+     * @Route(
+     *    path="/list",
+     *    name="session_list"
+     * )
+     * @Method({"POST"})
+     *
+     * @Template("::Session\index.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array
+     */
     public function listAction(Request $request)
     {
     	$form = $this->createChooseForm('session_list');
@@ -184,12 +188,7 @@ class SessionController extends Controller
 
         try {
             $em = $this->getDoctrine()->getManager();
-            if($em
-                ->getRepository(Presence::class)
-                ->checkBill(
-                    $em->getRepository(DAF::class)->getDaf($session),
-                    $session->getSesOf())
-            ) {
+            if ($this->checkBill($em->getRepository(DAF::class)->getDaf($session), $session->getSesOf())) {
                 $this->getDoctrine()->getManager()->remove($session);
                 $this->getDoctrine()->getManager()->flush();
             }
@@ -201,15 +200,23 @@ class SessionController extends Controller
     }
 
     /**
-    * Affiche la liste des sessions après ajout ou modification d'une session
-    *
-    * @Route(
-    *   path="/list/{module}/{type}/{of}/{session}",
-    *   name="session_list2"
-    * )
-    * @Method({"GET"})
-    * @Template("::Session\index.html.twig")
-    */
+     * Affiche la liste des sessions après ajout ou modification d'une session
+     *
+     * @Route(
+     *   path="/list/{module}/{type}/{of}/{session}",
+     *   name="session_list2"
+     * )
+     * @Method({"GET"})
+     *
+     * @Template("::Session\index.html.twig")
+     *
+     * @param $module
+     * @param $type
+     * @param $of
+     * @param $session
+     *
+     * @return array
+     */
     public function validBackListAction($module, $type, $of, $session)
     {
         $form = $this->createChooseForm('session_list');
@@ -307,6 +314,10 @@ class SessionController extends Controller
     /**
      * Création d'un formulaire pour choisir les participants d'une session
      *
+     * @param $of
+     * @param $module
+     * @param $moduletype
+     *
      * @return \Symfony\Component\Form\Form The form
      */
     private function createParticipantForm($of,$module,$moduletype)
@@ -344,12 +355,17 @@ class SessionController extends Controller
      * Displays a form to edit an existing Session entity.
      *
      * @Route(
-     *     "/edit/{id}",
-     *     name="session_edit"
+     *     path = "/edit/{id}",
+     *     name = "session_edit"
      * )
      * @Method({"GET","POST"})
      *
      * @Template("::Session\edit.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editAction(Request $request,$id)
     {
@@ -368,13 +384,11 @@ class SessionController extends Controller
 
         $editForm->handleRequest($request);
 
+        $notFullyBilled = $this->checkBill($em->getRepository(DAF::class)->getDaf($entity), $entity->getSesOf());
+
         if (
             $editForm->isValid()
-            && $em
-                ->getRepository(Presence::class)
-                ->checkBill(
-                    $em->getRepository(DAF::class)->getDaf($entity),
-                    $entity->getSesOf())
+            && $notFullyBilled
         ) {
             $em->flush();
             return $this->redirect($this->generateUrl('session_list2', array(
@@ -421,6 +435,11 @@ class SessionController extends Controller
      *
      * @Route("/{id}/delete", name="session_delete")
      * @Method("DELETE")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, $id)
     {
@@ -468,15 +487,21 @@ class SessionController extends Controller
     *   path="/stagiaire/list",
     *   name="session_stagiaire_list"
     * )
+    *
     * @Template("::Session\index_stagiaires.html.twig")
+    *
+    * @return array
     */
     public function stagiaireListAction()
     {
-        $id         = $this->get('session')->get('structure');
-
+        $id             = $this->get('session')->get('structure');
         $em             = $this->getDoctrine()->getManager();
         $structure      = $em->getRepository('CEOFESABundle:Structure')->find($id);
-        $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructure($id)->getQuery()->getResult();
+        $participants   = $em
+            ->getRepository('CEOFESABundle:Parcours')
+            ->getParcoursByStructure($id)
+            ->getQuery()
+            ->getResult();
 
         return array(
             'structure'     => $structure,
@@ -485,14 +510,18 @@ class SessionController extends Controller
     }
 
     /**
-    * Imprimer les feuilles de présence via PDF
-    *
-    * @Route(
-    *   path="/stagiaire/list/print",
-    *   name="session_stagiaire_list_print"
-    * )
-    * @Template("::Session\print_form.html.twig")
-    */
+     * Imprimer les feuilles de présence via PDF
+     *
+     * @Route(
+     *   path="/stagiaire/list/print",
+     *   name="session_stagiaire_list_print"
+     * )
+     * @Template("::Session\print_form.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\Response
+     */
     public function stagiaireListPrintAction(Request $request)
     {
         $form = $this->createForm(new MonthType());
@@ -534,8 +563,12 @@ class SessionController extends Controller
      *
      * @Route("/ajax", name="session_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function sessionAjaxAction(Request $request){
+    public function sessionAjaxAction(Request $request)
+    {
 
         $moduleId = $request->request->get('module_id');
         $typeId = $request->request->get('type_id');
@@ -566,17 +599,17 @@ class SessionController extends Controller
      *
      * @Route("/detail-ajax", name="details_session_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function detailsSessionAjaxAction(Request $request)
     {
         $sessionId = $request->request->get('id');
         $session = $this->getDoctrine()->getManager()->getRepository('CEOFESABundle:Session')->find($sessionId);
         $em = $this->getDoctrine()->getManager();
-        $notFullyBilled = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf());
+        $notFullyBilled = $this->checkBill($em->getRepository(DAF::class)->getDaf($session), $session->getSesOf());
+
         return new JsonResponse([
             'id'              => $sessionId,
             'date'            => date_format($session->getSesDate(), 'd-m-Y'),
@@ -596,8 +629,12 @@ class SessionController extends Controller
      *
      * @Route("/auto-heure-ajax", name="auto_heure_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function calculDureeAjaxAction(Request $request){
+    public function calculDureeAjaxAction(Request $request)
+    {
 
         $heureDebut = $request->request->get('heureDebut');
         $heureFin = $request->request->get('heureFin');
@@ -606,12 +643,15 @@ class SessionController extends Controller
 
         $result = array('hour' => 0, 'minute' => 0);
 
-        if(!empty($heureDebut) && !empty($heureFin) && !empty($minuteDebut) && !empty($minuteFin)){
+        if (!empty($heureDebut) && !empty($heureFin) && !empty($minuteDebut) && !empty($minuteFin)) {
             $dateDebut = new \DateTime($heureDebut.':'.$minuteDebut.':00');
             $dateFin = new \DateTime($heureFin.':'.$minuteFin.':00');
             $interval = $dateFin->diff($dateDebut);
 
-            $result = array('hour' => $interval->h, 'minute' => $interval->i);
+            $result = array(
+                'hour'   => $interval->h,
+                'minute' => $interval->i,
+                );
         }
 
         return new JsonResponse($result);
@@ -623,30 +663,34 @@ class SessionController extends Controller
      *
      * @Route("/formateur-ajax", name="formateurs_session_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function formateursSessionAjaxAction(Request $request){
+    public function formateursSessionAjaxAction(Request $request)
+    {
 
         $sessionId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
-        $formateurs = $em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionId)->getQuery()->getResult();
-        $reponse = array();
-        foreach ($formateurs as $formateur) {
+        $formateursResult = $em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionId)->getQuery()->getResult();
+        $formateurs = array();
+
+        foreach ($formateursResult as $formateur) {
             $p = array();
             $p['id'] = $formateur->getAniId();
             $p['tiers'] = $formateur->getAniTiers()->getTrsNom().' '.$formateur->getAniTiers()->getTrsPrenom();
-            $reponse[] = $p;
+            $formateurs[] = $p;
         }
-        $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionId));
-        $reponse2 = array();
-        $reponse2['formateurs'] = $reponse;
-        $reponse2['notFullyBilled'] = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf()
-            );
 
-        return new JsonResponse($reponse2);
+        $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionId));
+        $response = array();
+        $response['formateurs'] = $formateurs;
+        $response['notFullyBilled'] = $this->checkBill(
+            $em->getRepository(DAF::class)->getDaf($session),
+            $session->getSesOf()
+        );
+
+        return new JsonResponse($response);
     }
 
     /**
@@ -655,12 +699,20 @@ class SessionController extends Controller
      *
      * @Route("/participants-ajax", name="participants_session_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function participantsSessionAjaxAction(Request $request){
+    public function participantsSessionAjaxAction(Request $request)
+    {
 
         $sessionId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
-        $participants = $em->getRepository('CEOFESABundle:Presence')->getPresencesSession($sessionId)->getQuery()->getResult();
+        $participants = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getPresencesSession($sessionId)
+            ->getQuery()
+            ->getResult();
         $participantsA = array();
 
         $right = $this->get('security.context')->isGranted('ROLE_ADMIN');
@@ -679,17 +731,15 @@ class SessionController extends Controller
             $participantsA[] = $p;
         }
         
-        $reponse = array();
-        $reponse['participants'] = $participantsA;
+        $response = array();
+        $response['participants'] = $participantsA;
         $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionId));
-        $reponse['notFullyBilled'] = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf()
-            );
+        $response['notFullyBilled'] = $this->checkBill(
+            $em->getRepository(DAF::class)->getDaf($session),
+            $session->getSesOf()
+        );
         
-        return new JsonResponse($reponse);
+        return new JsonResponse($response);
     }
 
     /**
@@ -698,6 +748,9 @@ class SessionController extends Controller
      *
      * @Route("/formateur-delete-ajax", name="formateur_delete_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function formateursDeleteAjaxAction(Request $request)
     {
@@ -713,12 +766,7 @@ class SessionController extends Controller
 
         $sessionid = $animation->getAniSession()->getSesId();
         $session = $em->getRepository(Session::class)->findOneBy(array('sesId' =>$sessionid));
-        $notFullyBilled = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf()
-            );
+        $notFullyBilled = $this->checkBill($em->getRepository(DAF::class)->getDaf($session), $session->getSesOf());
 
         if ($notFullyBilled) {
             $em->remove($animation);
@@ -734,21 +782,19 @@ class SessionController extends Controller
      *
      * @Route("/formateur-add-ajax", name="formateur_add_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function formateurAddAjaxAction(Request $request){
+    public function formateurAddAjaxAction(Request $request)
+    {
 
         $sessionid = $request->request->get('idsession');
         $formateurid = $request->request->get('idformateur');
         $em = $this->getDoctrine()->getManager();
         $session = $em->getRepository('CEOFESABundle:Session')->find($sessionid);
         $formateur = $em->getRepository('CEOFESABundle:Tiers')->find($formateurid);
-
-        $notFullyBilled = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf()
-            );
+        $notFullyBilled = $this->checkBill($em->getRepository(DAF::class)->getDaf($session), $session->getSesOf());
 
         if (
             !$em->getRepository('CEOFESABundle:Animation')->getFormateurs($sessionid)->getQuery()->getResult()
@@ -770,8 +816,12 @@ class SessionController extends Controller
      *
      * @Route("/participant-delete-ajax", name="participant_delete_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function participantDeleteAjaxAction(Request $request){
+    public function participantDeleteAjaxAction(Request $request)
+    {
         $presenceId = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $presence = $em->getRepository('CEOFESABundle:Presence')->find($presenceId);
@@ -784,13 +834,7 @@ class SessionController extends Controller
 
         $sessionid = $presence->getPscSession()->getSesId();
         $session = $em->getRepository(Session::class)->findOneBy(array('sesId' => $sessionid));
-
-        $notFullyBilled = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf()
-            );
+        $notFullyBilled = $this->checkBill($em->getRepository(DAF::class)->getDaf($session), $session->getSesOf());
 
         if ($notFullyBilled) {
             $em->remove($presence);
@@ -806,6 +850,10 @@ class SessionController extends Controller
      * @Route("/participant-edit-ajax", name="participant_edit_ajax")
      *
      * @Template("::Session\editPresence.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function editPresenceAjaxAction(Request $request)
     {
@@ -821,12 +869,10 @@ class SessionController extends Controller
 
         $form = $this->createForm(new PresenceType(), $presence);
 
-        $notFullyBilled = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($presence->getPscSession()),
-                $presence->getPscSession()->getSesOf()
-            );
+        $notFullyBilled = $this->checkBill(
+            $em->getRepository(DAF::class)->getDaf($presence->getPscSession()),
+            $presence->getPscSession()->getSesOf()
+        );
 
         if ($form->handleRequest($request)->isValid() && $notFullyBilled) {
             $em->persist($presence);
@@ -848,10 +894,17 @@ class SessionController extends Controller
      * Traitement backoffice de l'AJAX
      * -> ajout d'un participant à la session
      *
-     * @Route("/participant-add-ajax", name="participant_add_ajax")
+     * @Route(
+     *     path = "/participant-add-ajax",
+     *     name = "participant_add_ajax"
+     * )
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function participantAddAjaxAction(Request $request){
+    public function participantAddAjaxAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $duree = $request->request->get('duree');
         $idsession = $request->request->get('idsession');
@@ -871,11 +924,7 @@ class SessionController extends Controller
             ->getQuery()
             ->getResult();
 
-        $notFullyBilled = $em
-            ->getRepository(Presence::class)
-            ->checkBill(
-                $em->getRepository(DAF::class)->getDaf($session),
-                $session->getSesOf());
+        $notFullyBilled = $this->checkBill($em->getRepository(DAF::class)->getDaf($session), $session->getSesOf());
 
         if ($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
             $reponse = new JsonResponse('doublon', 419);
@@ -936,6 +985,9 @@ class SessionController extends Controller
      *
      * @Route("/validate-presence-ajax", name="validate_presence_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function validatePresenceAjaxAction(Request $request)
     {
@@ -961,8 +1013,12 @@ class SessionController extends Controller
      *
      * @Route("/stagiaire-details-ajax", name="stagiaire_details_ajax")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function stagiaireDetailsAjaxAction(Request $request){
+    public function stagiaireDetailsAjaxAction(Request $request)
+    {
 
         $idparcours = $request->request->get('idParcours');
         $reponse = array();
@@ -989,10 +1045,11 @@ class SessionController extends Controller
         return new JsonResponse($reponse);
     }
 
-    /*
-    * Fonction pour vérifer si l'id de la structure de la session de formation correspond bien à la structure de la session en cours
-    */
-    private function checkStructure($id){
+    /**
+     * @param int $id
+     */
+    private function checkStructure($id)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $structure = $em->getRepository('CEOFESABundle:Session')->getStructureSession($id);
@@ -1002,10 +1059,14 @@ class SessionController extends Controller
         }
     }
 
-    /*
-    * Fonction pour vérifer si la somme des durées saisies pour une DAF pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cette DAF/stagiaire (DCont)
-    */
-    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0){
+    /**
+     * @param \CEOFESABundle\Entity\Parcours $parcours
+     * @param int                            $nextDuree
+     *
+     * @return bool
+     */
+    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $nbHeuresRealisees = $em->getRepository('CEOFESABundle:Presence')->getParcoursTotalDurees($parcours);
@@ -1013,10 +1074,23 @@ class SessionController extends Controller
 
         $nbHeuresRealisees += $nextDuree;
 
-        if($nbHeuresRealisees <= $nbHeuresPrevues){
+        if ($nbHeuresRealisees <= $nbHeuresPrevues) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $structure
+     *
+     * @return bool
+     */
+    private function checkBill(DAF $daf, Structure $structure)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        return  $em->getRepository(Presence::class)->checkBill($daf, $structure);
     }
 }
