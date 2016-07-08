@@ -15,6 +15,10 @@
                             <th>Nom</th>
                             <th>Siret</th>
                             <th>Reponsable</th>
+                            <th>Convention envoyée</th>
+                            <th>Convention revenue</th>
+                            <th>Avenant envoyé</th>
+                            <th>Avenant revenu</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -24,6 +28,45 @@
                             <td>{{ entity.strNom }}</td>
                             <td>{{ entity.strSiret }}</td>
                             <td>{{ entity.strReponsable }}</td>
+                            {% if entity.strEnvoiconvention %}
+                                {% if entity.strDateenvoiconvention %}
+                                    <td>{{ entity.strDateenvoiconvention|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>Envoyée</td>
+                                {% endif %}
+                            {% else %}
+                                <td>Non envoyée</td>
+                            {% endif %}
+
+                            {% if entity.strRetourconvention %}
+                                {% if entity.strDateretourconvention %}
+                                    <td>{{ entity.strDateretourconvention|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>Reçue</td>
+                                {% endif %}
+                            {% else %}
+                                <td>Non reçue</td>
+                            {% endif %}
+
+                            {% if entity.strEnvoiavenant %}
+                                {% if entity.strDateenvoiavenant %}
+                                    <td>{{  entity.strDateenvoiavenant|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>Envoyé</td>
+                                {% endif %}
+                            {% else %}
+                                <td>Non envoyé</td>
+                            {% endif %}
+
+                            {% if entity.strRetouravenant %}
+                                {% if entity.strDateretouravenant %}
+                                    <td>{{  entity.strDateretouravenant|date("d/m/Y") }}</td>
+                                {% else %}
+                                    <td>Reçu</td>
+                                {% endif %}
+                            {% else %}
+                                <td>Non reçu</td>
+                            {% endif %}
                             <td class="text-center">
                                 <a href="{{ path('structure_show', { 'id': entity.strId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
@@ -47,4 +90,9 @@
 </div>
 {% endblock %}
 {% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('#datatable').DataTable();
+        })
+    </script>
 {% endblock %}
