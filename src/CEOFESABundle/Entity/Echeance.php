@@ -22,9 +22,9 @@ class Echeance
     private $echId;
 
     /**
-     * @var \DAF
+     * @var DAF
      *
-     * @ORM\ManyToOne(targetEntity="DAF")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\DAF")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ech_DAF", referencedColumnName="daf_ID", nullable=false)
      * })

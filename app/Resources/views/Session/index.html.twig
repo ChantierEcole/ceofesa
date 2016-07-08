@@ -276,14 +276,17 @@
 
                         $("input.TypeSeance").val(data['seance']);
                         $("input.TypeFormation").val(data['formation']);
-                        var button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
-                        button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
-                        button = button.replace(new RegExp("variable", 'g'), id);
-                        $(".modifDetailBtn").html(button);
+                        var button = "";
+                        if (data['notFullyBilled']) {
+                            button = '<a href="{{ path("session_edit", {"id":"variable"}) }}"><button type="button" class="btn btn-blue4"><i class="fa fa-pencil"></i> Editer</button></a>';
+                            if (!data['hasPresence']) {
+                                button += '&nbsp;<a class="btn-confirm" href="{{ path("session_remove", {"id":"variable"}) }}"><button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Supprimer</button></a>';
+                            }
+                            button = button.replace(new RegExp("variable", 'g'), id);
+                            $(".modifDetailBtn").html(button);
+                        }
                         $(".btn-add-formateur").attr("data-sessionid", id);
-                        $(".btn-add-formateur").data("sessionid", id);
                         $(".btn-add-participant").attr("data-sessionid", id);
-                        $(".btn-add-participant").data("sessionid", id);
                     },
                     error:   function (xhr, ajaxOptions, thrownError) {
                         alert(xhr.responseText); //Ce code affichera le message d'erreur.
@@ -300,12 +303,16 @@
                     success: function (data) {
                         var noResult = 1;
                         $("div.listFormateur").html('<table><tbody>');
-                        $.each(data, function (index) {
-                            var id = data[index].id;
-                            var tiers = data[index].tiers;
-                            $("div.listFormateur").append('<tr><td>' + tiers + '</td><td><button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button></td></tr>');
+                        $.each(data['formateurs'], function (index) {
+                            var id = data['formateurs'][index].id;
+                            var tiers = data['formateurs'][index].tiers;
+                            var actions = data['notFullyBilled'] === true ? '<button type="button" class="btn btn-red3 btn-xs btn-delete-formateur" data-animationid="' + id + '">Supprimer</button>' : '';
+                            $("div.listFormateur").append('<tr><td>' + tiers + '</td><td>' + actions +  '</td></tr>');
                             noResult = 0;
                         });
+                        if (!data['notFullyBilled']) {
+                            $('.btn-add-formateur').attr('disabled', 'disabled');
+                        }
                         $("div.listFormateur").append('</tbody></table>');
                         if (noResult == 1) {
                             $("div.listFormateur").html('Pas de formateur inscrit pour cette session');
@@ -325,27 +332,32 @@
                     timeout: 10000,
                     success: function (data) {
                         $("tbody.listParticipant").html("");
-                        $.each(data, function (index) {
-                            var id = data[index].id;
+                        $.each(data['participants'], function (index) {
+                            var id = data['participants'][index].id;
 
                             var vTab = $("tbody.listParticipant");
                             vTab.append('<tr>');
 
                             var tr = $("tbody.listParticipant tr:last-child");
-                            tr.append('<td>' + data[index].stagiaire + '</td>');
-                            tr.append('<td class="js-length">' + data[index].nbheures['display'] + '</td>');
-                            tr.append('<td>' + data[index].daf + '</td>');
-                            tr.append('<td class="js-validate">' + (data[index].validate ? 'Oui' : 'Non') + '</td>');
+                            tr.append('<td>' + data['participants'][index].stagiaire + '</td>');
+                            tr.append('<td class="js-length">' + data['participants'][index].nbheures['display'] + '</td>');
+                            tr.append('<td>' + data['participants'][index].daf + '</td>');
+                            tr.append('<td class="js-validate">' + (data['participants'][index].validate ? 'Oui' : 'Non') + '</td>');
 
-                            if (data[index].validate == false && data[index].right == true) {
-                                tr.append('<td><button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="' + data[index].id + '"><i class="fa fa-check"></i> Valider</button> <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
-                            } else if (data[index].validate == false) {
-                                tr.append('<td><button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data[index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
-                            } else {
-                                tr.append('<td></td>');
+                            if (data['notFullyBilled']) {
+                                if (data['participants'][index].validate == false && data['participants'][index].right == true) {
+                                    tr.append('<td><button type="button" class="btn btn-green3 btn-xs js-btn-check" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-check"></i> Valider</button> <button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+                                } else if (data['participants'][index].validate == false) {
+                                    tr.append('<td><button type="button" class="btn btn-warning btn-xs js-btn-edit" data-entityid="' + data['participants'][index].id + '"><i class="fa fa-edit"></i> Editer</button> <button type="button" class="btn btn-red3 btn-xs btn-delete-participant js-btn-delete" data-presenceid="' + id + '">Supprimer</button></td>');
+                                } else {
+                                    tr.append('<td></td>');
+                                }
                             }
                         });
 
+                        if (!data['notFullyBilled']) {
+                            $('.btn-add-participant').attr('disabled', 'disabled');
+                        }
                         // TODO Handle this
                         var $inputDureeSession = $("input.DureeSession");
                         $("input#form_nbHeures_hour").val($inputDureeSession.attr('data-hour'));

@@ -23,9 +23,12 @@ class DParcours
     private $dprId;
 
     /**
-     * @var \Devis
+     * @var Devis
      *
-     * @ORM\ManyToOne(targetEntity="Devis", inversedBy="devParcours")
+     * @ORM\ManyToOne(
+     *     targetEntity = "CEOFESABundle\Entity\Devis",
+     *     inversedBy   = "devParcours"
+     * )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dpr_Devis", referencedColumnName="dev_ID", nullable=false)
      * })
@@ -33,9 +36,9 @@ class DParcours
     private $dprDevis;
 
     /**
-     * @var \Tiers
+     * @var Tiers
      *
-     * @ORM\ManyToOne(targetEntity="Tiers")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Tiers")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dpr_Tiers", referencedColumnName="trs_ID", nullable=false)
      * })
@@ -43,9 +46,9 @@ class DParcours
     private $dprTiers;
 
     /**
-     * @var \ModuleT
+     * @var ModuleT
      *
-     * @ORM\ManyToOne(targetEntity="ModuleT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\ModuleT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dpr_Type", referencedColumnName="mty_ID", nullable=false)
      * })
@@ -53,9 +56,9 @@ class DParcours
     private $dprType;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dpr_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -63,9 +66,9 @@ class DParcours
     private $dprStructure;
 
     /**
-     * @var \Module
+     * @var Module
      *
-     * @ORM\ManyToOne(targetEntity="Module")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Module")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dpr_Module", referencedColumnName="mod_ID", nullable=false)
      * })

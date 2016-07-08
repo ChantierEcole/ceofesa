@@ -7,6 +7,7 @@ use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\DCont;
 use CEOFESABundle\Entity\Devis;
 use CEOFESABundle\Entity\ModuleT;
+use CEOFESABundle\Entity\Presence;
 use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\DafType;
 use Proxies\__CG__\CEOFESABundle\Entity\BParcours;
@@ -29,8 +30,12 @@ class DafController extends Controller
     /**
      * Liste des daf
      *
-     * @Route("/", name="daf")
+     * @Route(
+     *     path = "/",
+     *     name = "daf")
+     *
      * @Method("GET")
+     *
      * @Template("::Daf\index.html.twig")
      */
     public function indexAction()
@@ -38,10 +43,12 @@ class DafController extends Controller
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
 
-        $entities = $em->getRepository('CEOFESABundle:DAF')->findBy(array('dafStructure' => $id), array('dafDatedebut' => 'ASC'));
+        $entities = $em
+            ->getRepository('CEOFESABundle:DAF')
+            ->findBy(array('dafStructure' => $id), array('dafDatedebut' => 'ASC'));
 
         return array(
-            'dafs' => $entities,
+            'dafs' => $entities
         );
     }
 
@@ -49,8 +56,20 @@ class DafController extends Controller
     /**
      * Creation d'une daf
      *
-     * @Route("/new/{id}", defaults={"id" = null}, name="new_daf")
+     * @Route(
+     *     path     = "/new/{id}",
+     *     defaults = {"id" = null},
+     *     name     = "new_daf"
+     * )
+     *
      * @Template("::Daf\new.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function newAction(Request $request, $id)
     {
@@ -99,8 +118,17 @@ class DafController extends Controller
     /**
      * Edition d'une daf
      *
-     * @Route("/edit/{id}", name="edit_daf")
+     * @Route(
+     *     path = "/edit/{id}",
+     *     name = "edit_daf"
+     * )
+     *
      * @Template("::Daf\new.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \CEOFESABundle\Entity\DAF                 $daf
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editAction(Request $request, DAF $daf)
     {
@@ -138,8 +166,12 @@ class DafController extends Controller
         foreach ($sousTraitants as $ss) {
             $bcd = new BonCde();
 
-            $relation = $em->getRepository('CEOFESABundle:Relation')->getRelation($daf->getDafStructure()->getStrId(), $ss->getStrId(), $daf->getDafOf()->getStrId())->getQuery()->getOneOrNullResult();
-            $year     = $daf->getDafDatedebut()->format('Y');
+            $relation = $em
+                ->getRepository('CEOFESABundle:Relation')
+                ->getRelation($daf->getDafStructure()->getStrId(), $ss->getStrId(), $daf->getDafOf()->getStrId())
+                ->getQuery()->getOneOrNullResult();
+
+            $year = $daf->getDafDatedebut()->format('Y');
 
             $bcd->setBcdAnnee($year);
             $bcd->setBcdDate($daf->getDafDatedebut());
@@ -149,7 +181,10 @@ class DafController extends Controller
 
             foreach ($daf->getDafDcont() as $dCont) {
                 foreach ($dCont->getCntParcours() as $parcours) {
-                    if ($parcours->getPrcType()->getMtyType() == ModuleT::EXTER && $parcours->getPrcStructure()->getStrId() == $ss->getStrId()) {
+                    if (
+                        $parcours->getPrcType()->getMtyType() == ModuleT::EXTER
+                        && $parcours->getPrcStructure()->getStrId() == $ss->getStrId()
+                    ) {
                         $bparcours = new BParcours();
                         $bparcours->setBprNombreheure($parcours->getPrcNombreheure());
                         $bparcours->setBprTauxhoraire($daf->getDafTauxhoraire());
@@ -164,7 +199,6 @@ class DafController extends Controller
             $em->persist($bcd);
             $em->flush();
         }
-
 
         return ;
     }
@@ -195,43 +229,131 @@ class DafController extends Controller
     /**
      * Affiche les détails d'une entité DAF
      *
-     * @Route("/{id}", name="daf_show")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "daf_show"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Daf\show.html.twig")
+     *
+     * @param \CEOFESABundle\Entity\DAF $daf
+     *
+     * @return array
      */
     public function showAction(DAF $daf)
     {
         $em = $this->getDoctrine()->getManager();
 
         $bonCdes = $em->getRepository('CEOFESABundle:BonCde')->findBy(array('bcdDAF' => $daf));
+        
+        $sousTraitants = $em
+            ->getRepository(Structure::class)
+            ->getSousTraitantsNbHeures($daf)
+            ->getQuery()
+            ->getResult();
 
         return array(
-            'bonCdes' => $bonCdes,
-            'daf'     => $daf
+            'bonCdes'       => $bonCdes,
+            'daf'           => $daf,
+            'sousTraitants' => $sousTraitants,
         );
     }
 
     /**
      * Imprimer le bon de commande d'un sous traitant de la DAF
      *
-     * @Route("/print_bon_commande/{id}", name="print_st_daf")
+     * @Route(
+     *     path  = "/print_bon_commande/{id}",
+     *      name = "print_st_daf"
+     * )
+     *
      * @Method("GET")
+     *
+     * @param \CEOFESABundle\Entity\BonCde $bonCde
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function printBonCommandeAction(BonCde $bonCde)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $html = $this->renderView('::Templates\bon_commande.html.twig', array(
-            'bonCde' => $bonCde,
+            'bonCde' => $bonCde
         ));
 
         $response= new Response();
-        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait','page-size' => 'A4')));
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml(
+            $html, 
+            array('orientation' => 'Portrait','page-size' => 'A4'))
+        );
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-disposition', 'filename=bon_commande-'.$bonCde->getBcdRelation()->getRelSoustraitant()->getStrNom().'.pdf');
+        $response->headers->set(
+            'Content-disposition',
+            'filename=bon_commande-'.$bonCde->getBcdRelation()->getRelSoustraitant()->getStrNom().'.pdf'
+        );
 
         return $response;
     }
 
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $s
+     *
+     * @Route(
+     *     path = "/facturer/{id}/{s}",
+     *     name = "facturer_heures"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function facturerHeuresAction(DAF $daf, Structure $s)
+    {
+        $presences = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Presence::class)
+            ->getPresences($daf, $s)
+            ->getQuery()
+            ->getResult();
 
+        /** @var \CEOFESABundle\Entity\Presence $presence */
+        foreach ($presences as $presence) {
+            $presence->setPscFacture(true);
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirect($this->generateUrl('daf_show', array('id' => $daf->getDafId())));
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\DAF       $daf
+     * @param \CEOFESABundle\Entity\Structure $s
+     *
+     * @Route(
+     *     path = "/payer/{id}/{s}",
+     *     name = "payer_heures"
+     * )
+     * 
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function marquerHeurePayeeAction(DAF $daf, Structure $s)
+    {
+        $presences = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Presence::class)
+            ->getPresences($daf, $s)
+            ->getQuery()
+            ->getResult();
+
+        /** @var \CEOFESABundle\Entity\Presence $presence */
+        foreach ($presences as $presence){
+            $presence->setPscPayee(true);
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirect($this->generateUrl('daf_show', array('id' => $daf->getDafId())));
+    }
 }

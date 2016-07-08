@@ -20,14 +20,15 @@ use CEOFESABundle\Form\Type\UtilisateurType;
  */
 class AdminController extends Controller
 {
-	/**
-    * @Route(
-    * 	path="/users",
-    * 	name="users_gestion"
-    * )
-    * @Method({"GET","POST"})
-    */
-    public function userGestionAction(Request $request)
+    /**
+     * @Route(
+     *    path = "/users",
+     *    name = "users_gestion"
+     * )
+     * @Method({"GET","POST"})
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userGestionAction()
     {
         // Pour récupérer le service UserManager du bundle
         $userManager = $this->get('fos_user.user_manager');
@@ -35,23 +36,24 @@ class AdminController extends Controller
         // Pour récupérer la liste de tous les utilisateurs
         $users = $userManager->findUsers();
         
-        return $this->render("User/gestion.html.twig",array('users'=>$users));
+        return $this->render("User/gestion.html.twig", array('users'=>$users));
     }
 
-	/**
-	* Liste les devis en cours
-    *
-    * @Route(
-    * 	path="/devis",
-    * 	name="devis_gestion"
-    * )
-    */
-    public function devisGestionAction(Request $request)
+    /**
+     * Liste les devis en cours
+     *
+     * @Route(
+     *    path = "/devis",
+     *    name = "devis_gestion"
+     * )
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function devisGestionAction()
     {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('CEOFESABundle:Devis')->getDevisEnCours();
 
-        return $this->render("Devis/admin.html.twig",array(
+        return $this->render("Devis/admin.html.twig", array(
         	'entities' => $entities,
         ));
     }
@@ -59,8 +61,16 @@ class AdminController extends Controller
     /**
      * Finds and displays a Devis entity for admin
      *
-     * @Route("/devis/{id}", name="devis_admin_show")
+     * @Route(
+     *     path = "/devis/{id}",
+     *     name = "devis_admin_show"
+     * )
+     *
      * @Method("GET")
+     *
+     * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id)
     {
@@ -73,33 +83,39 @@ class AdminController extends Controller
             throw $this->createNotFoundException('Devis Introuvable. Désolé');
         }
 
-        return $this->render("Devis/adminShow.html.twig",array(
-            'entity'      => $entity,
+        return $this->render("Devis/adminShow.html.twig", array(
+            'entity'   => $entity,
             'entities' => $entities,
         ));
     }
 
     /**
-	* Traitement ajax validation devis
-    *
-    * @Route(
-    * 	path="/devis/valid",
-    * 	name="devis_valid"
-    * )
-    * @Method("POST")
-    */
-    public function validAjaxAction(Request $request){
+     * Traitement ajax validation devis
+     *
+     * @Route(
+     *    path = "/devis/valid",
+     *    name = "devis_valid"
+     * )
+     *
+     * @Method("POST")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function validAjaxAction(Request $request)
+    {
 
-        $DevisId = $request->request->get('id');
+        $devisId = $request->request->get('id');
 
         $em = $this->getDoctrine()->getManager();
-        $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($devisId);
         $devstructure = $devis->getDevstructure();
         $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devstructure);
 
         if (!$devis) {
             throw $this->createNotFoundException(
-                'Aucun devis trouvé pour cet id : '.$id
+                'Aucun devis trouvé pour cet id : '.$devisId
             );
         }
 
@@ -110,63 +126,73 @@ class AdminController extends Controller
             ->setSubject('Votre devis a été validé')
             ->setFrom($this->container->getParameter('contact_mail1'))
             ->setTo($mails)
-            ->setBody($this->renderView('Mail\validDevis.txt.twig',array('devis' => $devis)))
+            ->setBody($this->renderView('Mail\validDevis.txt.twig', array('devis' => $devis)))
         ;
         $this->get('mailer')->send($message);
 
-        return new Response($DevisId);
+        return new Response($devisId);
     }
 
     /**
-    * Traitement ajax invalidation devis
-    *
-    * @Route(
-    *   path="/devis/unvalid",
-    *   name="devis_unvalid"
-    * )
-    * @Method("POST")
-    */
-    public function unvalidAjaxAction(Request $request){
-
-        $DevisId = $request->request->get('id');
+     * Traitement ajax invalidation devis
+     *
+     * @Route(
+     *   path = "/devis/unvalid",
+     *   name = "devis_unvalid"
+     * )
+     * @Method("POST")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unvalidAjaxAction(Request $request)
+    {
+        $devisId = $request->request->get('id');
 
         $em = $this->getDoctrine()->getManager();
-        $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($devisId);
 
         if (!$devis) {
             throw $this->createNotFoundException(
-                'Aucun devis trouvé pour cet id : '.$id
+                'Aucun devis trouvé pour cet id : '.$devisId
             );
         }
 
         $devis->setDevStatut('en cours');
         $em->flush();
 
-        return new Response($DevisId);
+        return new Response($devisId);
     }
 
     /**
-	* Traitement ajax refus devis
-    *
-    * @Route(
-    * 	path="/devis/refuse",
-    * 	name="devis_refuse"
-    * )
-    * @Method("POST")
-    */
-    public function refuseAjaxAction(Request $request){
+     * Traitement ajax refus devis
+     *
+     * @Route(
+     *    path = "/devis/refuse",
+     *    name = "devis_refuse"
+     * )
+     *
+     * @Method("POST")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function refuseAjaxAction(Request $request)
+    {
 
-        $DevisId = $request->request->get('id');
+        $devisId = $request->request->get('id');
         $raison = $request->request->get('raison');
 
         $em = $this->getDoctrine()->getManager();
-        $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
+        $devis = $em->getRepository('CEOFESABundle:Devis')->find($devisId);
         $devstructure = $devis->getDevstructure();
         $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devstructure);
 
         if (!$devis) {
             throw $this->createNotFoundException(
-                'Aucun devis trouvé pour cet id : '.$id
+                'Aucun devis trouvé pour cet id : '.$devisId
             );
         }
 
@@ -181,19 +207,21 @@ class AdminController extends Controller
         ;
         $this->get('mailer')->send($message);
 
-        return new Response($DevisId); 
-
+        return new Response($devisId);
     }
 
     /**
-    * Traitement ajax liste des structures admin menu header
-    *
-    * @Route(
-    *   path="/structure/change",
-    *   name="structure_change"
-    * )
-    */
-    public function listAjaxAction(Request $request){
+     * Traitement ajax liste des structures admin menu header
+     *
+     * @Route(
+     *   path = "/structure/change",
+     *   name = "structure_change"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function listAjaxAction()
+    {
 
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository('CEOFESABundle:Structure')->getStructures();
@@ -213,31 +241,39 @@ class AdminController extends Controller
     }
 
     /**
-    * Traitement ajax structure sélectionnée admin menu header
-    *
-    * @Route(
-    *   path="/structure/session",
-    *   name="structure_session"
-    * )
-    */
-    public function sessionAjaxAction(Request $request){
+     * Traitement ajax structure sélectionnée admin menu header
+     *
+     * @Route(
+     *   path = "/structure/session",
+     *   name = "structure_session"
+     * )
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sessionAjaxAction()
+    {
 
         $idStructure = $this->get('session')->get('structure');
         $em = $this->getDoctrine()->getManager();
         $StrSession = $em->getRepository('CEOFESABundle:Structure')->find($idStructure);
-        return new Response($StrSession);
 
+        return new Response($StrSession);
     }
 
     /**
-    * Traitement ajax changement de structure pour la session
-    *
-    * @Route(
-    *   path="/change/session",
-    *   name="change_session"
-    * )
-    */
-    public function changeSessionAjaxAction(Request $request){
+     * Traitement ajax changement de structure pour la session
+     *
+     * @Route(
+     *   path = "/change/session",
+     *   name = "change_session"
+     * )
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function changeSessionAjaxAction(Request $request)
+    {
 
         $structureId = $request->request->get('structure_id');
         if (!empty($structureId)) {
@@ -245,18 +281,21 @@ class AdminController extends Controller
         }
 
         return new Response($this->get('session')->get('structure'));
-
     }
 
     /**
      * Envoi d'emails aux utilisateurs
      *
      * @Route(
-     *   path="/email",
-     *   name="admin_email"
+     *   path = "/email",
+     *   name = "admin_email"
      * )
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function emailAction(Request $request){
+    public function emailAction(Request $request)
+    {
 
         $form = $this->createForm(new EmailType());
 

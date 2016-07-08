@@ -20,9 +20,9 @@ class Utilisateurs extends BaseUser
     protected $id;
 
     /**
-    * @var \Structure
+    * @var Structure
     *
-    * @ORM\ManyToOne(targetEntity="Structure")
+    * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
     * @ORM\JoinColumn(name="structure", referencedColumnName="str_ID",nullable=false)
     *
     */

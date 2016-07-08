@@ -15,10 +15,11 @@ class MainController extends Controller
 {
     /**
     * @Route(
-    *       path="/",
-    *       name="redirect-root"
+    *       path = "/",
+    *       name = "redirect-root"
     * )
-    * @Method("GET")
+     *
+     * @Method("GET")
     */
     public function redirectAction()
     {
@@ -32,9 +33,10 @@ class MainController extends Controller
 
     /**
     * @Route(
-    *       path="/dashboard",
-    *       name="dashboard"
+    *       path = "/dashboard",
+    *       name = "dashboard"
     * )
+    * 
     * @Method("GET")
     */
     public function dashboardAction()
@@ -44,8 +46,8 @@ class MainController extends Controller
 
     /**
      * @Route(
-     *       path="/dashboard/structure",
-     *       name="structure_dashboard"
+     *       path = "/dashboard/structure",
+     *       name = "structure_dashboard"
      * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request

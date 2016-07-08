@@ -39,6 +39,7 @@ class CiviliteT
      * Set ctyId
      *
      * @param integer $ctyId
+     * 
      * @return CiviliteT
      */
     public function setCtyId($ctyId)
@@ -62,6 +63,7 @@ class CiviliteT
      * Set ctyType
      *
      * @param string $ctyType
+     * 
      * @return CiviliteT
      */
     public function setCtyType($ctyType)
@@ -85,6 +87,7 @@ class CiviliteT
      * Set ctyTypecourt
      *
      * @param string $ctyTypecourt
+     * 
      * @return CiviliteT
      */
     public function setCtyTypecourt($ctyTypecourt)

@@ -31,8 +31,17 @@ class SortieController extends Controller
     /**
      * Edit motif sortie
      *
-     * @Route("/edit/{id}", name="sortie_edit")
+     * @Route(
+     *     path = "/edit/{id}",
+     *     name = "sortie_edit"
+     * )
+     *
      * @Template("::Sortie\edit.html.twig")
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \CEOFESABundle\Entity\DCont               $DCont
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editAction(Request $request, DCont $DCont)
     {
@@ -48,10 +57,6 @@ class SortieController extends Controller
             return $this->redirectToRoute('daf_show', array('id' => $DCont->getCntDaf()->getDafId()));
         }
 
-        return array(
-            'form' => $form->createView(),
-        );
+        return array('form' => $form->createView());
     }
-
-
 }

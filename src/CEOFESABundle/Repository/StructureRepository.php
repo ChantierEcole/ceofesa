@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\ModuleT;
 use CEOFESABundle\Entity\Structure;
 use Doctrine\ORM\EntityRepository;
@@ -123,5 +124,28 @@ class StructureRepository extends EntityRepository
         ->createQueryBuilder('s')
         ->orderBy('s.strNom','ASC')
         ;
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\DAF $daf
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getSousTraitantsNbHeures(DAF $daf)
+    {
+        return $this
+            ->createQueryBuilder('s')
+            ->select('s as structure, SUM(prc.prcNombreheure) as nbHeures')
+            ->leftJoin('s.strParcours', 'prc')
+            ->leftJoin('prc.prcDcont', 'dc')
+            ->leftJoin('dc.cntDaf', 'daf')
+            ->leftJoin('prc.prcType', 'm')
+            ->andWhere('daf.dafId = :dafId')
+            ->andWhere('m.mtyType = :type')
+            ->distinct('dc')
+            ->groupBy('s.strId, dc')
+            ->setParameter('dafId', $daf)
+            ->setParameter('type', 'EXTERNE')
+            ;
     }
 }

@@ -30,8 +30,13 @@ class BonCdeController extends Controller
     /**
      * Liste des bon de commandes
      *
-     * @Route("/liste", name="bcd_index")
+     * @Route(
+     *     path = "/liste",
+     *     name = "bcd_index"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::BonCde\index.html.twig")
      */
     public function indexAction()
@@ -49,8 +54,17 @@ class BonCdeController extends Controller
     /**
      * Send bon de commande
      *
-     * @Route("/send/{id}", name="bcd_send")
+     * @Route(
+     *     path = "/send/{id}",
+     *     name = "bcd_send"
+     * )
+     *
      * @Method("GET")
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \CEOFESABundle\Entity\BonCde              $bon
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function sendAction(Request $request, BonCde $bon)
     {

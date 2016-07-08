@@ -16,39 +16,61 @@ class BonCde
     /**
      * @var integer
      *
-     * @ORM\Column(name="bcd_ID", type="integer", nullable=false)
+     * @ORM\Column(
+     *     name     = "bcd_ID", 
+     *     type     = "integer", 
+     *     nullable = false
+     * )
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy = "IDENTITY")
      */
     private $bcdId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="bcd_Annee", type="string", length=4, nullable=false)
+     * @ORM\Column(
+     *     name     = "bcd_Annee", 
+     *     type     = "string", 
+     *     length   = 4, 
+     *     nullable = false
+     * )
      */
     private $bcdAnnee;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="bcd_Numero", type="integer", nullable=true, options={"default" = 0})
+     * @ORM\Column(
+     *     name     = "bcd_Numero", 
+     *     type     = "integer", 
+     *     nullable = true, 
+     *     options  = {"default" = 0}
+     * )
      */
     private $bcdNumero;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="bcd_Date", type="datetime", nullable=false)
+     * @ORM\Column(
+     *     name     = "bcd_Date", 
+     *     type     = "datetime", 
+     *     nullable = false
+     * )
      */
     private $bcdDate;
 
     /**
-     * @var \Relation
+     * @var Relation
      *
-     * @ORM\ManyToOne(targetEntity="Relation")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Relation")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="bcd_Relation", referencedColumnName="rel_ID", nullable=false)
+     *   @ORM\JoinColumn(
+     *     name                 = "bcd_Relation", 
+     *     referencedColumnName = "rel_ID", 
+     *     nullable             = false
+     *  )
      * })
      */
     private $bcdRelation;
@@ -56,9 +78,16 @@ class BonCde
     /**
      * @var DAF
      *
-     * @ORM\ManyToOne(targetEntity="DAF", inversedBy="bcdBonCdes")
+     * @ORM\ManyToOne(
+     *     targetEntity = "CEOFESABundle\Entity\DAF",
+     *     inversedBy   = "bcdBonCdes"
+     * )
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="bcd_DAF", referencedColumnName="daf_ID", nullable=true)
+     *   @ORM\JoinColumn(
+     *     name                 = "bcd_DAF", 
+     *     referencedColumnName = "daf_ID", 
+     *     nullable             = true
+     *    )
      * })
      */
     private $bcdDAF;
@@ -66,12 +95,23 @@ class BonCde
     /**
      * @var boolean
      *
-     * @ORM\Column(name="bcdSent", type="boolean", nullable=false, options={"default" = 0})
+     * @ORM\Column(
+     *     name     = "bcdSent", 
+     *     type     = "boolean", 
+     *     nullable = false, 
+     *     options  = {"default" = 0}
+     *  )
      */
     private $bcdSent;
 
     /**
-     * @ORM\OneToMany(targetEntity="BParcours", mappedBy="bprBonCde", cascade={"persist"}, orphanRemoval=true)
+     * @var BParcours
+     * @ORM\OneToMany(
+     *     targetEntity  = "CEOFESABundle\Entity\BParcours", 
+     *     mappedBy      = "bprBonCde", 
+     *     cascade       = {"persist"}, 
+     *     orphanRemoval = true
+     * )
      */
     protected $bcdBParcours;
 
@@ -97,6 +137,7 @@ class BonCde
      * Set bcdAnnee
      *
      * @param string $bcdAnnee
+     *
      * @return BonCde
      */
     public function setBcdAnnee($bcdAnnee)
@@ -120,6 +161,7 @@ class BonCde
      * Set bcdNumero
      *
      * @param integer $bcdNumero
+     *
      * @return BonCde
      */
     public function setBcdNumero($bcdNumero)
@@ -143,6 +185,7 @@ class BonCde
      * Set bcdDate
      *
      * @param \DateTime $bcdDate
+     *
      * @return BonCde
      */
     public function setBcdDate($bcdDate)
@@ -166,6 +209,7 @@ class BonCde
      * Set bcdRelation
      *
      * @param \CEOFESABundle\Entity\Relation $bcdRelation
+     *
      * @return BonCde
      */
     public function setBcdRelation(\CEOFESABundle\Entity\Relation $bcdRelation = null)
@@ -189,6 +233,7 @@ class BonCde
      * Add bcdBParcours
      *
      * @param BParcours $bcdBParcours
+     *
      * @return DCont
      */
     public function addBcdBParcour(BParcours $bcdBParcours)

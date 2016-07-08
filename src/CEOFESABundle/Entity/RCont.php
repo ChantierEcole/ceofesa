@@ -22,9 +22,9 @@ class RCont
     private $rcnId;
 
     /**
-     * @var \Relation
+     * @var Relation
      *
-     * @ORM\ManyToOne(targetEntity="Relation")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Relation")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="rcn_Relation", referencedColumnName="rel_ID", nullable=false)
      * })
@@ -32,9 +32,9 @@ class RCont
     private $rcnRelation;
 
     /**
-     * @var \Module
+     * @var Module
      *
-     * @ORM\ManyToOne(targetEntity="Module")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Module")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="rnc_Module", referencedColumnName="mod_ID", nullable=false)
      * })

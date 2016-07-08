@@ -31,9 +31,9 @@ class ModuleT
     private $mtyType;
 
     /**
-     * @var \StructureT
+     * @var StructureT
      *
-     * @ORM\ManyToOne(targetEntity="StructureT")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\StructureT")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="mty_StructureType", referencedColumnName="sty_ID")
      * })
@@ -44,7 +44,7 @@ class ModuleT
     /**
      * Set mtyId
      *
-     * @param interger $mtyId
+     * @param integer $mtyId
      * @return ModuleT
      */
     public function setMtyId($mtyId)
@@ -57,7 +57,7 @@ class ModuleT
     /**
      * Get mtyId
      *
-     * @return interger
+     * @return integer
      */
     public function getMtyId()
     {
@@ -68,6 +68,7 @@ class ModuleT
      * Set mtyType
      *
      * @param string $mtyType
+     * 
      * @return ModuleT
      */
     public function setMtyType($mtyType)
@@ -91,6 +92,7 @@ class ModuleT
      * Set mtyStructuretype
      *
      * @param \CEOFESABundle\Entity\StructureT $mtyStructuretype
+     * 
      * @return ModuleT
      */
     public function setMtyStructuretype(\CEOFESABundle\Entity\StructureT $mtyStructuretype = null)

@@ -32,6 +32,7 @@ class FormationT
      * Set ftyId
      *
      * @param integer $ftyId
+     * 
      * @return FormationT
      */
     public function setFtyId($ftyId)
@@ -55,6 +56,7 @@ class FormationT
      * Set ftyType
      *
      * @param string $ftyType
+     * 
      * @return FormationT
      */
     public function setFtyType($ftyType)

@@ -22,7 +22,11 @@ class SoustraitantController extends Controller
     /**
      * Liste les Sous-Traitants de la Structure
      *
-     * @Route("/liste", name="soustraitant_list")
+     * @Route(
+     *     path = "/liste",
+     *     name = "soustraitant_list"
+     * )
+     *
      * @Method({"GET","POST"})
      *
      * @Template("::Soustraitant\index.html.twig")
@@ -34,15 +38,17 @@ class SoustraitantController extends Controller
 
         $relations = $em->getRepository('CEOFESABundle:Relation')->findBy(array('relStructure' => $id));
 
-        return array(
-            'relations' => $relations,
-        );
+        return array('relations' => $relations);
     }
 
     /**
      * Lier un Sous-Traitants à la Structure
      *
-     * @Route("/add_relation", name="soustraitant_add_relation")
+     * @Route(
+     *     path = "/add_relation",
+     *     name = "soustraitant_add_relation"
+     * )
+     *
      * @Method({"GET","POST"})
      *
      * @Template("::Soustraitant\add_relation.html.twig")
@@ -78,15 +84,17 @@ class SoustraitantController extends Controller
             return $this->redirectToRoute('soustraitant_list');
         }
 
-        return array(
-            'form' => $form->createView(),
-        );
+        return array('form' => $form->createView());
     }
 
     /**
      * Print convention sous trainte
      *
-     * @Route("/print_convention/{id}", name="soustraitant_convention_print")
+     * @Route(
+     *     path = "/print_convention/{id}",
+     *     name="soustraitant_convention_print"
+     * )
+     *
      * @Method("GET")
      *
      * @param \CEOFESABundle\Entity\Relation $relation
@@ -100,9 +108,15 @@ class SoustraitantController extends Controller
         ));
 
         $response= new Response();
-        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Portrait','page-size' => 'A4')));
+        $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array(
+            'orientation' => 'Portrait',
+            'page-size' => 'A4'
+        )));
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-disposition', 'filename=convention-'.$relation->getRelSoustraitant()->getStrNom().'.pdf');
+        $response->headers->set(
+            'Content-disposition', 
+            'filename=convention-'.$relation->getRelSoustraitant()->getStrNom().'.pdf'
+        );
 
         return $response;
     }
@@ -110,7 +124,11 @@ class SoustraitantController extends Controller
     /**
      * Finds and displays a Structure entity.
      *
-     * @Route("/{id}", name="soustraitant_show")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "soustraitant_show"
+     * )
+     *
      * @Method("GET")
      *
      * @Template("::Soustraitant\show.html.twig")

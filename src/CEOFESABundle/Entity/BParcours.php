@@ -15,25 +15,32 @@ class BParcours
     /**
      * @var integer
      *
-     * @ORM\Column(name="bpr_ID", type="integer", nullable=false)
+     * @ORM\Column(
+     *     name     = "bpr_ID",
+     *     type     = "integer",
+     *     nullable = false
+     * )
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $bprId;
 
     /**
-     * @var \BonCde
+     * @var BonCde
      *
-     * @ORM\ManyToOne(targetEntity="BonCde", inversedBy="bcdBParcours")
+     * @ORM\ManyToOne(
+     *     targetEntity = "CEOFESABundle\Entity\BonCde",
+     *     inversedBy   = "bcdBParcours"
+     * )
      * @ORM\JoinColumn(name="bpr_BonCde", referencedColumnName="bcd_ID", nullable=false)
      *
      */
     private $bprBonCde;
 
     /**
-     * @var \Parcours
+     * @var Parcours
      *
-     * @ORM\ManyToOne(targetEntity="Parcours")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Parcours")
      * @ORM\JoinColumn(name="bpr_Parcours", referencedColumnName="prc_ID", nullable=false)
      * 
      */
@@ -71,6 +78,7 @@ class BParcours
      * Set bprNombreheure
      *
      * @param string $bprNombreheure
+     * 
      * @return BParcours
      */
     public function setBprNombreheure($bprNombreheure)
@@ -94,6 +102,7 @@ class BParcours
      * Set bprTauxhoraire
      *
      * @param string $bprTauxhoraire
+     * 
      * @return BParcours
      */
     public function setBprTauxhoraire($bprTauxhoraire)
@@ -117,6 +126,7 @@ class BParcours
      * Set bprBonCde
      *
      * @param \CEOFESABundle\Entity\BonCde $bprBonCde
+     * 
      * @return BParcours
      */
     public function setBprBonCde(\CEOFESABundle\Entity\BonCde $bprBonCde = null)
@@ -140,6 +150,7 @@ class BParcours
      * Set bprParcours
      *
      * @param \CEOFESABundle\Entity\Parcours $bprParcours
+     * 
      * @return BParcours
      */
     public function setBprParcours(\CEOFESABundle\Entity\Parcours $bprParcours = null)

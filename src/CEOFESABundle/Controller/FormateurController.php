@@ -21,8 +21,13 @@ class FormateurController extends Controller
     /**
      * Lists all Tiers entities.
      *
-     * @Route("/liste", name="formateur_list")
+     * @Route(
+     *     path = "/liste",
+     *     name = "formateur_list"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Formateur\index.html.twig")
      */
     public function indexAction()
@@ -30,16 +35,29 @@ class FormateurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
         $entities = $em->getRepository('CEOFESABundle:Tiers')->getStructureFormateurs($id)->getQuery()->getResult();
-        return array(
-            'entities' => $entities,
-        );
+        
+        return array('entities' => $entities);
     }
+
     /**
      * Creates a new Tiers entity.
      *
-     * @Route("/ajout", name="formateur_create")
+     * @Route(
+     *     path = "/ajout",
+     *     name = "formateur_create"
+     * )
+     *
      * @Method({"GET","POST"})
+     *
      * @Template("::Formateur\new.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function createAction(Request $request)
     {
@@ -49,7 +67,14 @@ class FormateurController extends Controller
 
         if ($form->isValid()) {
             
-            $typeFormateur = $this->getDoctrine()->getEntityManager()->getRepository('CEOFESABundle:TiersT')->getFormateurType()->getQuery()->getSingleResult();
+            $typeFormateur = $this
+                ->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('CEOFESABundle:TiersT')
+                ->getFormateurType()
+                ->getQuery()
+                ->getSingleResult();
+            
             $entity->setTrsType($typeFormateur);
             $entity->setTrsFonction("Formateur");
 
@@ -78,9 +103,9 @@ class FormateurController extends Controller
         $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new TiersType($id), $entity, array(
-            'action' => $this->generateUrl('formateur_create'),
+            'action'            => $this->generateUrl('formateur_create'),
             'validation_groups' => array('formateur'),
-            'method' => 'POST',
+            'method'            => 'POST',
         ));
 
         return $form;
@@ -89,8 +114,13 @@ class FormateurController extends Controller
     /**
      * Displays a form to create a new Tiers entity.
      *
-     * @Route("/new", name="formateur_new")
+     * @Route(
+     *     path = "/new",
+     *     name = "formateur_new"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Formateur\new.html.twig")
      */
     public function newAction()
@@ -108,8 +138,14 @@ class FormateurController extends Controller
      * Finds and displays a Tiers entity.
      *
      * @Route("/{id}", name="formateur_show")
+     *
      * @Method("GET")
+     *
      * @Template("::Formateur\show.html.twig")
+     *
+     * @param int $id
+     *
+     * @return array
      */
     public function showAction($id)
     {
@@ -132,9 +168,18 @@ class FormateurController extends Controller
     /**
      * Displays a form to edit an existing Tiers entity.
      *
-     * @Route("/{id}/edit", name="formateur_edit")
+     * @Route(
+     *     path = "/{id}/edit",
+     *     name = "formateur_edit"
+     * )
+     *
      * @Method("GET")
+     *
      * @Template("::Formateur\edit.html.twig")
+     *
+     * @param int $id
+     *
+     * @return array
      */
     public function editAction($id)
     {
@@ -168,19 +213,30 @@ class FormateurController extends Controller
         $id = $this->get('session')->get('structure');
 
         $form = $this->createForm(new TiersType($id), $entity, array(
-            'action' => $this->generateUrl('formateur_update', array('id' => $entity->getTrsId())),
+            'action'            => $this->generateUrl('formateur_update', array('id' => $entity->getTrsId())),
             'validation_groups' => array('formateur'),
-            'method' => 'PUT',
+            'method'            => 'PUT',
         ));
 
         return $form;
     }
+
     /**
      * Edits an existing Tiers entity.
      *
-     * @Route("/{id}", name="formateur_update")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "formateur_update"
+     * )
+     *
      * @Method("PUT")
+     *
      * @Template("::Formateur\edit.html.twig")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function updateAction(Request $request, $id)
     {
@@ -208,11 +264,21 @@ class FormateurController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a Tiers entity.
      *
-     * @Route("/{id}", name="formateur_delete")
+     * @Route(
+     *     path = "/{id}",
+     *     name = "formateur_delete"
+     * )
+     *
      * @Method("DELETE")
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int                                       $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, $id)
     {

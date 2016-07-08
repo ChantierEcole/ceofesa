@@ -68,9 +68,9 @@ class Devis
     private $devTauxhoraire;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dev_Structure", referencedColumnName="str_ID", nullable=false)
      * })
@@ -78,9 +78,9 @@ class Devis
     private $devStructure;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
-     * @ORM\ManyToOne(targetEntity="Structure")
+     * @ORM\ManyToOne(targetEntity = "CEOFESABundle\Entity\Structure")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="dev_OF", referencedColumnName="str_ID", nullable=false)
      * })
@@ -88,7 +88,14 @@ class Devis
     private $devOf;
 
     /**
-    * @ORM\OneToMany(targetEntity="DParcours", mappedBy="dprDevis", cascade={"persist"}, orphanRemoval=true)
+    * @var DParcours
+    * 
+    * @ORM\OneToMany(
+    *     targetEntity  = "CEOFESABundle\Entity\DParcours", 
+    *     mappedBy      = "dprDevis", 
+    *     cascade       = {"persist"}, 
+    *     orphanRemoval = true
+    * )
     * @Assert\Valid
     * @CeofesaAssert\DParcours
     */
