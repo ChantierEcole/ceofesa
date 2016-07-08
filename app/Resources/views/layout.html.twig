@@ -122,6 +122,11 @@
                             <a href="{{ path('structure_dashboard') }}"><span class="glyphicons glyphicons-dashboard"></span><span class="sidebar-title">Dashboard</span></a>
                         </li>
                     </ul>
+                    <ul class="nav sidebar-nav">
+                        <li>
+                            <a href="{{ path('detail_ma_structure') }}"><span class="glyphicons glyphicons-building"></span><span class="sidebar-title">Ma structure</span></a>
+                        </li>
+                    </ul>
                     {% if is_granted('ROLE_USER') %}
                     <ul class="nav sidebar-nav">
                         <li>
