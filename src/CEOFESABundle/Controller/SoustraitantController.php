@@ -33,7 +33,7 @@ class SoustraitantController extends Controller
         $id = $this->get('session')->get('structure');
 
         $relations = $em->getRepository('CEOFESABundle:Relation')->findBy(array('relStructure' => $id));
-
+        
         return array(
             'relations' => $relations,
         );
@@ -43,6 +43,7 @@ class SoustraitantController extends Controller
      * Lier un Sous-Traitants à la Structure
      *
      * @Route("/add_relation", name="soustraitant_add_relation")
+     * 
      * @Method({"GET","POST"})
      *
      * @Template("::Soustraitant\add_relation.html.twig")
@@ -130,5 +131,35 @@ class SoustraitantController extends Controller
         }
 
         return array('entity' => $entity);
+    }
+
+    /**
+     * @param \CEOFESABundle\Entity\Relation            $relation
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @Route(
+     *     path = "/edit/{id}",
+     *     name = "soustraitant_edit"
+     * )
+     *
+     * @Template("::Soustraitant\edit.html.twig")
+     *
+     *  * @return array
+     */
+    public function editAction(Relation $relation, Request $request)
+    {
+        $form = $this->createForm(new RelationType(), $relation);
+        $form->handleRequest($request);
+
+        if($form->isValid() && $form->isSubmitted()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($relation);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('soustraitant_list'));
+        }
+
+        return array('form' => $form->createView());
     }
 }

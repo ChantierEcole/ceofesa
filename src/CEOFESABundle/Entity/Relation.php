@@ -22,7 +22,7 @@ class Relation
     private $relId;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
      * @ORM\ManyToOne(targetEntity="Structure", inversedBy="strRelations")
      * @ORM\JoinColumns({
@@ -32,7 +32,7 @@ class Relation
     private $relStructure;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
      * @ORM\ManyToOne(targetEntity="Structure")
      * @ORM\JoinColumns({
@@ -42,7 +42,7 @@ class Relation
     private $relOf;
 
     /**
-     * @var \Structure
+     * @var Structure
      *
      * @ORM\ManyToOne(targetEntity="Structure")
      * @ORM\JoinColumns({
