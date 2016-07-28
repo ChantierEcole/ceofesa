@@ -1,24 +1,20 @@
 set :stages,        [ "preprod", "prod" ]
 set :default_stage, "preprod"
 set :stage_dir,     "app/config"
-require 'capistrano/ext/multistage'
 
 set :application,   "ceofesa"
-set :domain, "www.ceintranet.org"
-ssh_options[:port] = "2224"
-ssh_options[:forward_agent] = "2224"
+set :domain, "151.80.58.64"
 set :keep_releases, 5
 
 set :scm,         :git
 set :scm_verbose, true
-set :repository,  "file:///var/www/ceofesa"
+set :repository,  "git@github.com:ChantierEcole/ceofesa.git"
 
-set :deploy_via, :copy
-set :deploy_to,  "/var/www/ceofesa/preprod"
+set :deploy_via, :remote_cache
 
 set :use_sudo,         false
 set :interactive_mode, false
-set :user,             "ofesa"
+set :user,             "admin"
 
 set :writable_dirs,     ["app/cache", "app/logs"]
 
@@ -40,9 +36,18 @@ role :db,         domain, :primary => true
 
 before "symfony:assetic:dump", "symfony:assets:update_version"
 after "deploy", "deploy:cleanup"
-after "deploy", "symfony:clear_apc"
+after "deploy", "restart_fpm"
 after "deploy", "symfony:doctrine:migrations:migrate"
-after "deploy:rollback:cleanup", "symfony:clear_apc"
+after "deploy:rollback:cleanup", "restart_fpm"
+
+task :restart_fpm do
+  servers = find_servers_for_task(current_task)
+  servers.each do |server|
+    capifony_pretty_print "--> Restarting FPM"
+    run "sudo service php5-fpm restart", :hosts => server
+    capifony_puts_ok
+  end
+end
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
