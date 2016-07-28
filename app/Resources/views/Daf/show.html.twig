@@ -58,17 +58,19 @@
                                 <td>{{ bon.bcdRelation.relSoustraitant.strNom }}</td>
                                 <td>{{ bon.bcdSent ? 'Oui' : 'Non' }}</td>
                                 <td>
-                                    {% if bon.bcdSent == false and is_granted('ROLE_ADMIN') %}
+                                    {% if is_granted('ROLE_ADMIN') %}
                                         <a href="{{ path('print_st_daf', { 'id' : bon.bcdId }) }}">
                                             <button type="button" class="btn btn-blue4 btn-xs">
                                                 <i class="fa fa-print"></i> Imprimer le bon de commande
                                             </button>
                                         </a>
-                                        <a href="{{ path('bcd_send', { 'id' : bon.bcdId }) }}">
-                                            <button type="button" class="btn btn-blue3 btn-xs">
-                                                <i class="glyphicons glyphicons-file_import"></i> Marquer comme envoyé
-                                            </button>
-                                        </a>
+                                        {% if bon.bcdSent == false %}
+                                            <a href="{{ path('bcd_send', { 'id' : bon.bcdId }) }}">
+                                                <button type="button" class="btn btn-blue3 btn-xs">
+                                                    <i class="glyphicons glyphicons-file_import"></i> Marquer comme envoyé
+                                                </button>
+                                            </a>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                             </tr>

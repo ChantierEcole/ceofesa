@@ -1,15 +1,15 @@
 {% extends '::layout.html.twig' %}
 
 {% block body -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-visible">
-            <div class="panel-heading">
-                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails du sous-traitant</div>
-            </div>
-            <div class="panel-body">
-                <table class="record_properties table table-bordered">
-                    <tbody>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-visible">
+                <div class="panel-heading">
+                    <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails de la structure : {{ entity.strNom }}</div>
+                </div>
+                <div class="panel-body">
+                    <table class="record_properties table table-bordered">
+                        <tbody>
                         <tr>
                             <th>Nom</th>
                             <td>{{ entity.strNom }}</td>
@@ -84,27 +84,43 @@
                         </tr>
                         <tr>
                             <th>Date envoi convention</th>
+                            {% if entity.strEnvoiconvention %}
                             <td data-order="{{ entity.strDateenvoiconvention.timestamp|default(0) }}">
                                 {{ entity.strDateenvoiconvention|date("d-m-Y")|default() }}
                             </td>
+                            {% else %}
+                            <td>Non envoyée</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Date retour convention</th>
+                            {% if entity.strRetourconvention %}
                             <td data-order="{{ entity.strDateretourconvention.timestamp|default(0) }}">
                                 {{ entity.strDateretourconvention|date("d-m-Y")|default() }}
                             </td>
+                            {% else %}
+                            <td>Non reçue</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Date envoi avenant</th>
+                            {% if entity.strEnvoiavenant %}
                             <td data-order="{{ entity.strDateenvoiavenant.timestamp|default(0) }}">
                                 {{ entity.strDateenvoiavenant|date("d-m-Y")|default() }}
                             </td>
+                            {% else %}
+                            <td>Non envoyé</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Date retour avenant</th>
+                            {% if entity.strRetouravenant %}
                             <td data-order="{{ entity.strDateretouravenant.timestamp|default(0) }}">
                                 {{ entity.strDateretouravenant|date("d-m-Y")|default() }}
                             </td>
+                            {% else %}
+                            <td>Non reçu</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Reponsable</th>
@@ -117,36 +133,17 @@
                         <tr>
                             <th>Region</th>
                             <td>
-                            {% if entity.strRegion %}
-                                {{ entity.strRegion.regNom }}
-                            {% endif %}
+                                {% if entity.strRegion %}
+                                    {{ entity.strRegion.regNom }}
+                                {% endif %}
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-                <br/>
-
-                <a href="{{ path('structure_edit', { 'id': entity.strId }) }}">
-                    <button type="button" class="btn btn-blue4">
-                        Modifier
-                    </button>
-                </a>
-
-                <a href="{{ path('structure') }}">
-                    <button type="button" class="btn btn-light4">
-                        Retour à la liste
-                    </button>
-                </a>
-
-                <a href="{{ path('convention_partenaire_pdf', { 'id': entity.strId }) }}">
-                    <button type="button" class="btn btn-blue3">
-                        Imprimer la convention
-                    </button>
-                </a>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 {% block javascripts %}
 {% endblock %}
