@@ -18,7 +18,7 @@ set :user,             "admin"
 
 set :writable_dirs,     ["app/cache", "app/logs"]
 
-set :shared_files,    [ app_path + "/config/parameters.yml", web_path + "/.htaccess" ]
+set :shared_files,    [ app_path + "/config/parameters.yml", web_path + "/.htaccess", "backup.sh" ]
 set :shared_children, [ log_path, web_path + "/uploads" ]
 
 set :writable_dirs,       [ cache_path ]
