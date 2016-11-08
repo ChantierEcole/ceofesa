@@ -56,22 +56,15 @@ class DafController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $em          = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $idStructure = $this->get('session')->get('structure');
 
-        if ($id) {
-            $devis = $em->getRepository('CEOFESABundle:Devis')->find($id);
-        } else {
-            $devis = new Devis();
-        }
+        $devis = $id !== null ? $em->getRepository('CEOFESABundle:Devis')->find($id) : new Devis();
+        $form = $this->createCreateForm($devis);
 
-        $form   = $this->createCreateForm($devis);
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $daf = $form->getData();
 
-            /* DEFAULT SORTIE TYPE */
             $sortieT = $em->getRepository('CEOFESABundle:SortieT')->find(DCont::DEFAULT_SORTIE_ID);
             foreach ($daf->getDafDcont() as $dCont) {
                 $dCont->setCntMotifsortie($sortieT);
@@ -91,9 +84,7 @@ class DafController extends Controller
             return $this->redirectToRoute('daf');
         }
 
-        return array(
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -108,9 +99,10 @@ class DafController extends Controller
 
         $id = $this->get('session')->get('structure');
 
-        $form = $this->createForm(new DafType($id), $daf, array(
-            'action' => $this->generateUrl('edit_daf', array('id' => $daf->getDafId())),
-            'method' => 'POST',
+        $form = $this->createForm(new DafType(), $daf, array(
+            'structure' => $id,
+            'action'    => $this->generateUrl('edit_daf', array('id' => $daf->getDafId())),
+            'method'    => 'POST',
         ));
 
         $form->handleRequest($request);
@@ -146,6 +138,7 @@ class DafController extends Controller
             $bcd->setBcdRelation($relation);
             $bcd->setBcdNumero($em->getRepository('CEOFESABundle:BonCde')->getBcdNumber($year, $relation));
             $bcd->setBcdDAF($daf);
+            $bcd->setBcdSent(false);
 
             foreach ($daf->getDafDcont() as $dCont) {
                 foreach ($dCont->getCntParcours() as $parcours) {
@@ -184,9 +177,10 @@ class DafController extends Controller
         $daf = new DAF();
         $daf->createFromDevis($entity);
 
-        $form = $this->createForm(new DafType($id), $daf, array(
-            'action' => $this->generateUrl('new_daf', array('id' => $entity->getDevId())),
-            'method' => 'POST',
+        $form = $this->createForm(new DafType(), $daf, array(
+            'structure' => $id,
+            'action'    => $this->generateUrl('new_daf', array('id' => $entity->getDevId())),
+            'method'    => 'POST',
         ));
 
         return $form;
