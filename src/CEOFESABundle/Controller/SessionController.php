@@ -127,11 +127,9 @@ class SessionController extends Controller
     */
     public function listAction(Request $request)
     {
-    	$form = $this->createChooseForm('session_list');
-
-    	$form->handleRequest($request);
-        // data is an array
+    	$form = $this->createChooseForm('session_list')->handleRequest($request);
         $data = $form->getData();
+
         $module = $data['module'];
         $modType = $data['type'];
         $of = $data['of'];
@@ -147,8 +145,7 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
 
-        $monthForm = $this->createForm(new MonthType());
-
+        $monthForm = $this->createForm(new MonthType(), null, array('structure' => $id));
         $monthForm->get('module')->setData($module->getModId());
         $monthForm->get('type')->setData($modType->getMtyId());
         $monthForm->get('of')->setData($of->getStrId());
@@ -178,7 +175,12 @@ class SessionController extends Controller
     public function deleteSessionAction(Session $session)
     {
         if (count($session->getPresences()) > 0) {
-            throw new AccessDeniedException();
+            $this->addFlash(
+                'error',
+                'Merci de désinscrire le formateur et les stagiaires de la session avant de la supprimer.'
+            );
+
+            return $this->redirectToRoute('session_index');
         }
 
         try {
@@ -216,24 +218,23 @@ class SessionController extends Controller
         $ofEntity = $em->getRepository('CEOFESABundle:Structure')->find($of);
         $sessions = $em->getRepository('CEOFESABundle:Session')->getSessions($module,$type,$of,$id)->getQuery()->getResult();
 
-        $form2 = $this->createParticipantForm($of,$module,$type);
+        $form2 = $this->createParticipantForm($of, $module, $type);
 
-        $monthForm = $this->createForm(new MonthType());
-
+        $monthForm = $this->createForm(new MonthType(), null, array('structure' => $id));
         $monthForm->get('module')->setData($moduleEntity->getModId());
         $monthForm->get('type')->setData($modtypeEntity->getMtyId());
         $monthForm->get('of')->setData($ofEntity->getStrId());
 
         return array(
-            'monthForm' => $monthForm->createView(),
-            'choose_form' => $form->createView(),
+            'monthForm'        => $monthForm->createView(),
+            'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
-            'entities' => $sessions,
-            'module' => $moduleEntity,
-            'type' => $modtypeEntity,
-            'of' => $ofEntity,
-            'formateurs' => $formateurs,
-            'session' => $session,
+            'entities'         => $sessions,
+            'module'           => $moduleEntity,
+            'type'             => $modtypeEntity,
+            'of'               => $ofEntity,
+            'formateurs'       => $formateurs,
+            'session'          => $session,
         );
     }
 
@@ -475,24 +476,22 @@ class SessionController extends Controller
     */
     public function stagiaireListPrintAction(Request $request)
     {
-        $form = $this->createForm(new MonthType());
+        $id = $this->get('session')->get('structure');
+        $form = $this->createForm(new MonthType(), null, array('structure' => $id));
 
-        $form->handleRequest($request);
+        if ($form->handleRequest($request)->isValid()) {
+            $data = $form->getData();
+            $date = $data['date'];
+            $module = $data['module'];
+            $modType = $data['type'];
+            $of = $data['of'];
 
-        if ($form->isValid()) {
-            $data       = $form->getData();
-            $date       = $data['date'];
-            $module     = $data['module'];
-            $modType    = $data['type'];
-            $of         = $data['of'];
-            $id         = $this->get('session')->get('structure');
-
-            $em             = $this->getDoctrine()->getManager();
-            $participants   = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
+            $em = $this->getDoctrine()->getManager();
+            $participants = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
 
             $html = $this->renderView('::Templates\emargement.html.twig', array(
-                'participants'  => $participants,
-                'date'          => $date
+                'participants' => $participants,
+                'date'         => $date,
             ));
 
             $response= new Response();
@@ -503,9 +502,7 @@ class SessionController extends Controller
             return $response;
         }
 
-        return array(
-            'printForm' => $form->createView()
-        );
+        return array('printForm' => $form->createView());
     }
 
     /**

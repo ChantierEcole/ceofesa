@@ -45,6 +45,24 @@ class StructureRepository extends EntityRepository
             ;
     }
 
+    public function getOFPrincipalAndSousTraitants($id)
+    {
+        $subQuery = $this->createQueryBuilder('f1')
+            ->select('s1')
+            ->innerJoin('f1.strRelations', 'r1')
+            ->innerJoin('r1.relSoustraitant', 's1')
+            ->andWhere('f1.strId = :id')
+            ->getQuery()
+            ->getDQL();
+
+        return $this
+            ->createQueryBuilder('f')
+            ->orWhere('f.strType = 2')
+            ->orWhere('f IN ('.$subQuery.')')
+            ->orderBy('f.strNom','DESC')
+            ->setParameter('id', $id);
+    }
+
     public function getOF()
     {
         return $this
