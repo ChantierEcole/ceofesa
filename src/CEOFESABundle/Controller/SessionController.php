@@ -175,7 +175,12 @@ class SessionController extends Controller
     public function deleteSessionAction(Session $session)
     {
         if (count($session->getPresences()) > 0) {
-            throw new AccessDeniedException();
+            $this->addFlash(
+                'error',
+                'Merci de désinscrire le formateur et les stagiaires de la session avant de la supprimer.'
+            );
+
+            return $this->redirectToRoute('session_index');
         }
 
         try {
