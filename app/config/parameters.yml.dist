@@ -15,7 +15,6 @@ parameters:
     mailer_password:   ~
     mailer_port: 587
 
-
     locale:            fr
 
     # A secret key that's used to generate certain security-related tokens
