@@ -51,7 +51,7 @@ class MonthType extends AbstractType
     {
         $resolver
             ->setRequired(array('structure'))
-            ->setAllowedTypes(array('structure' => 'int'));
+            ->setAllowedTypes(array('structure' => array('int', 'string')));
     }
 
     /**

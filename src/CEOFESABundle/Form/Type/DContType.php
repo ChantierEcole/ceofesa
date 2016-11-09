@@ -48,7 +48,7 @@ class DContType extends AbstractType
         $resolver
             ->setRequired(array('structure'))
             ->setDefaults(array('data_class' => 'CEOFESABundle\Entity\DCont'))
-            ->setAllowedTypes(array('structure' => 'int'));
+            ->setAllowedTypes(array('structure' => array('int', 'string')));
     }
 
     /**

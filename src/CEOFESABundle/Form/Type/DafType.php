@@ -40,7 +40,7 @@ class DafType extends AbstractType
         $resolver
             ->setRequired(array('structure'))
             ->setDefaults(array('data_class' => 'CEOFESABundle\Entity\DAF'))
-            ->setAllowedTypes(array('structure' => 'int'));
+            ->setAllowedTypes(array('structure' => array('int', 'string')));
     }
 
     /**
