@@ -896,21 +896,24 @@ class SessionController extends Controller
         }
     }
 
-    /*
-    * Fonction pour vérifer si la somme des durées saisies pour un APC pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cet APC/stagiaire (DCont)
-    */
-    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0){
-
+    /**
+     * @param Parcours $parcours
+     * @param int      $nextDuree
+     *
+     * @return bool
+     */
+    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0)
+    {
         $em = $this->getDoctrine()->getManager();
-        $nbHeuresRealisees = $em->getRepository('CEOFESABundle:Presence')->getParcoursTotalDurees($parcours);
-        $nbHeuresPrevues = $parcours->getPrcNombreheure();
 
-        $nbHeuresRealisees += $nextDuree;
+        $nbHeuresRealisees = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getDafTotalDurees($parcours->getPrcDcont()->getCntDaf());
 
-        if($nbHeuresRealisees <= $nbHeuresPrevues){
-            return true;
-        } else {
-            return false;
-        }
+        $nbHeuresPrevues = $em
+            ->getRepository('CEOFESABundle:Parcours')
+            ->getDafTotalHeures($parcours->getPrcDcont()->getCntDaf());
+
+        return $nbHeuresRealisees + $nextDuree <= $nbHeuresPrevues;
     }
 }

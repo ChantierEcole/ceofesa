@@ -3,6 +3,8 @@
 namespace CEOFESABundle\Repository;
 
 use CEOFESABundle\Entity\Tiers;
+use CEOFESABundle\Entity\DAF;
+use CEOFESABundle\Entity\DCont;
 use Doctrine\ORM\EntityRepository;
 
 class ParcoursRepository extends EntityRepository
@@ -178,13 +180,35 @@ class ParcoursRepository extends EntityRepository
             ->getResult();
     }
 
-    public function getDcontTotalHeures($dcont)
+    /**
+     * @param DCont $dcont
+     *
+     * @return int
+     */
+    public function getDcontTotalHeures(DCont $dcont)
     {
         return $this
             ->createQueryBuilder('t')
-            ->select('sum(t.prcNombreheure as total')
+            ->select('sum(t.prcNombreheure) as total')
             ->where('t.prcDcont = :dcont')
             ->setParameter('dcont', $dcont)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param DAF $daf
+     *
+     * @return int
+     */
+    public function getDafTotalHeures(DAF $daf)
+    {
+        return $this
+            ->createQueryBuilder('t')
+            ->select('sum(t.prcNombreheure) as total')
+            ->innerJoin('t.prcDcont', 'c')
+            ->where('c.cntDaf = :daf')
+            ->setParameter('daf', $daf)
             ->getQuery()
             ->getSingleScalarResult();
     }

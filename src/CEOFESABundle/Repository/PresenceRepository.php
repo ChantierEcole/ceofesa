@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\Tiers;
 use Doctrine\ORM\EntityRepository;
 
@@ -45,18 +46,20 @@ class PresenceRepository extends EntityRepository
     }
 
     /**
-     * @param $parcours
-     * @return mixed
+     * @param DAF $daf
+     *
+     * @return int
      */
-    public function getParcoursTotalDurees($parcours)
+    public function getDafTotalDurees(DAF $daf)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('sum(t.pscDuree as total')
-            ->where('t.pscParcours = :parcours')
-            ->setParameter('parcours', $parcours)
-        ;
-        $result = $qb->getQuery()->getSingleScalarResult();
-        return $result;
+        return $this->createQueryBuilder('t')
+            ->select('sum(t.pscDuree) as total')
+            ->innerJoin('t.pscParcours', 'p')
+            ->innerJoin('p.prcDcont', 'c')
+            ->where('c.cntDaf = :daf')
+            ->setParameter('daf', $daf)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function getParcoursDcontTotalDurees($dcont,$mtype,$module,$structure)
