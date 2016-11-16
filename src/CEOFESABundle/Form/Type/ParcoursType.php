@@ -39,7 +39,7 @@ class ParcoursType extends AbstractType
         $resolver
             ->setRequired(array('structure'))
             ->setDefaults(array('data_class' => 'CEOFESABundle\Entity\Parcours'))
-            ->setAllowedTypes(array('structure' => 'int'));
+            ->setAllowedTypes(array('structure' => array('int', 'string')));
     }
 
     /**
