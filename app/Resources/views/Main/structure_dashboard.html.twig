@@ -20,6 +20,9 @@
             <div class="col-sm-3">
               {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary' }} )  }}
               {{ form_widget(form.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+              {% if form.export is defined %}
+                {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+              {% endif %}
             </div>
             {{ form_end(form) }}
           </div>
@@ -51,9 +54,9 @@
                     <td>{{ participant.prenom }}</td>
                     <td>{{ participant.dossier }}</td>
                     <td>{{ participant.type }}</td>
-                    <td class="ta-right">{{ participant.nombreHeureMois | default('0') }}</td>
-                    <td class="ta-right">{{ participant.nombreHeureCumulee | default('0') }}</td>
-                    <td class="ta-right">{{ participant.nombreHeurePrevue | default('0') }}</td>
+                    <td class="ta-right">{{ participant.nombreHeureMois | default('0.00') }}</td>
+                    <td class="ta-right">{{ participant.nombreHeureCumulee | default('0.00') }}</td>
+                    <td class="ta-right">{{ participant.nombreHeurePrevue | default('0.00') }}</td>
                     <td>{{ participant.structure }}</td>
                   </tr>
                 {% endfor %}

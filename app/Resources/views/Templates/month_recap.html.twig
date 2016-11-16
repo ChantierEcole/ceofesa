@@ -232,10 +232,10 @@
             <TD colspan=2 class="tr13 td59"><P class="p16 ft17">{{ participant.nom }} {{ participant.prenom }}</P></TD>
             <TD class="tr13 td54"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td60"><P class="p17 ft17">{{ participant.type }} <br /> {{ participant.structure }}</P></TD>
-            <TD class="tr13 td61"><P class="p18 ft17">{{ participant.nombreHeureMois }}</P></TD>
-            <TD colspan=2 class="tr13 td55"><P class="p19 ft17">{{ participant.nombreHeureCumulee }}</P></TD>
+            <TD class="tr13 td61"><P class="p18 ft17">{{ participant.nombreHeureMois | default('0.00') }}</P></TD>
+            <TD colspan=2 class="tr13 td55"><P class="p19 ft17">{{ participant.nombreHeureCumulee | default('0.00') }}</P></TD>
             <TD class="tr13 td62"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td63"><P class="p18 ft17">{{ participant.nombreHeurePrevue }}</P></TD>
+            <TD class="tr13 td63"><P class="p18 ft17">{{ participant.nombreHeurePrevue | default('0.00') }}</P></TD>
         </TR>
         {% endfor %}
     </TABLE>

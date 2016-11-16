@@ -9,6 +9,13 @@ services:
         tags:
             - { name: form.type, alias: duration }
 
+    ceofesa.form.type.dashboard:
+        class: CEOFESABundle\Form\Type\DashboardType
+        arguments:
+            - "@security.authorization_checker"
+        tags:
+            - { name: form.type, alias: dashboard_type }
+
     validator.unique.parcours:
         class: CEOFESABundle\Validator\Constraints\ParcoursValidator
         arguments: ["%max_heures%","@doctrine.orm.entity_manager"]
@@ -48,3 +55,9 @@ services:
         tags:
             - { name: twig.extension }
 
+    ceofesa.dashboard.exporter:
+        class: CEOFESABundle\Export\DashboardExporter
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@twig"
+            - "@knp_snappy.pdf"
