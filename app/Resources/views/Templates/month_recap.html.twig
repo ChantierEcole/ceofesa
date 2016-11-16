@@ -227,15 +227,15 @@
         <TR style="border-right: 1px solid black;">
             <TD class="tr0 td51"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td57"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD colspan=2 class="tr13 td53"><P class="p16 ft17"><NOBR>{{ participant.prcDcont.cntDaf.dafDossier }}</NOBR></P></TD>
+            <TD colspan=2 class="tr13 td53"><P class="p16 ft17"><NOBR>{{ participant.dossier }}</NOBR></P></TD>
             <TD class="tr13 td58"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD colspan=2 class="tr13 td59"><P class="p16 ft17">{{ participant.prcDcont.cntTiers.trsNom }} {{ participant.prcDcont.cntTiers.trsPrenom }}</P></TD>
+            <TD colspan=2 class="tr13 td59"><P class="p16 ft17">{{ participant.nom }} {{ participant.prenom }}</P></TD>
             <TD class="tr13 td54"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td60"><P class="p17 ft17">{{ participant.prcModule.modCode }} - {{ participant.prcType.mtyType }} <br /> {{ participant.prcStructure.strNom }}</P></TD>
-            <TD class="tr13 td61"><P class="p18 ft17">{{ participant.totalHeuresInMonth(date) }}</P></TD>
-            <TD colspan=2 class="tr13 td55"><P class="p19 ft17">{{ participant.totalHeures(date) }}</P></TD>
+            <TD class="tr13 td60"><P class="p17 ft17">{{ participant.type }} <br /> {{ participant.structure }}</P></TD>
+            <TD class="tr13 td61"><P class="p18 ft17">{{ participant.nombreHeureMois }}</P></TD>
+            <TD colspan=2 class="tr13 td55"><P class="p19 ft17">{{ participant.nombreHeureCumulee }}</P></TD>
             <TD class="tr13 td62"><P class="p2 ft4">&nbsp;</P></TD>
-            <TD class="tr13 td63"><P class="p18 ft17">{{ participant.prcNombreheure }}</P></TD>
+            <TD class="tr13 td63"><P class="p18 ft17">{{ participant.nombreHeurePrevue }}</P></TD>
         </TR>
         {% endfor %}
     </TABLE>
