@@ -5,8 +5,8 @@
         <title>Emargement</title>
         <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="{{ asset('fonts/glyphicons_pro/glyphicons.min.css', absolute=true) }}">
-		<link rel="stylesheet" type="text/css" href="{{ asset('css/emargement.css', absolute=true ) }}">
+        <link rel="stylesheet" type="text/css" href="{{ webRootDir~asset('fonts/glyphicons_pro/glyphicons.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ webRootDir~asset('css/emargement.css') }}">
 	</head>
 	<body id="print">
 
@@ -74,15 +74,8 @@
 					</div>
 				</div>
 
-				<div class="row sessions mt20">
-					<div class="col-xs-1 contener">
-						<div class="col-xs-12 h15">
-							Date :
-						</div>
-						<div class="col-xs-12 h185">
-						</div>
-					</div>
-					{% for i in 0..9  %}
+				<div class="row sessions mt10">
+					{% for i in 0..10  %}
 						<div class="col-xs-1 contener {% if loop.last %}br{% endif %}">
 							<div class="col-xs-12 h15">
 								{% if participant.prcPresence[i] is defined %}
@@ -90,7 +83,7 @@
 								{% endif %}
 							</div>
 							<div class="col-xs-6 h45">
-								<p>Heure déb.</p>
+								<p>Heure déb</p>
 								{% if participant.prcPresence[i] is defined %}
 									<p>{{ participant.prcPresence[i].pscSession.sesHeureDebut }}</p>
 								{% endif %}
@@ -124,14 +117,7 @@
 				</div>
 
 				<div class="row sessions">
-					<div class="col-xs-1 contener">
-						<div class="col-xs-12 h15">
-							Date :
-						</div>
-						<div class="col-xs-12 h185 bb">
-						</div>
-					</div>
-					{% for i in 0..9  %}
+					{% for i in 0..10  %}
 						<div class="col-xs-1 contener {% if loop.last %}br{% endif %}">
 							<div class="col-xs-12 h15">
 								{% if participant.prcPresence[i + 10] is defined %}
@@ -139,7 +125,7 @@
 								{% endif %}
 							</div>
 							<div class="col-xs-6 h45">
-								<p>Heure déb.</p>
+								<p>Heure déb</p>
 								{% if participant.prcPresence[i + 10] is defined %}
 									<p>{{ participant.prcPresence[i + 10].pscSession.sesHeureDebut }}</p>
 								{% endif %}
@@ -173,7 +159,7 @@
 					{% endfor %}
 				</div>
 
-				<div class="row mt20">
+				<div class="row mt10">
 					<div class="col-xs-4 col-xs-offset-1 fs14">
 						<b>Cachet de l'organismse de formation :</b>
 					</div>
