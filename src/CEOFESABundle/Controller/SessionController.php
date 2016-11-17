@@ -145,15 +145,9 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
 
-        $monthForm = $this->createForm(new MonthType(), null, array('structure' => $id));
-        $monthForm->get('module')->setData($module->getModId());
-        $monthForm->get('type')->setData($modType->getMtyId());
-        $monthForm->get('of')->setData($of->getStrId());
-
 		return array(
             'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
-            'monthForm'        => $monthForm->createView(),
             'entities'         => $entities,
             'module'           => $module,
             'type'             => $modType,
@@ -220,13 +214,7 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of, $module, $type);
 
-        $monthForm = $this->createForm(new MonthType(), null, array('structure' => $id));
-        $monthForm->get('module')->setData($moduleEntity->getModId());
-        $monthForm->get('type')->setData($modtypeEntity->getMtyId());
-        $monthForm->get('of')->setData($ofEntity->getStrId());
-
         return array(
-            'monthForm'        => $monthForm->createView(),
             'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
             'entities'         => $sessions,
@@ -485,6 +473,7 @@ class SessionController extends Controller
             $module = $data['module'];
             $modType = $data['type'];
             $of = $data['of'];
+            $opca = $data['opca'];
 
             $em = $this->getDoctrine()->getManager();
             $participants = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
@@ -492,6 +481,7 @@ class SessionController extends Controller
             $html = $this->renderView('::Templates\emargement.html.twig', array(
                 'participants' => $participants,
                 'date'         => $date,
+                'opca'         => $opca,
             ));
 
             $response= new Response();

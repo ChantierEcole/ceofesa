@@ -13,27 +13,32 @@
 
                 {{ form_start(printForm) }}
                 <div class="row">
-                    <div class="col-md-3 col-sm-offset-1">
+                    <div class="col-md-2 col-sm-offset-2">
                         {{ form_label(printForm.module) }}
                         {{ form_widget(printForm.module) }}
                         {{ form_errors(printForm.module) }}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         {{ form_label(printForm.type) }}
                         {{ form_widget(printForm.type) }}
                         {{ form_errors(printForm.type) }}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         {{ form_label(printForm.of) }}
                         {{ form_widget(printForm.of) }}
                         {{ form_errors(printForm.of) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(printForm.opca) }}
+                        {{ form_widget(printForm.opca) }}
+                        {{ form_errors(printForm.opca) }}
                     </div>
                 </div>
 
                 <br />
 
                 <div class="row">
-                    <div class="col-sm-1 col-sm-offset-2">
+                    <div class="col-sm-1 col-sm-offset-3">
                         {{ form_label(printForm.date) }}
                     </div>
                     {{ form_widget(printForm.date.day, { 'attr': { 'style': 'display:none' }} )  }}

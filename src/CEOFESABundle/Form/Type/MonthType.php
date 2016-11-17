@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Form\Type;
 
+use CEOFESABundle\Entity\Opca;
 use CEOFESABundle\Repository\StructureRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,6 +15,7 @@ class MonthType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $opca = Opca::getChoices();
         $id = $options['structure'];
 
         $builder
@@ -34,6 +36,10 @@ class MonthType extends AbstractType
                 'query_builder' => function(StructureRepository $repo) use ($id) {
                     return $repo->getOFPrincipalAndSousTraitants($id);
                 }
+            ))
+            ->add('opca', 'choice', array(
+                'required' => true,
+                'choices'  => array_combine($opca, $opca),
             ))
             ->add('date', 'date', array(
                 'label'  => 'Pour le mois :',
