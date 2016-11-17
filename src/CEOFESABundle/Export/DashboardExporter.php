@@ -72,7 +72,7 @@ class DashboardExporter
         fputcsv($file, array(
             'Nom',
             'Prénom',
-            'DAF',
+            'APC',
             'Type',
             'Nombre d\'Heures du mois',
             'Cumul d\'Heures réalisées depuis le début du parcours',

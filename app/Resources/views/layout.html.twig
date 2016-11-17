@@ -174,15 +174,15 @@
                     </ul>
                     <ul class="nav sidebar-nav">
                         <li>
-                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-file"></span><span class="sidebar-title">DAF</span><span class="caret"></span></a>
+                            <a class="accordion-toggle" href="#sideEight"><span class="glyphicons glyphicons-file"></span><span class="sidebar-title">APC</span><span class="caret"></span></a>
                             <ul id="sideEight" class="nav sub-nav">
                                 {% if is_granted('ROLE_ADMIN') %}
                                 <li>
-                                    <a href="{{ path('new_daf') }}"><span class="glyphicons glyphicons-file_import"></span> Créer une DAF </a>
+                                    <a href="{{ path('new_daf') }}"><span class="glyphicons glyphicons-file_import"></span> Créer un APC </a>
                                 </li>
                                 {% endif %}
                                 <li>
-                                    <a href="{{ path('daf') }}"><span class="glyphicons glyphicons-more_items"></span> Liste des DAF </a>
+                                    <a href="{{ path('daf') }}"><span class="glyphicons glyphicons-more_items"></span> Liste des APC </a>
                                 </li>
                                 <li>
                                     <a href="{{ path('bcd_index') }}"><span class="glyphicons glyphicons-more_items"></span> Bons de commande </a>
