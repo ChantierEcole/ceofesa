@@ -46,20 +46,55 @@ class ParcoursRepository extends EntityRepository
      */
     public function getParcoursByStructureAndDate($idStructure, $date)
     {
+        $subQueryMonth = $this->createQueryBuilder('par1')
+            ->select('SUM(pre1.pscDuree)')
+            ->innerJoin('par1.prcPresence', 'pre1')
+            ->innerJoin('pre1.pscSession', 'ses1')
+            ->where('ses1.sesDate >= :dateDebut')
+            ->andWhere('ses1.sesDate <= :dateFin')
+            ->andWhere('par1 = par')
+            ->getQuery()
+            ->getDQL();
+
+        $subQueryTotal = $this->createQueryBuilder('par2')
+            ->select('SUM(pre2.pscDuree)')
+            ->innerJoin('par2.prcPresence', 'pre2')
+            ->innerJoin('pre2.pscSession', 'ses2')
+            ->where('ses2.sesDate <= :dateDebut')
+            ->andWhere('par2 = par')
+            ->getQuery()
+            ->getDQL();
+
         return $this
             ->createQueryBuilder('par')
+            ->select('tiers.trsNom as nom')
+            ->addSelect('tiers.trsPrenom as prenom')
+            ->addSelect('daf.dafDossier as dossier')
+            ->addSelect('typ.mtyType as type')
+            ->addSelect('par.prcNombreheure as nombreHeurePrevue')
+            ->addSelect('structur.strNom as structure')
+            ->addSelect('('.$subQueryMonth.') AS nombreHeureMois')
+            ->addSelect('('.$subQueryTotal.') AS nombreHeureCumulee')
             ->innerJoin('par.prcDcont','dcnt')
             ->innerJoin('dcnt.cntDaf','daf')
+            ->innerJoin('dcnt.cntTiers', 'tiers')
+            ->innerJoin('par.prcType', 'typ')
+            ->innerJoin('par.prcStructure', 'structur')
             ->leftJoin('par.prcPresence', 'psc')
             ->leftJoin('psc.pscSession', 'session')
-            ->where('daf.dafStructure = :IdStructure')
+            ->where('daf.dafStructure = :idStructure')
             ->andWhere('session.sesDate >= :dateDebut')
             ->andWhere('session.sesDate <= :dateFin')
-            ->setParameter('IdStructure', $idStructure)
+            ->groupBy('nom')
+            ->addGroupBy('prenom')
+            ->addGroupBy('dossier')
+            ->addGroupBy('type')
+            ->addGroupBy('structure')
+            ->setParameter('idStructure', $idStructure)
             ->setParameter('dateDebut', new \DateTime($date->format('Y-m-01')))
             ->setParameter('dateFin', new \DateTime($date->format('Y-m-t')))
             ->getQuery()
-            ->getResult();
+            ->getScalarResult();
     }
 
 

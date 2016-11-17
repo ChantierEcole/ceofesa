@@ -37,7 +37,6 @@
                   <th>Nom</th>
                   <th>Prénom</th>
                   <th>DAF</th>
-                  <th>Module</th>
                   <th>Type</th>
                   <th>Nombre d'Heures du mois</th>
                   <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
@@ -48,15 +47,14 @@
                 <tbody>
                 {% for participant in participants %}
                   <tr>
-                    <td>{{ participant.prcDcont.cntTiers.trsNom }}</td>
-                    <td>{{ participant.prcDcont.cntTiers.trsPrenom }}</td>
-                    <td>{{ participant.prcDcont.cntDaf.dafDossier }}</td>
-                    <td>{{ participant.prcModule.modCode }}</td>
-                    <td>{{ participant.prcType.mtyType }}</td>
-                    <td class="ta-right">{{ participant.totalHeuresInMonth(date) }}</td>
-                    <td class="ta-right">{{ participant.totalHeures(date) }}</td>
-                    <td class="ta-right">{{ participant.prcNombreheure }}</td>
-                    <td>{{ participant.prcStructure.strNom }}</td>
+                    <td>{{ participant.nom }}</td>
+                    <td>{{ participant.prenom }}</td>
+                    <td>{{ participant.dossier }}</td>
+                    <td>{{ participant.type }}</td>
+                    <td class="ta-right">{{ participant.nombreHeureMois | default('0') }}</td>
+                    <td class="ta-right">{{ participant.nombreHeureCumulee | default('0') }}</td>
+                    <td class="ta-right">{{ participant.nombreHeurePrevue | default('0') }}</td>
+                    <td>{{ participant.structure }}</td>
                   </tr>
                 {% endfor %}
                 </tbody>
