@@ -2,15 +2,25 @@
 
 namespace CEOFESABundle\Form\Type;
 
-use CEOFESABundle\Repository\StructureRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class DashboardType extends AbstractType
 {
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     */
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -27,15 +37,10 @@ class DashboardType extends AbstractType
             ))
             ->add('save', 'submit', array('label' => 'Afficher'))
             ->add('print', 'submit', array('label' => 'Imprimer'));
-    }
-    
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-        ));
+
+        if ($this->authorizationChecker->isGranted('ROLE_USER')) {
+            $builder->add('export', 'submit', array('label' => 'Éxporter'));
+        }
     }
 
     /**
