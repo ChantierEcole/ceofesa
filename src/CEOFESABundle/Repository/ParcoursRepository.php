@@ -40,11 +40,12 @@ class ParcoursRepository extends EntityRepository
 
     /**
      * @param int       $idStructure
-     * @param \DateTime $date
+     * @param \DateTime $start
+     * @param \DateTime $end
      * 
      * @return array
      */
-    public function getParcoursByStructureAndDate($idStructure, $date)
+    public function getParcoursByStructureAndDate($idStructure, \DateTime $start, \DateTime $end)
     {
         $subQueryMonth = $this->createQueryBuilder('par1')
             ->select('SUM(pre1.pscDuree)')
@@ -60,7 +61,7 @@ class ParcoursRepository extends EntityRepository
             ->select('SUM(pre2.pscDuree)')
             ->innerJoin('par2.prcPresence', 'pre2')
             ->innerJoin('pre2.pscSession', 'ses2')
-            ->where('ses2.sesDate <= :dateDebut')
+            ->where('ses2.sesDate <= :dateFin')
             ->andWhere('par2 = par')
             ->getQuery()
             ->getDQL();
@@ -91,8 +92,8 @@ class ParcoursRepository extends EntityRepository
             ->addGroupBy('type')
             ->addGroupBy('structure')
             ->setParameter('idStructure', $idStructure)
-            ->setParameter('dateDebut', new \DateTime($date->format('Y-m-01')))
-            ->setParameter('dateFin', new \DateTime($date->format('Y-m-t')))
+            ->setParameter('dateDebut', $start)
+            ->setParameter('dateFin', $end)
             ->getQuery()
             ->getScalarResult();
     }

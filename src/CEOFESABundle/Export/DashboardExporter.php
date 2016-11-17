@@ -38,16 +38,18 @@ class DashboardExporter
 
     /**
      * @param Structure $structure
-     * @param \DateTime $date
+     * @param \DateTime $start
+     * @param \DateTime $end
      *
      * @return string
      */
-    public function exportPdf(Structure $structure, \DateTime $date)
+    public function exportPdf(Structure $structure, \DateTime $start, \DateTime $end)
     {
         $html = $this->twig->render('::Templates\month_recap.html.twig', array(
-            'participants' => $this->resolveParticipants($structure, $date),
+            'participants' => $this->resolveParticipants($structure, $start, $end),
             'structure'    => $structure,
-            'date'         => $date,
+            'start'        => $start,
+            'end'          => $end,
         ));
 
         return $this->snappy->getOutputFromHtml($html, array(
@@ -58,11 +60,12 @@ class DashboardExporter
 
     /**
      * @param Structure $structure
-     * @param \DateTime $date
+     * @param \DateTime $start
+     * @param \DateTime $end
      *
      * @return string
      */
-    public function exportCsv(Structure $structure, \DateTime $date)
+    public function exportCsv(Structure $structure, \DateTime $start, \DateTime $end)
     {
         $file = fopen('php://memory', 'rw+');
 
@@ -77,7 +80,7 @@ class DashboardExporter
             'OF Sous-traitant',
         ));
 
-        $participants = $this->resolveParticipants($structure, $date);
+        $participants = $this->resolveParticipants($structure, $start, $end);
 
         foreach ($participants as $participant) {
             fputcsv($file, array(
@@ -101,15 +104,17 @@ class DashboardExporter
 
     /**
      * @param Structure $structure
-     * @param \DateTime $date
+     * @param \DateTime $start
+     * @param \DateTime $end
      *
      * @return Parcours[]
      */
-    private function resolveParticipants(Structure $structure, \DateTime $date)
+    private function resolveParticipants(Structure $structure, \DateTime $start, \DateTime $end)
     {
         return $this->em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate(
             $structure->getStrId(),
-            $date
+            $start,
+            $end
         );
     }
 }

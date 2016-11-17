@@ -57,20 +57,20 @@ class MainController extends Controller
         $id = $this->get('session')->get('structure');
         $em = $this->getDoctrine()->getManager();
         $structure = $em->getRepository('CEOFESABundle:Structure')->find($id);
-
         $form = $this->createForm('dashboard_type');
 
         if ($form->handleRequest($request)->isValid()) {
             $data = $form->getData();
-            $date = $data['date'];
+            $start = $data['start'];
+            $end = $data['end'];
 
             if ($form->get('print')->isClicked()) {
                 $response= new Response();
-                $response->setContent($this->get('ceofesa.dashboard.exporter')->exportPdf($structure, $date));
+                $response->setContent($this->get('ceofesa.dashboard.exporter')->exportPdf($structure, $start, $end));
                 $response->headers->set('Content-Type', 'application/pdf');
                 $response->headers->set(
                     'Content-disposition',
-                    'filename=SyntheseMensuelle-'.$date->format('m-Y').'.pdf'
+                    'filename=SyntheseMensuelle-'.$start->format('m-Y').'-'.$end->format('m-Y').'.pdf'
                 );
 
                 return $response;
@@ -78,22 +78,22 @@ class MainController extends Controller
 
             if ($form->has('export') && $form->get('export')->isClicked()) {
                 $response= new Response();
-                $response->setContent($this->get('ceofesa.dashboard.exporter')->exportCsv($structure, $date));
+                $response->setContent($this->get('ceofesa.dashboard.exporter')->exportCsv($structure, $start, $end));
                 $response->headers->set('Content-Type', 'application/csv');
                 $response->headers->set(
                     'Content-disposition',
-                    'filename=SyntheseMensuelle-'.$date->format('m-Y').'.csv'
+                    'filename=SyntheseMensuelle-'.$start->format('m-Y').'-'.$end->format('m-Y').'.csv'
                 );
 
                 return $response;
             }
         } else {
-            $form->get('date')->setData($date = new \DateTime());
+            $form->get('start')->setData($start = new \DateTime(date('Y-m-01 00:00:00')));
+            $form->get('end')->setData($end = new \DateTime(date('Y-m-t 23:59:59')));
         }
 
         return $this->render("Main/structure_dashboard.html.twig", array(
-            'date'         => $date,
-            'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate($id, $date),
+            'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate($id, $start, $end),
             'structure'    => $structure,
             'form'         => $form->createView(),
         ));

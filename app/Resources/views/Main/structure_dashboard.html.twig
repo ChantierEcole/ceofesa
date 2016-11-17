@@ -8,24 +8,43 @@
         </div>
         <div class="panel-body">
 
-          <div class="row">
-            {{ form_start(form) }}
-            {{ form_widget(form.date.day, { 'attr': { 'style': 'display:none' }} )  }}
-            <div class="col-sm-2">
-              {{ form_widget(form.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+          {{ form_start(form) }}
+            <div class="row">
+              <div class="col-sm-1">
+                {{ form_label(form.start, null, { 'attr': { 'class': 'form-label' }}) }}
+              </div>
+              <div class="col-sm-2">
+                {{ form_widget(form.start.day, { 'attr': { 'class': 'form-control' }} )  }}
+              </div>
+              <div class="col-sm-2">
+                {{ form_widget(form.start.month, { 'attr': { 'class': 'form-control' }} )  }}
+              </div>
+              <div class="col-sm-2">
+                {{ form_widget(form.start.year, { 'attr': { 'class': 'form-control' }} )  }}
+              </div>
             </div>
-            <div class="col-sm-2">
-              {{ form_widget(form.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+            <div class="row">
+              <div class="col-sm-1">
+                {{ form_label(form.end, null, { 'attr': { 'class': 'form-label' }}) }}
+              </div>
+              <div class="col-sm-2">
+                {{ form_widget(form.end.day, { 'attr': { 'class': 'form-control' }} )  }}
+              </div>
+              <div class="col-sm-2">
+                {{ form_widget(form.end.month, { 'attr': { 'class': 'form-control' }} )  }}
+              </div>
+              <div class="col-sm-2">
+                {{ form_widget(form.end.year, { 'attr': { 'class': 'form-control' }} )  }}
+              </div>
+              <div class="col-sm-3">
+                {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                {{ form_widget(form.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                {% if form.export is defined %}
+                  {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                {% endif %}
+              </div>
             </div>
-            <div class="col-sm-3">
-              {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary' }} )  }}
-              {{ form_widget(form.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
-              {% if form.export is defined %}
-                {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-primary' }} )  }}
-              {% endif %}
-            </div>
-            {{ form_end(form) }}
-          </div>
+          {{ form_end(form) }}
 
           <br />
           <br />
