@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Form\Type\TiersFilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -107,24 +108,34 @@ class StagiaireController extends Controller
      * Finds and displays a Tiers entity.
      *
      * @Route("/{id}", name="stagiaire_show")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Template("::Stagiaire\show.html.twig")
      */
-    public function showAction($id)
+    public function showAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $entity = $em->getRepository('CEOFESABundle:Tiers')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Tiers entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $form = $this->createForm(new TiersFilterType());
+
+        if ($form->handleRequest($request)->isValid()) {
+            $data = $form->getData();
+            $start = $data['start'];
+            $end = $data['end'];
+        } else {
+            $form->get('start')->setData($start = new \DateTime(date('Y-m-01 00:00:00')));
+            $form->get('end')->setData($end = new \DateTime(date('Y-m-t 23:59:59')));
+        }
 
         return array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'parcours'    => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByTiers($entity, $start, $end),
+            'filter_form' => $form->createView(),
+            'delete_form' => $this->createDeleteForm($id)->createView(),
         );
     }
 
