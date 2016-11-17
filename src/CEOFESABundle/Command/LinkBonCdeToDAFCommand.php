@@ -37,9 +37,9 @@ class LinkBonCdeToDAFCommand extends ContainerAwareCommand
                 $em->persist($bon);
                 $em->flush();
 
-                $output->writeln("[INFO] La DAF  ". $daf->getDafDossier() . " a été lié au bon de commande " . $bon->getBcdId());
+                $output->writeln("[INFO] L'APC  ". $daf->getDafDossier() . " a été lié au bon de commande " . $bon->getBcdId());
             } else {
-                $output->writeln("[ERROR] Pas de DAF  pour le bon de commande " . $bon->getBcdId());
+                $output->writeln("[ERROR] Pas d'APC pour le bon de commande " . $bon->getBcdId());
             }
         }
     }

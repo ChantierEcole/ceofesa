@@ -775,7 +775,7 @@ class SessionController extends Controller
 
         if ($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
             $reponse = new JsonResponse('doublon', 419);
-        } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de sa DAF
+        } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de son APC
             $reponse = new JsonResponse('limite', 419);
         } elseif ($type == 'Individuel' && $isParticipants) {
                 $reponse = new JsonResponse('individuel', 419);
@@ -897,7 +897,7 @@ class SessionController extends Controller
     }
 
     /*
-    * Fonction pour vérifer si la somme des durées saisies pour une DAF pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cette DAF/stagiaire (DCont)
+    * Fonction pour vérifer si la somme des durées saisies pour un APC pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cet APC/stagiaire (DCont)
     */
     private function checkTotalHeures(Parcours $parcours, $nextDuree = 0){
 

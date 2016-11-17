@@ -294,6 +294,6 @@ class Parcours
      */
     public function getPrctiersdaf()
     {
-        return $this->prcDcont->getCntTiers()->getTrsNom().' '.$this->prcDcont->getCntTiers()->getTrsPrenom().' - DAF : '.$this->prcDcont->getCntDaf()->getDafDossier();
+        return $this->prcDcont->getCntTiers()->getTrsNom().' '.$this->prcDcont->getCntTiers()->getTrsPrenom().' - APC : '.$this->prcDcont->getCntDaf()->getDafDossier();
     }
 }
