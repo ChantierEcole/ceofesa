@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\Tiers;
 use Doctrine\ORM\EntityRepository;
 
 class ParcoursRepository extends EntityRepository
@@ -98,6 +99,68 @@ class ParcoursRepository extends EntityRepository
             ->getScalarResult();
     }
 
+    /**
+     * @param Tiers     $tiers
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return array
+     */
+    public function getParcoursByTiers(Tiers $tiers, \DateTime $start, \DateTime $end)
+    {
+        $subQueryMonth = $this->createQueryBuilder('par1')
+            ->select('SUM(pre1.pscDuree)')
+            ->innerJoin('par1.prcPresence', 'pre1')
+            ->innerJoin('pre1.pscSession', 'ses1')
+            ->where('ses1.sesDate >= :dateDebut')
+            ->andWhere('ses1.sesDate <= :dateFin')
+            ->andWhere('par1 = par')
+            ->getQuery()
+            ->getDQL();
+
+        $subQueryTotal = $this->createQueryBuilder('par2')
+            ->select('SUM(pre2.pscDuree)')
+            ->innerJoin('par2.prcPresence', 'pre2')
+            ->innerJoin('pre2.pscSession', 'ses2')
+            ->where('ses2.sesDate <= :dateFin')
+            ->andWhere('par2 = par')
+            ->getQuery()
+            ->getDQL();
+
+        return $this
+            ->createQueryBuilder('par')
+            ->select('tiers.trsNom as nom')
+            ->addSelect('tiers.trsPrenom as prenom')
+            ->addSelect('daf.dafDossier as dossier')
+            ->addSelect('modul.modCode as module')
+            ->addSelect('typ.mtyType as type')
+            ->addSelect('par.prcNombreheure as nombreHeurePrevue')
+            ->addSelect('structur.strNom as structure')
+            ->addSelect('('.$subQueryMonth.') AS nombreHeureMois')
+            ->addSelect('('.$subQueryTotal.') AS nombreHeureCumulee')
+            ->innerJoin('par.prcDcont','dcnt')
+            ->innerJoin('dcnt.cntDaf','daf')
+            ->innerJoin('dcnt.cntTiers', 'tiers')
+            ->innerJoin('par.prcModule', 'modul')
+            ->innerJoin('par.prcType', 'typ')
+            ->innerJoin('par.prcStructure', 'structur')
+            ->leftJoin('par.prcPresence', 'psc')
+            ->leftJoin('psc.pscSession', 'session')
+            ->where('tiers = :tiers')
+            ->andWhere('session.sesDate >= :dateDebut')
+            ->andWhere('session.sesDate <= :dateFin')
+            ->groupBy('nom')
+            ->addGroupBy('prenom')
+            ->addGroupBy('dossier')
+            ->addGroupBy('module')
+            ->addGroupBy('type')
+            ->addGroupBy('structure')
+            ->setParameter('tiers', $tiers)
+            ->setParameter('dateDebut', $start)
+            ->setParameter('dateFin', $end)
+            ->getQuery()
+            ->getScalarResult();
+    }
 
     public function getParcoursAndSessions($idStructure, $idOF, $idModule, $idModuleType, $date)
     {

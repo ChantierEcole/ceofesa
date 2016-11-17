@@ -89,6 +89,86 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-visible">
+            <div class="panel-heading">
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Parcours du stagiaire </div>
+            </div>
+            <div class="panel-body">
+                {{ form_start(filter_form) }}
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ form_label(filter_form.start, null, { 'attr': { 'class': 'form-label' }}) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(filter_form.start.day, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(filter_form.start.month, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(filter_form.start.year, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                            {{ form_label(filter_form.end, null, { 'attr': { 'class': 'form-label' }}) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(filter_form.end.day, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(filter_form.end.month, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(filter_form.end.year, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ form_widget(filter_form.filter, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                        </div>
+                    </div>
+                {{ form_end(filter_form) }}
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="js-data-table">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>DAF</th>
+                                <th>Module</th>
+                                <th>Type</th>
+                                <th>Nombre d'Heures du mois</th>
+                                <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
+                                <th>Nombre d'Heures prévues<br /> pour le parcours</th>
+                                <th>OF Sous-traitant</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for _parcours in parcours %}
+                                <tr>
+                                    <td>{{ _parcours.nom }}</td>
+                                    <td>{{ _parcours.prenom }}</td>
+                                    <td>{{ _parcours.dossier }}</td>
+                                    <td>{{ _parcours.module }}</td>
+                                    <td>{{ _parcours.type }}</td>
+                                    <td class="ta-right">{{ _parcours.nombreHeureMois | default('0.00') }}</td>
+                                    <td class="ta-right">{{ _parcours.nombreHeureCumulee | default('0.00') }}</td>
+                                    <td class="ta-right">{{ _parcours.nombreHeurePrevue | default('0.00') }}</td>
+                                    <td>{{ _parcours.structure }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block javascripts %}
 {% endblock %}
