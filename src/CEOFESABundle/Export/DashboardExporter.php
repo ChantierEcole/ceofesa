@@ -74,7 +74,7 @@ class DashboardExporter
             'Prénom',
             'APC',
             'Type',
-            'Nombre d\'Heures du mois',
+            'Nombre d\'Heures de la période',
             'Cumul d\'Heures réalisées depuis le début du parcours',
             'Nombre d\'Heures prévues pour le parcours',
             'OF Sous-traitant',
