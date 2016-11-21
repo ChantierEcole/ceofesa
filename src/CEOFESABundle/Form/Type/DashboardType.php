@@ -48,7 +48,7 @@ class DashboardType extends AbstractType
             ->add('print', 'submit', array('label' => 'Imprimer'));
 
         if ($this->authorizationChecker->isGranted('ROLE_USER')) {
-            $builder->add('export', 'submit', array('label' => 'Éxporter'));
+            $builder->add('export', 'submit', array('label' => 'Exporter'));
         }
     }
 
