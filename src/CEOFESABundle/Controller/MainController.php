@@ -70,7 +70,7 @@ class MainController extends Controller
                 $response->headers->set('Content-Type', 'application/pdf');
                 $response->headers->set(
                     'Content-disposition',
-                    'filename=SyntheseMensuelle-'.$start->format('m-Y').'-'.$end->format('m-Y').'.pdf'
+                    'filename=Synthese-'.$start->format('d-m-Y').'-'.$end->format('d-m-Y').'.pdf'
                 );
 
                 return $response;
@@ -82,7 +82,7 @@ class MainController extends Controller
                 $response->headers->set('Content-Type', 'application/csv');
                 $response->headers->set(
                     'Content-disposition',
-                    'filename=SyntheseMensuelle-'.$start->format('m-Y').'-'.$end->format('m-Y').'.csv'
+                    'filename=Synthese-'.$start->format('d-m-Y').'-'.$end->format('d-m-Y').'.csv'
                 );
 
                 return $response;
