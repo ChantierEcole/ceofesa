@@ -30,9 +30,9 @@
                             <td>{{ daf.dafDossier }}</td>
                             <td data-order="{{ daf.dafDatedebut.timestamp|default(0) }}">{{ daf.dafDatedebut|date('d/m/Y')|default() }}</td>
                             <td data-order="{{ daf.dafDatefin.timestamp|default(0) }}">{{ daf.dafDatefin|date('d/m/Y')|default() }}</td>
-                            <td>{{ daf.dafNbheure }}</td>
+                            <td>{{ daf.totalNbheure | number_format(2, '.', ' ') }}</td>
                             <td>{{ daf.dafNbsalarie }}</td>
-                            <td>{{ daf.dafMontant }}</td>
+                            <td>{{ daf.totalMontant | number_format(2, '.', ' ') }} €</td>
                             <td>{{  daf.dafTauxhoraire }}</td>
                             <td>{{  daf.dafOf.strNom }}</td>
                             <td>
