@@ -3,6 +3,7 @@
 namespace CEOFESABundle\Repository;
 
 use CEOFESABundle\Entity\DAF;
+use CEOFESABundle\Entity\DCont;
 use CEOFESABundle\Entity\Tiers;
 use Doctrine\ORM\EntityRepository;
 
@@ -33,16 +34,20 @@ class PresenceRepository extends EntityRepository
         ;
     }
 
-    public function getDcontTotalDurees($dcont)
+    /**
+     * @param DCont $dcont
+     *
+     * @return int
+     */
+    public function getDcontTotalDurees(DCont $dcont)
     {
-    	$qb = $this->createQueryBuilder('t');
-    	$qb->select('sum(t.pscDuree as total')
-    	->innerJoin('t.pscParcours','par')
-        ->where('par.prcDcont = :dcont')
-        ->setParameter('dcont', $dcont)
-        ;
-        $result = $qb->getQuery()->getSingleScalarResult();
-        return $result;
+    	return $this->createQueryBuilder('t')
+    	    ->select('sum(t.pscDuree) as total')
+            ->innerJoin('t.pscParcours','par')
+            ->where('par.prcDcont = :dcont')
+            ->setParameter('dcont', $dcont)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

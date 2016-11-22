@@ -767,6 +767,7 @@ class SessionController extends Controller
             ->getQuery()
             ->getResult();
         $limiteOK = $this->checkTotalHeures($parcours,$duree);
+        $maxOk = $this->checkIndividuelHeures($parcours, $duree);
         $isParticipants = $em
             ->getRepository('CEOFESABundle:Presence')
             ->getPresencesSession($idsession)
@@ -777,6 +778,8 @@ class SessionController extends Controller
             $reponse = new JsonResponse('doublon', 419);
         } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de son APC
             $reponse = new JsonResponse('limite', 419);
+        } elseif (!$maxOk) {
+            $reponse = new JsonResponse('max', 419);
         } elseif ($type == 'Individuel' && $isParticipants) {
                 $reponse = new JsonResponse('individuel', 419);
         } else { // si ok : rajout de la présence en base
@@ -915,5 +918,22 @@ class SessionController extends Controller
             ->getDafTotalHeures($parcours->getPrcDcont()->getCntDaf());
 
         return $nbHeuresRealisees + $nextDuree <= $nbHeuresPrevues;
+    }
+
+    /**
+     * @param Parcours $parcours
+     * @param int      $nextDuree
+     *
+     * @return bool
+     */
+    private function checkIndividuelHeures(Parcours $parcours, $nextDuree = 0)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $nbHeuresRealisees = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getDContTotalDurees($parcours->getPrcDcont());
+
+        return $nbHeuresRealisees + $nextDuree > 399;
     }
 }

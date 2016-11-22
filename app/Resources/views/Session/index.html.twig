@@ -421,6 +421,8 @@
                                 alert('Erreur : Ce stagiaire a atteint sa limite d\'heures prises en charge pour ce parcours');
                             } else if (erreur == 'individuel') {
                                 alert('Erreur : Cette formation est individuelle et ne peut comporter plusieurs participants');
+                            } else if (erreur == 'max') {
+                                alert('Erreur : Vous ne pouvez pas dépasser 399 heures de présences pour un stagiaire pour cet APC');
                             } else {
                                 //alert('Un erreur est survenue lors de l\'enregistrement');
                                 alert(request.responseText);
