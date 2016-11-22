@@ -32,7 +32,7 @@
                         </tr>
                         <tr>
                             <th>Nombre d'heure total</th>
-                            <td>{{ daf.totalNbheure }}</td>
+                            <td>{{ daf.totalNbheure | number_format(2, ',', ' ') }}</td>
                         </tr>
                         <tr>
                             <th>Taux Horaire</th>
@@ -40,7 +40,7 @@
                         </tr>
                         <tr>
                             <th>Prix Total</th>
-                            <td>{{ daf.totalMontant | number_format(2, ',', ' ')  }} €</td>
+                            <td>{{ daf.totalMontant | number_format(2, ',', ' ') }} €</td>
                         </tr>
                     </tbody>
                 </table>
