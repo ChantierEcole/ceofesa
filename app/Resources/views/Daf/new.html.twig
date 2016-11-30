@@ -43,7 +43,7 @@
     </div>
 </div>
 {% endblock %}
-        
+
 {% block javascripts %}
 <script type="text/javascript">
 
@@ -72,7 +72,7 @@
       data =  parseInt(data)+1;
       $(this).children('label').text("Stagiaire n° "+data);
     });
-    
+
     // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un
     if (index == 0) {
       addCategory($container);
@@ -91,7 +91,7 @@
             addAddLink($(this));
         });
     }
-    
+
 
     // La fonction qui ajoute un formulaire Parcours
 
@@ -119,8 +119,8 @@
 
       var parcoursIndex = $container.children('.form-group').length;
 
-      var $prototype = $($container.attr('data-prototype').replace(/__name__label__/g, 'Parcours n°' + (parcoursIndex+1))
-              .replace(/__name__/g, parcoursIndex));
+      var $prototype = $($container.attr('data-prototype').replace(/__name_parcours__label__/g, 'Parcours n°' + (parcoursIndex+1))
+              .replace(/__name_parcours__/g, parcoursIndex));
 
       addDeleteLink($prototype);
       $container.append($prototype);
@@ -173,7 +173,7 @@
         dataType: 'json',
         timeout: 30000,
         success: function (data) {
-          console.log(data);          
+          console.log(data);
           //réinitialise la liste des sous-traitants
           $(ofElement).html('');
 
