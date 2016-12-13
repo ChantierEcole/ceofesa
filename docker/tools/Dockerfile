@@ -24,19 +24,24 @@ RUN docker-php-ext-install intl mbstring zip mysql pdo_mysql json mcrypt gd
 RUN pecl install -o -f xdebug-2.4.0 \
     && rm -rf /tmp/pear
 
-# Config files
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
+
+# Capifony
+RUN gem install -N net-ssh:3.1.1 capifony:2.8.3 capistrano_colors slack-notifier
+
+# Assign a shell to user www-data
+RUN chsh -s /bin/bash www-data
+
+# Access right
+RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www
+
+# Copy configuration files
 ADD config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY config/php.ini /usr/local/etc/php/php.ini
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 COPY .bashrc /var/www/.bashrc
-
-# Access right
-RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www
-
-RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
-
-RUN chsh -s /bin/bash www-data
 
 WORKDIR /var/www/html/
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
