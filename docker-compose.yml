@@ -43,6 +43,7 @@ tools:
         - ~/.gitconfig:/var/www/.gitconfig
         - ~/.composer:/var/www/.composer
         - ~/.ssh:/var/www/.ssh
+        - ./docker/var/.bash_history:/var/www/.bash_history
     environment:
         - SSH_AUTH_SOCK=/tmp/agent.sock
     volumes_from:

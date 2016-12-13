@@ -8,6 +8,7 @@ DOCKER=docker
 all: configure start install
 
 configure:
+	@touch docker/var/.bash_history
 	@echo "WWW_DATA_UID=`id -u`\nWWW_DATA_GUID=`id -g`\nLOCAL_IP=`ip route get 1 | awk '{print $$NF;exit}'`" | tee docker/settings/env_access > /dev/null
 
 start:
