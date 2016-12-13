@@ -29,6 +29,7 @@ ADD config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY config/php.ini /usr/local/etc/php/php.ini
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY .bashrc /var/www/.bashrc
 
 # Access right
 RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www

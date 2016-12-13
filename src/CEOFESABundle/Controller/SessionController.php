@@ -795,7 +795,7 @@ class SessionController extends Controller
 
         return $reponse;
     }
-    
+
     /**
      * @param \CEOFESABundle\Entity\Parcours $parcours
      *
@@ -819,7 +819,7 @@ class SessionController extends Controller
             ->getPresencesParcours($parcours->getPrcId())
             ->getQuery()
             ->getResult();
-        
+
         return array(
             'presences' => $presences,
             'parcours'  => $parcours,
@@ -934,6 +934,6 @@ class SessionController extends Controller
             ->getRepository('CEOFESABundle:Presence')
             ->getDContTotalDurees($parcours->getPrcDcont());
 
-        return $nbHeuresRealisees + $nextDuree > 399;
+        return $nbHeuresRealisees + $nextDuree <= 399;
     }
 }
