@@ -78,7 +78,7 @@ class MainController extends Controller
 
             if ($form->has('export') && $form->get('export')->isClicked()) {
                 $response= new Response();
-                $response->setContent($this->get('ceofesa.dashboard.exporter')->exportCsv($structure, $start, $end));
+                $response->setContent("\xEF\xBB\xBF".$this->get('ceofesa.dashboard.exporter')->exportCsv($structure, $start, $end));
                 $response->headers->set('Content-Type', 'application/csv');
                 $response->headers->set(
                     'Content-disposition',
