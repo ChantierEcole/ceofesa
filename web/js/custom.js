@@ -86,11 +86,23 @@ jQuery(document).ready(function() {
 
 
     /* INIT DATATABLE */
-	$('.js-data-table').dataTable( {
+	var _dataTable = $('.js-data-table').DataTable( {
 		"language": {
 			"url": '//cdn.datatables.net/plug-ins/1.10.10/i18n/French.json'
 		},
 		"aaSorting": []
+	});
+
+	$('.js-data-table').on('page.dt', function () {
+		window.localStorage.setItem(window.location.href.split('?')[0], _dataTable.page.info().page);
+	});
+
+	$('.js-data-table').on('init.dt', function () {
+		var page = parseInt(window.localStorage.getItem(window.location.href.split('?')[0]));
+
+		if (page) {
+			_dataTable.page(page).draw(false);
+		}
 	});
 
 	/* INIT CHOSEN */

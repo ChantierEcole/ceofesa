@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="panel panel-visible">
             <div class="panel-heading">
-                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails de la DAF </div>
+                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-search"></span> Détails de l'APC </div>
             </div>
             <div class="panel-body">
                 <table class="record_properties table table-bordered">
@@ -32,7 +32,7 @@
                         </tr>
                         <tr>
                             <th>Nombre d'heure total</th>
-                            <td>{{ daf.dafNbheure }}</td>
+                            <td>{{ daf.totalNbheure | number_format(2, ',', ' ') }}</td>
                         </tr>
                         <tr>
                             <th>Taux Horaire</th>
@@ -40,7 +40,7 @@
                         </tr>
                         <tr>
                             <th>Prix Total</th>
-                            <td>{{ daf.dafMontant|number_format(2, ',', ' ')  }} €</td>
+                            <td>{{ daf.totalMontant | number_format(2, ',', ' ') }} €</td>
                         </tr>
                     </tbody>
                 </table>

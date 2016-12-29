@@ -4,26 +4,11 @@ namespace CEOFESABundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class DashboardType extends AbstractType
+class TiersFilterType extends AbstractType
 {
     /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
-
-    /**
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     */
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -44,19 +29,14 @@ class DashboardType extends AbstractType
                 'years'  => range($year - 5, $year + 5),
                 'data'   => new \DateTime(date('Y-m-t 23:59:59')),
             ))
-            ->add('save', 'submit', array('label' => 'Afficher'))
-            ->add('print', 'submit', array('label' => 'Imprimer'));
-
-        if ($this->authorizationChecker->isGranted('ROLE_USER')) {
-            $builder->add('export', 'submit', array('label' => 'Exporter'));
-        }
+            ->add('filter', 'submit', array('label' => 'Filtrer'));
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return 'dashboard_type';
+        return 'tiers_filter_type';
     }
 }

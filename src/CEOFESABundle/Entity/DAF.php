@@ -366,6 +366,30 @@ class DAF
     /**
      * @return int
      */
+    public function getTotalNbheure()
+    {
+        $ret = 0;
+
+        foreach ($this->getDafDcont() as $dcont) {
+            foreach ($dcont->getCntParcours() as $parcours) {
+                $ret += $parcours->getPrcNombreheure();
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalMontant()
+    {
+        return $this->getTotalNbheure() * $this->getDafTauxhoraire();
+    }
+
+    /**
+     * @return int
+     */
     public function calcNbSalarie()
     {
         $tab = array();

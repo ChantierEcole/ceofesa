@@ -145,15 +145,9 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of->getStrId(),$module->getModId(),$modType->getMtyId());
 
-        $monthForm = $this->createForm(new MonthType(), null, array('structure' => $id));
-        $monthForm->get('module')->setData($module->getModId());
-        $monthForm->get('type')->setData($modType->getMtyId());
-        $monthForm->get('of')->setData($of->getStrId());
-
 		return array(
             'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
-            'monthForm'        => $monthForm->createView(),
             'entities'         => $entities,
             'module'           => $module,
             'type'             => $modType,
@@ -220,13 +214,7 @@ class SessionController extends Controller
 
         $form2 = $this->createParticipantForm($of, $module, $type);
 
-        $monthForm = $this->createForm(new MonthType(), null, array('structure' => $id));
-        $monthForm->get('module')->setData($moduleEntity->getModId());
-        $monthForm->get('type')->setData($modtypeEntity->getMtyId());
-        $monthForm->get('of')->setData($ofEntity->getStrId());
-
         return array(
-            'monthForm'        => $monthForm->createView(),
             'choose_form'      => $form->createView(),
             'participant_form' => $form2->createView(),
             'entities'         => $sessions,
@@ -485,6 +473,7 @@ class SessionController extends Controller
             $module = $data['module'];
             $modType = $data['type'];
             $of = $data['of'];
+            $opca = $data['opca'];
 
             $em = $this->getDoctrine()->getManager();
             $participants = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessions($id, $of, $module, $modType, $date);
@@ -492,6 +481,7 @@ class SessionController extends Controller
             $html = $this->renderView('::Templates\emargement.html.twig', array(
                 'participants' => $participants,
                 'date'         => $date,
+                'opca'         => $opca,
             ));
 
             $response= new Response();
@@ -777,6 +767,7 @@ class SessionController extends Controller
             ->getQuery()
             ->getResult();
         $limiteOK = $this->checkTotalHeures($parcours,$duree);
+        $maxOk = $this->checkIndividuelHeures($parcours, $duree);
         $isParticipants = $em
             ->getRepository('CEOFESABundle:Presence')
             ->getPresencesSession($idsession)
@@ -785,8 +776,10 @@ class SessionController extends Controller
 
         if ($presenceExist) { // vérifie si une présence avec cette session et ce parcours n'existe pas déjà
             $reponse = new JsonResponse('doublon', 419);
-        } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de sa DAF
+        } elseif (!$limiteOK) { // vérifie si le stagiaire n'a pas dépassé le nombre d'heure de son APC
             $reponse = new JsonResponse('limite', 419);
+        } elseif (!$maxOk) {
+            $reponse = new JsonResponse('max', 419);
         } elseif ($type == 'Individuel' && $isParticipants) {
                 $reponse = new JsonResponse('individuel', 419);
         } else { // si ok : rajout de la présence en base
@@ -802,7 +795,7 @@ class SessionController extends Controller
 
         return $reponse;
     }
-    
+
     /**
      * @param \CEOFESABundle\Entity\Parcours $parcours
      *
@@ -826,7 +819,7 @@ class SessionController extends Controller
             ->getPresencesParcours($parcours->getPrcId())
             ->getQuery()
             ->getResult();
-        
+
         return array(
             'presences' => $presences,
             'parcours'  => $parcours,
@@ -906,21 +899,41 @@ class SessionController extends Controller
         }
     }
 
-    /*
-    * Fonction pour vérifer si la somme des durées saisies pour une DAF pour un stagiaire ne dépasse pas la somme des heures prévues dans les parcours pour cette DAF/stagiaire (DCont)
-    */
-    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0){
-
+    /**
+     * @param Parcours $parcours
+     * @param int      $nextDuree
+     *
+     * @return bool
+     */
+    private function checkTotalHeures(Parcours $parcours, $nextDuree = 0)
+    {
         $em = $this->getDoctrine()->getManager();
-        $nbHeuresRealisees = $em->getRepository('CEOFESABundle:Presence')->getParcoursTotalDurees($parcours);
-        $nbHeuresPrevues = $parcours->getPrcNombreheure();
 
-        $nbHeuresRealisees += $nextDuree;
+        $nbHeuresRealisees = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getDafTotalDurees($parcours->getPrcDcont()->getCntDaf());
 
-        if($nbHeuresRealisees <= $nbHeuresPrevues){
-            return true;
-        } else {
-            return false;
-        }
+        $nbHeuresPrevues = $em
+            ->getRepository('CEOFESABundle:Parcours')
+            ->getDafTotalHeures($parcours->getPrcDcont()->getCntDaf());
+
+        return $nbHeuresRealisees + $nextDuree <= $nbHeuresPrevues;
+    }
+
+    /**
+     * @param Parcours $parcours
+     * @param int      $nextDuree
+     *
+     * @return bool
+     */
+    private function checkIndividuelHeures(Parcours $parcours, $nextDuree = 0)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $nbHeuresRealisees = $em
+            ->getRepository('CEOFESABundle:Presence')
+            ->getDContTotalDurees($parcours->getPrcDcont());
+
+        return $nbHeuresRealisees + $nextDuree <= 399;
     }
 }
