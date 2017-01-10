@@ -17,11 +17,9 @@ class DevisRepository extends EntityRepository
         ->setParameter('annee', $annee)
         ;
 
-        $result = $qb->getQuery()->getSingleScalarResult();
+        $result = $qb->getQuery()->getResult();
 
-        $result += 1;
-
-        return $result;
+        return (empty($result)) ? 1 : $result[0]['devNumero'] + 1;
     }
 
     public function getDevisStructure($id_structure){
