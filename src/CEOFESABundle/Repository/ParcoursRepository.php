@@ -27,7 +27,7 @@ class ParcoursRepository extends EntityRepository
 
     /**
      * @param $idStructure
-     * 
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getParcoursByStructure($idStructure)
@@ -45,7 +45,7 @@ class ParcoursRepository extends EntityRepository
      * @param int       $idStructure
      * @param \DateTime $start
      * @param \DateTime $end
-     * 
+     *
      * @return array
      */
     public function getParcoursByStructureAndDate($idStructure, \DateTime $start, \DateTime $end)
@@ -185,7 +185,7 @@ class ParcoursRepository extends EntityRepository
      *
      * @return int
      */
-    public function getDcontTotalHeures(DCont $dcont)
+    public function getDcontTotalHeures($dcont)
     {
         return $this
             ->createQueryBuilder('t')
