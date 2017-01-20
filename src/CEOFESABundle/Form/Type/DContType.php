@@ -36,6 +36,7 @@ class DContType extends AbstractType
                 'attr'         => array('class' => 'parcours-widget'),
                 'label'        => false,
                 'options'      => array('structure' => $id, 'label' => false),
+                'prototype_name' => '__name_parcours__'
             ))
         ;
     }

@@ -33,7 +33,15 @@
                             <td data-order="{{ devi.devDatedebut.timestamp|default(0) }}">{{ devi.devDatedebut|date('d/m/Y')|default() }}</td>
                             <td data-order="{{ devi.devDatefin.timestamp|default(0) }}">{{ devi.devDatefin|date('d/m/Y')|default() }}</td>
                             <td>{{ devi.devStatut }}</td>
-                            <td class="text-center">
+                            <td class="text-center" data-search="
+                                {% set students = [] %}
+                                {% for parcour in devi.devParcours %}
+                                    {% if parcour.dprTiers.trsNomPrenom not in students %}
+                                        {{ parcour.dprTiers.trsNomPrenom }}
+                                        {% set students = students|merge([parcour.dprTiers.trsNomPrenom]) %}
+                                    {% endif %}
+                                {% endfor %}
+                            ">
                                 <a href="{{ path('devis_show', { 'id': devi.devId }) }}">
                                     <button type="button" class="btn btn-green3 btn-xs">
                                         <i class="fa fa-eye"></i> Voir
@@ -80,8 +88,6 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}
 {% block javascripts %}
 {% endblock %}
