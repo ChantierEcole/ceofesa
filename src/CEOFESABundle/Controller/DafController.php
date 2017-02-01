@@ -145,7 +145,7 @@ class DafController extends Controller
                     if ($parcours->getPrcType()->getMtyType() == ModuleT::EXTER && $parcours->getPrcStructure()->getStrId() == $ss->getStrId()) {
                         $bparcours = new BParcours();
                         $bparcours->setBprNombreheure($parcours->getPrcNombreheure());
-                        $bparcours->setBprTauxhoraire($daf->getDafTauxhoraire());
+                        $bparcours->setBprTauxhoraire($daf->getDafTauxhoraire() === 9.15 ? 8.15 : (float)10);
                         $bparcours->setBprParcours($parcours);
                         $bparcours->setBprBonCde($bcd);
                         $bcd->addBcdBParcour($bparcours);
