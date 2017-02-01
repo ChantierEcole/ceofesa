@@ -54,9 +54,8 @@ class MainController extends Controller
      */
     public function dashboardStructureAction(Request $request)
     {
-        $id = $this->get('session')->get('structure');
         $em = $this->getDoctrine()->getManager();
-        $structure = $em->getRepository('CEOFESABundle:Structure')->find($id);
+        $structure = $em->getRepository('CEOFESABundle:Structure')->find($this->get('session')->get('structure'));
         $form = $this->createForm('dashboard_type');
 
         if ($form->handleRequest($request)->isValid()) {
@@ -93,7 +92,7 @@ class MainController extends Controller
         }
 
         return $this->render("Main/structure_dashboard.html.twig", array(
-            'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate($id, $start, $end),
+            'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate($structure, $start, $end),
             'structure'    => $structure,
             'form'         => $form->createView(),
         ));

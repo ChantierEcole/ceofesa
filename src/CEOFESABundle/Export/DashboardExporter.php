@@ -65,7 +65,28 @@ class DashboardExporter
      *
      * @return string
      */
-    public function exportCsv(Structure $structure, \DateTime $start, \DateTime $end)
+    public function generalExportPdf(\DateTime $start, \DateTime $end)
+    {
+        $html = $this->twig->render('::Templates\general_recap.html.twig', array(
+            'participants' => $this->resolveParticipants(null, $start, $end),
+            'start'        => $start,
+            'end'          => $end,
+        ));
+
+        return $this->snappy->getOutputFromHtml($html, array(
+            'orientation' => 'Portrait',
+            'page-size'   => 'A4',
+        ));
+    }
+
+    /**
+     * @param Structure|null $structure
+     * @param \DateTime      $start
+     * @param \DateTime      $end
+     *
+     * @return string
+     */
+    public function exportCsv(Structure $structure = null, \DateTime $start, \DateTime $end)
     {
         $file = fopen('php://memory', 'rw+');
 
@@ -103,16 +124,16 @@ class DashboardExporter
     }
 
     /**
-     * @param Structure $structure
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param Structure|null $structure
+     * @param \DateTime      $start
+     * @param \DateTime      $end
      *
      * @return Parcours[]
      */
-    private function resolveParticipants(Structure $structure, \DateTime $start, \DateTime $end)
+    private function resolveParticipants(Structure $structure = null, \DateTime $start, \DateTime $end)
     {
         return $this->em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate(
-            $structure->getStrId(),
+            $structure,
             $start,
             $end
         );
