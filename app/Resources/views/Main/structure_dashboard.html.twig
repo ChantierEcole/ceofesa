@@ -60,6 +60,7 @@
                   <th>Prénom</th>
                   <th>APC</th>
                   <th>Type</th>
+                  <th>Module</th>
                   <th>Nombre d'Heures de la période</th>
                   <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
                   <th>Nombre d'Heures prévues<br /> pour le parcours</th>
@@ -73,6 +74,7 @@
                     <td>{{ participant.prenom }}</td>
                     <td>{{ participant.dossier }}</td>
                     <td>{{ participant.type }}</td>
+                    <td>{{ participant.moduleCode }} - {{ participant.moduleIntitule }}</td>
                     <td class="ta-right">{{ participant.nombreHeureMois | default('0.00') }}</td>
                     <td class="ta-right">{{ participant.nombreHeureCumulee | default('0.00') }}</td>
                     <td class="ta-right">{{ participant.nombreHeurePrevue | default('0.00') }}</td>
