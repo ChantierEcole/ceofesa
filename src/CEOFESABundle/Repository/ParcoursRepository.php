@@ -88,7 +88,6 @@ class ParcoursRepository extends EntityRepository
             ->leftJoin('par.prcPresence', 'psc')
             ->leftJoin('psc.pscSession', 'session')
             ->leftJoin('par.prcModule', 'module')
-            ->where('daf.dafStructure = :idStructure')
             ->andWhere('session.sesDate >= :dateDebut')
             ->andWhere('session.sesDate <= :dateFin')
             ->groupBy('par')
