@@ -293,4 +293,60 @@ class AdminController extends Controller
             'form' => $form->createView()
         ));
     }
+
+    /**
+     * @Route(
+     *       path="/admin/dashboard/general",
+     *       name="general_dashboard"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function generalDashboardAction(Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $structure = $em->getRepository('CEOFESABundle:Structure')->find($id = $this->get('session')->get('structure'));
+        $form = $this->createForm('dashboard_type');
+
+        if ($form->handleRequest($request)->isValid()) {
+            $data = $form->getData();
+            $start = $data['start'];
+            $end = $data['end'];
+
+            if ($form->get('print')->isClicked()) {
+                $response= new Response();
+                $response->setContent($this->get('ceofesa.dashboard.exporter')->generalExportPdf($start, $end));
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set(
+                    'Content-disposition',
+                    'filename=Synthese-'.$start->format('d-m-Y').'-'.$end->format('d-m-Y').'.pdf'
+                );
+
+                return $response;
+            }
+
+            if ($form->has('export') && $form->get('export')->isClicked()) {
+                $response= new Response();
+                $response->setContent("\xEF\xBB\xBF".$this->get('ceofesa.dashboard.exporter')->exportCsv(null, $start, $end)); //fixme not by structure but for everyone
+                $response->headers->set('Content-Type', 'application/csv');
+                $response->headers->set(
+                    'Content-disposition',
+                    'filename=Synthese-'.$start->format('d-m-Y').'-'.$end->format('d-m-Y').'.csv'
+                );
+
+                return $response;
+            }
+        } else {
+            $form->get('start')->setData($start = new \DateTime(date('Y-m-01 00:00:00')));
+            $form->get('end')->setData($end = new \DateTime(date('Y-m-t 23:59:59')));
+        }
+
+        return $this->render("Main/structure_dashboard.html.twig", array(
+            'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate(null, $start, $end),
+            'structure'    => $structure,
+            'form'         => $form->createView(),
+        ));
+    }
 }
