@@ -9,6 +9,8 @@ use Knp\Snappy\GeneratorInterface;
 
 class DashboardExporter
 {
+    const CSV_DELIMITER = ';';
+
     /**
      * @var EntityManagerInterface
      */
@@ -99,7 +101,7 @@ class DashboardExporter
             'Cumul d\'Heures réalisées depuis le début du parcours',
             'Nombre d\'Heures prévues pour le parcours',
             'OF Sous-traitant',
-        ));
+        ), self::CSV_DELIMITER);
 
         $participants = $this->resolveParticipants($structure, $start, $end);
 
@@ -113,7 +115,7 @@ class DashboardExporter
                 !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
                 !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
                 $participant['structure'],
-            ));
+            ), self::CSV_DELIMITER);
         }
 
         rewind($file);
