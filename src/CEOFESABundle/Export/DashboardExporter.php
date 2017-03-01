@@ -9,6 +9,8 @@ use Knp\Snappy\GeneratorInterface;
 
 class DashboardExporter
 {
+    const CSV_DELIMITER = ';';
+
     /**
      * @var EntityManagerInterface
      */
@@ -65,11 +67,32 @@ class DashboardExporter
      *
      * @return string
      */
-    public function exportCsv(Structure $structure, \DateTime $start, \DateTime $end)
+    public function generalExportPdf(\DateTime $start, \DateTime $end)
+    {
+        $html = $this->twig->render('::Templates\general_recap.html.twig', array(
+            'participants' => $this->resolveParticipants(null, $start, $end),
+            'start'        => $start,
+            'end'          => $end,
+        ));
+
+        return $this->snappy->getOutputFromHtml($html, array(
+            'orientation' => 'Portrait',
+            'page-size'   => 'A4',
+        ));
+    }
+
+    /**
+     * @param Structure|null $structure
+     * @param \DateTime      $start
+     * @param \DateTime      $end
+     *
+     * @return string
+     */
+    public function exportCsv(Structure $structure = null, \DateTime $start, \DateTime $end)
     {
         $file = fopen('php://memory', 'rw+');
 
-        fputcsv($file, array(
+        $headerFields = array(
             'Nom',
             'Prénom',
             'APC',
@@ -77,22 +100,36 @@ class DashboardExporter
             'Nombre d\'Heures de la période',
             'Cumul d\'Heures réalisées depuis le début du parcours',
             'Nombre d\'Heures prévues pour le parcours',
-            'OF Sous-traitant',
-        ));
+        );
+
+        if ($structure === null) {
+            $headerFields[] = 'Structure';
+        }
+
+        $headerFields[] = 'OF Sous-traitant';
+
+        fputcsv($file, $headerFields, self::CSV_DELIMITER);
 
         $participants = $this->resolveParticipants($structure, $start, $end);
-
         foreach ($participants as $participant) {
-            fputcsv($file, array(
+            $contentFields = array(
                 $participant['nom'],
                 $participant['prenom'],
                 $participant['dossier'],
                 $participant['type'],
                 !empty($participant['nombreHeureMois']) ? $participant['nombreHeureMois'] : '0.00',
                 !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
-                !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
-                $participant['structure'],
-            ));
+                !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00'
+            );
+
+
+            if ($structure === null) {
+                $headerFields[] = $participant['structureDaf'];
+            }
+
+            $contentFields [] = $participant['structure'];
+
+            fputcsv($file, $contentFields, self::CSV_DELIMITER);
         }
 
         rewind($file);
@@ -103,16 +140,16 @@ class DashboardExporter
     }
 
     /**
-     * @param Structure $structure
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param Structure|null $structure
+     * @param \DateTime      $start
+     * @param \DateTime      $end
      *
      * @return Parcours[]
      */
-    private function resolveParticipants(Structure $structure, \DateTime $start, \DateTime $end)
+    private function resolveParticipants(Structure $structure = null, \DateTime $start, \DateTime $end)
     {
         return $this->em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate(
-            $structure->getStrId(),
+            $structure,
             $start,
             $end
         );

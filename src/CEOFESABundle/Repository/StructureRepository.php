@@ -4,6 +4,7 @@ namespace CEOFESABundle\Repository;
 
 use CEOFESABundle\Entity\ModuleT;
 use CEOFESABundle\Entity\Structure;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 class StructureRepository extends EntityRepository
@@ -141,5 +142,22 @@ class StructureRepository extends EntityRepository
         ->createQueryBuilder('s')
         ->orderBy('s.strNom','ASC')
         ;
+    }
+
+    /**
+     * @param array|string[] $structureType
+     *
+     * @return ArrayCollection|Structure[]
+     */
+    public function findByExternTypeStructures(array $structureType)
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb
+            ->join('s.strType', 'strType')
+            ->where($qb->expr()->in('strType.styType', $structureType))
+            ->orderBy('s.strNom', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

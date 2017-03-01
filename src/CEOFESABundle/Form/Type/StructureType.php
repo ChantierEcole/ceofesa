@@ -8,6 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class StructureType extends AbstractType
 {
+    const TYPE_STRUCTURE = 'Structure';
+    const TYPE_OF_PRINCIPAL = 'OF Principal';
+    const TYPE_OF_SOUS_TRAITANT = 'OF Sous-traitant';
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options

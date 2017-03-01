@@ -2,6 +2,7 @@
 
 namespace CEOFESABundle\Repository;
 
+use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Entity\Tiers;
 use CEOFESABundle\Entity\DAF;
 use CEOFESABundle\Entity\DCont;
@@ -9,46 +10,44 @@ use Doctrine\ORM\EntityRepository;
 
 class ParcoursRepository extends EntityRepository
 {
-	public function getParcours($idStructure,$idOF,$idModule,$idModuleType)
+    public function getParcours($idStructure, $idOF, $idModule, $idModuleType)
     {
         return $this
-        ->createQueryBuilder('par')
-        ->innerJoin('par.prcDcont','dcnt')
-        ->innerJoin('dcnt.cntDaf','daf')
-        ->innerJoin('dcnt.cntTiers','trs')
-        ->where('par.prcStructure = :IdOF')
-        ->andWhere('par.prcModule = :IdModule')
-        ->andWhere('par.prcType = :IdModuleType')
-        ->andWhere('daf.dafStructure = :IdStructure')
-        ->setParameters(array('IdStructure' => $idStructure, 'IdOF' => $idOF, 'IdModule' => $idModule, 'IdModuleType' => $idModuleType))
-        ->orderBy('trs.trsNom', 'ASC')
-        ;
+            ->createQueryBuilder('par')
+            ->innerJoin('par.prcDcont', 'dcnt')
+            ->innerJoin('dcnt.cntDaf', 'daf')
+            ->innerJoin('dcnt.cntTiers', 'trs')
+            ->where('par.prcStructure = :IdOF')
+            ->andWhere('par.prcModule = :IdModule')
+            ->andWhere('par.prcType = :IdModuleType')
+            ->andWhere('daf.dafStructure = :IdStructure')
+            ->setParameters(array('IdStructure' => $idStructure, 'IdOF' => $idOF, 'IdModule' => $idModule, 'IdModuleType' => $idModuleType))
+            ->orderBy('trs.trsNom', 'ASC');
     }
 
     /**
      * @param $idStructure
-     * 
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     public function getParcoursByStructure($idStructure)
     {
         return $this
             ->createQueryBuilder('par')
-            ->innerJoin('par.prcDcont','dcnt')
-            ->innerJoin('dcnt.cntDaf','daf')
+            ->innerJoin('par.prcDcont', 'dcnt')
+            ->innerJoin('dcnt.cntDaf', 'daf')
             ->where('daf.dafStructure = :IdStructure')
-            ->setParameters(array('IdStructure' => $idStructure))
-            ;
+            ->setParameters(array('IdStructure' => $idStructure));
     }
 
     /**
-     * @param int       $idStructure
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * 
+     * @param Structure|null $structure
+     * @param \DateTime      $start
+     * @param \DateTime      $end
+     *
      * @return array
      */
-    public function getParcoursByStructureAndDate($idStructure, \DateTime $start, \DateTime $end)
+    public function getParcoursByStructureAndDate(Structure $structure = null, \DateTime $start, \DateTime $end)
     {
         $subQueryMonth = $this->createQueryBuilder('par1')
             ->select('SUM(pre1.pscDuree)')
@@ -69,7 +68,7 @@ class ParcoursRepository extends EntityRepository
             ->getQuery()
             ->getDQL();
 
-        return $this
+        $qb = $this
             ->createQueryBuilder('par')
             ->select('tiers.trsNom as nom')
             ->addSelect('tiers.trsPrenom as prenom')
@@ -77,28 +76,32 @@ class ParcoursRepository extends EntityRepository
             ->addSelect('typ.mtyType as type')
             ->addSelect('par.prcNombreheure as nombreHeurePrevue')
             ->addSelect('structur.strNom as structure')
+            ->addSelect('dafStructure.strNom as structureDaf')
             ->addSelect('('.$subQueryMonth.') AS nombreHeureMois')
             ->addSelect('('.$subQueryTotal.') AS nombreHeureCumulee')
+            ->addSelect('module.modCode AS moduleCode')
+            ->addSelect('module.modIntitule AS moduleIntitule')
             ->innerJoin('par.prcDcont','dcnt')
             ->innerJoin('dcnt.cntDaf','daf')
+            ->innerJoin('daf.dafStructure ','dafStructure')
             ->innerJoin('dcnt.cntTiers', 'tiers')
             ->innerJoin('par.prcType', 'typ')
             ->innerJoin('par.prcStructure', 'structur')
             ->leftJoin('par.prcPresence', 'psc')
             ->leftJoin('psc.pscSession', 'session')
-            ->where('daf.dafStructure = :idStructure')
+            ->leftJoin('par.prcModule', 'module')
             ->andWhere('session.sesDate >= :dateDebut')
             ->andWhere('session.sesDate <= :dateFin')
-            ->groupBy('nom')
-            ->addGroupBy('prenom')
-            ->addGroupBy('dossier')
-            ->addGroupBy('type')
-            ->addGroupBy('structure')
-            ->setParameter('idStructure', $idStructure)
+            ->groupBy('par')
             ->setParameter('dateDebut', $start)
-            ->setParameter('dateFin', $end)
-            ->getQuery()
-            ->getScalarResult();
+            ->setParameter('dateFin', $end);
+        if ($structure != null) {
+            $qb
+                ->andWhere('dafStructure = :structure')
+                ->setParameter('structure', $structure);
+        }
+
+        return $qb->getQuery()->getScalarResult();
     }
 
     /**
@@ -140,8 +143,8 @@ class ParcoursRepository extends EntityRepository
             ->addSelect('structur.strNom as structure')
             ->addSelect('('.$subQueryMonth.') AS nombreHeureMois')
             ->addSelect('('.$subQueryTotal.') AS nombreHeureCumulee')
-            ->innerJoin('par.prcDcont','dcnt')
-            ->innerJoin('dcnt.cntDaf','daf')
+            ->innerJoin('par.prcDcont', 'dcnt')
+            ->innerJoin('dcnt.cntDaf', 'daf')
             ->innerJoin('dcnt.cntTiers', 'tiers')
             ->innerJoin('par.prcModule', 'modul')
             ->innerJoin('par.prcType', 'typ')
@@ -185,7 +188,7 @@ class ParcoursRepository extends EntityRepository
      *
      * @return int
      */
-    public function getDcontTotalHeures(DCont $dcont)
+    public function getDcontTotalHeures($dcont)
     {
         return $this
             ->createQueryBuilder('t')

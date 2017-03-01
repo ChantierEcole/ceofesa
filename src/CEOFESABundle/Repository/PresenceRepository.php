@@ -39,7 +39,7 @@ class PresenceRepository extends EntityRepository
      *
      * @return int
      */
-    public function getDcontTotalDurees(DCont $dcont)
+    public function getDcontTotalDurees($dcont)
     {
     	return $this->createQueryBuilder('t')
     	    ->select('sum(t.pscDuree) as total')
