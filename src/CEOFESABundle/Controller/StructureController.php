@@ -30,11 +30,24 @@ class StructureController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('CEOFESABundle:Structure')->getAllStructures()->getQuery()->getResult();
+        $structureRepository = $em->getRepository('CEOFESABundle:Structure');
+        $structures = $structureRepository->findByExternTypeStructures([StructureType::TYPE_STRUCTURE]);
 
-        return array(
-            'entities' => $entities,
-        );
+        return array('structures' => $structures);
+    }
+
+    /**
+     * @Route("/sous-traitants", name="sous_traitants")
+     * @Method("GET")
+     * @Template("::Structure\index.html.twig")
+     */
+    public function listeSousTraitantAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $structureRepository = $em->getRepository('CEOFESABundle:Structure');
+        $structures = $structureRepository->findByExternTypeStructures([StructureType::TYPE_OF_PRINCIPAL, StructureType::TYPE_OF_SOUS_TRAITANT]);
+
+        return array('structures' => $structures);
     }
 
     /**
