@@ -307,7 +307,6 @@ class AdminController extends Controller
     public function generalDashboardAction(Request $request){
 
         $em = $this->getDoctrine()->getManager();
-        $structure = $em->getRepository('CEOFESABundle:Structure')->find($id = $this->get('session')->get('structure'));
         $form = $this->createForm('dashboard_type');
 
         if ($form->handleRequest($request)->isValid()) {
@@ -345,7 +344,6 @@ class AdminController extends Controller
 
         return $this->render("Main/structure_dashboard.html.twig", array(
             'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate(null, $start, $end),
-            'structure'    => $structure,
             'form'         => $form->createView(),
         ));
     }

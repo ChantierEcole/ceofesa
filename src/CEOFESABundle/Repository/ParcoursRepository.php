@@ -76,12 +76,14 @@ class ParcoursRepository extends EntityRepository
             ->addSelect('typ.mtyType as type')
             ->addSelect('par.prcNombreheure as nombreHeurePrevue')
             ->addSelect('structur.strNom as structure')
+            ->addSelect('dafStructure.strNom as structureDaf')
             ->addSelect('('.$subQueryMonth.') AS nombreHeureMois')
             ->addSelect('('.$subQueryTotal.') AS nombreHeureCumulee')
             ->addSelect('module.modCode AS moduleCode')
             ->addSelect('module.modIntitule AS moduleIntitule')
             ->innerJoin('par.prcDcont','dcnt')
             ->innerJoin('dcnt.cntDaf','daf')
+            ->innerJoin('daf.dafStructure ','dafStructure')
             ->innerJoin('dcnt.cntTiers', 'tiers')
             ->innerJoin('par.prcType', 'typ')
             ->innerJoin('par.prcStructure', 'structur')
@@ -95,11 +97,10 @@ class ParcoursRepository extends EntityRepository
             ->setParameter('dateFin', $end);
         if ($structure != null) {
             $qb
-                ->andWhere('daf.dafStructure = :structure')
+                ->andWhere('dafStructure = :structure')
                 ->setParameter('structure', $structure);
         }
 
-        $t = $qb->getQuery()->getScalarResult();
         return $qb->getQuery()->getScalarResult();
     }
 

@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <div class="panel panel-visible margin-bottom-none">
         <div class="panel-heading">
-          <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-dashboard"></span>Panneau de contrôle - {{ structure.strNom }}</div>
+          <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-dashboard"></span>Panneau de contrôle - {% if structure is defined %}{{ structure.strNom }}{% else %}Général{% endif %}</div>
         </div>
         <div class="panel-body">
 
@@ -64,6 +64,7 @@
                   <th>Nombre d'Heures de la période</th>
                   <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
                   <th>Nombre d'Heures prévues<br /> pour le parcours</th>
+                  {% if structure is not defined %}<th class="ta-center">Structure</th>{% endif %}
                   <th>OF Sous-traitant</th>
                 </tr>
                 </thead>
@@ -78,6 +79,7 @@
                     <td class="ta-right">{{ participant.nombreHeureMois | default('0.00') }}</td>
                     <td class="ta-right">{{ participant.nombreHeureCumulee | default('0.00') }}</td>
                     <td class="ta-right">{{ participant.nombreHeurePrevue | default('0.00') }}</td>
+                    {% if structure is not defined %}<td class="ta-center">{{ participant.structureDaf }}</td>{% endif %}
                     <td>{{ participant.structure }}</td>
                   </tr>
                 {% endfor %}
