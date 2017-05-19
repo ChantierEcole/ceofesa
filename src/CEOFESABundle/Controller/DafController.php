@@ -108,6 +108,14 @@ class DafController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $sortieT = $em->getRepository('CEOFESABundle:SortieT')->find(DCont::DEFAULT_SORTIE_ID);
+            foreach ($daf->getDafDcont() as $dCont) {
+                if ($dCont->getCntMotifsortie() === null) {
+                    $dCont->setCntMotifsortie($sortieT);
+                }
+            }
+
             $em->persist($daf);
             $em->flush();
 
