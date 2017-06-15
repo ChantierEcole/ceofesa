@@ -18,13 +18,14 @@ set :user,             "admin"
 
 set :writable_dirs,     ["app/cache", "app/logs"]
 
-set :shared_files,    [ app_path + "/config/parameters.yml", web_path + "/.htaccess", "backup.sh" ]
+set :shared_files,    [ app_path + "/config/parameters.yml", web_path + "/.htaccess"]
 set :shared_children, [ log_path, web_path + "/uploads" ]
 
 set :writable_dirs,       [ cache_path ]
 set :webserver_user,      "www-data"
 set :permission_method,   :acl
 set :use_set_permissions, true
+ssh_options[:forward_agent] = true
 
 set :use_composer,               true
 set :dump_assetic_assets,        true

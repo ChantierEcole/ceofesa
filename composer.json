@@ -6,6 +6,7 @@
     "autoload": {
         "psr-0": { "": "src/", "SymfonyStandard": "app/" }
     },
+    "minimum-stability" : "dev",
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.7.*",
@@ -40,7 +41,8 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
+            "vendor/widop/backup/preinstall.sh"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -52,7 +54,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+	"secure-http": false
     },
     "extra": {
         "symfony-app-dir": "app",
@@ -62,6 +65,12 @@
         },
         "branch-alias": {
             "dev-master": "2.5-dev"
+        }
+    },
+    "repositories": {
+        "widop": {
+            "type": "composer",
+            "url": "http://packages.widop.com"
         }
     }
 }
