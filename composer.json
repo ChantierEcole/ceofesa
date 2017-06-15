@@ -6,6 +6,7 @@
     "autoload": {
         "psr-0": { "": "src/", "SymfonyStandard": "app/" }
     },
+    "minimum-stability" : "dev",
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.7.*",
@@ -52,7 +53,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+	"secure-http": false
     },
     "extra": {
         "symfony-app-dir": "app",
@@ -62,6 +64,12 @@
         },
         "branch-alias": {
             "dev-master": "2.5-dev"
+        }
+    },
+    "repositories": {
+        "widop": {
+            "type": "composer",
+            "url": "http://packages.widop.com"
         }
     }
 }
