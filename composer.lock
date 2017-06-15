@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4eb80c220cd69a34e551378e6bdc02af",
-    "content-hash": "b01e0ebeee600c560ab4445ce736e61f",
+    "hash": "810fae2d3c9a4690fb31bf6aaabc70fd",
+    "content-hash": "ecbe8c9b15256ce3b72e06c6c2d9e5eb",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -53,16 +53,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CoreSphere/ConsoleBundle.git",
-                "reference": "79107b90cd713e15dd2b4326910a1b18e34ec2a6"
+                "reference": "7761030372974d890bc19cee38f23a6f43c2d974"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CoreSphere/ConsoleBundle/zipball/79ef9a4a86cf5839593b1b3bf385556120b14008",
-                "reference": "79107b90cd713e15dd2b4326910a1b18e34ec2a6",
+                "url": "https://api.github.com/repos/CoreSphere/ConsoleBundle/zipball/7761030372974d890bc19cee38f23a6f43c2d974",
+                "reference": "7761030372974d890bc19cee38f23a6f43c2d974",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5",
+                "php": "^5.5|^7.0",
                 "symfony/console": "~2.7|~3.0",
                 "symfony/dependency-injection": "~2.7|~3.0",
                 "symfony/event-dispatcher": "~2.7|~3.0",
@@ -73,7 +73,8 @@
                 "doctrine/doctrine-fixtures-bundle": "^2.2",
                 "doctrine/doctrine-migrations-bundle": "^1.0",
                 "phpunit/phpunit": "^4.8",
-                "symfony/finder": "^2.7"
+                "symfony/finder": "^2.7",
+                "symfony/templating": "^3.2"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -101,7 +102,7 @@
                 "javascript",
                 "symfony"
             ],
-            "time": "2015-11-27 21:56:07"
+            "time": "2017-02-22 13:12:30"
         },
         {
             "name": "doctrine/annotations",
@@ -681,12 +682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineFixturesBundle.git",
-                "reference": "0f1a2f91b349e10f5c343f75ab71d23aace5b029"
+                "reference": "561fb64d1d3b47673bdb13a0ac76f0003cf0eeef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineFixturesBundle/zipball/0f1a2f91b349e10f5c343f75ab71d23aace5b029",
-                "reference": "0f1a2f91b349e10f5c343f75ab71d23aace5b029",
+                "url": "https://api.github.com/repos/doctrine/DoctrineFixturesBundle/zipball/561fb64d1d3b47673bdb13a0ac76f0003cf0eeef",
+                "reference": "561fb64d1d3b47673bdb13a0ac76f0003cf0eeef",
                 "shasum": ""
             },
             "require": {
@@ -730,7 +731,7 @@
                 "Fixture",
                 "persistence"
             ],
-            "time": "2015-11-04 21:23:23"
+            "time": "2017-05-23 11:55:00"
         },
         {
             "name": "doctrine/doctrine-migrations-bundle",
@@ -742,7 +743,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/b21d0af23d4511701cd34d56b96442bc814ed072",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/c0a2f5d069e56e2ac7a42719dfda63fd996a39ed",
                 "reference": "c0a2f5d069e56e2ac7a42719dfda63fd996a39ed",
                 "shasum": ""
             },
@@ -1495,12 +1496,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpSnappyBundle.git",
-                "reference": "ead0b44c6a9a96c1817710cd854665ee755afe04"
+                "reference": "6056a0cf193105dfe30da65908e1394d42a2f082"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/ead0b44c6a9a96c1817710cd854665ee755afe04",
-                "reference": "ead0b44c6a9a96c1817710cd854665ee755afe04",
+                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/6056a0cf193105dfe30da65908e1394d42a2f082",
+                "reference": "6056a0cf193105dfe30da65908e1394d42a2f082",
                 "shasum": ""
             },
             "require": {
@@ -1544,7 +1545,7 @@
                 "pdf",
                 "snappy"
             ],
-            "time": "2015-12-15 10:11:19"
+            "time": "2017-06-14 23:35:34"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -2714,6 +2715,28 @@
             "time": "2016-01-25 21:22:18"
         },
         {
+            "name": "widop/backup",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:widop/backup.git",
+                "reference": "145f8af100107befbd7ce81068e8e54285fe6162"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/widop/backup/zipball/145f8af100107befbd7ce81068e8e54285fe6162",
+                "reference": "145f8af100107befbd7ce81068e8e54285fe6162",
+                "shasum": ""
+            },
+            "type": "library",
+            "description": "Database and files backup script with logrotate and rclone",
+            "support": {
+                "source": "https://github.com/widop/backup/tree/0.0.5",
+                "issues": "https://github.com/widop/backup/issues"
+            },
+            "time": "2017-06-12 15:01:46"
+        },
+        {
             "name": "willdurand/jsonp-callback-validator",
             "version": "v1.1.0",
             "source": {
@@ -2862,14 +2885,13 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "friendsofsymfony/user-bundle": 20,
-        "coresphere/console-bundle": 20,
-        "doctrine/migrations": 20,
         "doctrine/doctrine-migrations-bundle": 20,
         "knplabs/knp-snappy-bundle": 20,
-        "doctrine/doctrine-fixtures-bundle": 20
+        "doctrine/doctrine-fixtures-bundle": 20,
+        "widop/backup": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
