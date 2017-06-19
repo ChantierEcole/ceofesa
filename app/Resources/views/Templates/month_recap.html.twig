@@ -205,6 +205,7 @@
             <TD colspan=2 class="tr12 td55"><P class="p2 ft15">&nbsp;</P></TD>
             <TD class="tr12 td48"><P class="p2 ft15">&nbsp;</P></TD>
             <TD class="tr12 td49"><P class="p2 ft15">&nbsp;</P></TD>
+            <TD class="tr12 td49"><P class="p2 ft15">&nbsp;</P></TD>
             <TD colspan=2 class="tr10 td56"><P class="p2 ft10">&nbsp;</P></TD>
             <TD class="tr10 td16"><P class="p2 ft10">&nbsp;</P></TD>
         </TR>
@@ -220,6 +221,7 @@
             <TD colspan=2 class="tr13 td55"><P class="p14 ft16">Cumul d'Heures réalisées <br /> depuis le début du parcours</P></TD>
             <TD class="tr13 td62"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td63"><P class="p15 ft16">Nombre d'Heures prévues<br /> pour le parcours</P></TD>
+            <TD class="tr13 td63"><P class="p15 ft16">OF Sous-traitant</P></TD>
             <TD colspan=2 class="tr0 td56"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr0 td16"><P class="p2 ft4">&nbsp;</P></TD>
         </TR>
@@ -236,6 +238,7 @@
             <TD colspan=2 class="tr13 td55"><P class="p19 ft17">{{ participant.nombreHeureCumulee | default('0.00') }}</P></TD>
             <TD class="tr13 td62"><P class="p2 ft4">&nbsp;</P></TD>
             <TD class="tr13 td63"><P class="p18 ft17">{{ participant.nombreHeurePrevue | default('0.00') }}</P></TD>
+            <TD class="tr13 td63"><P class="p18 ft17">{{ participant.structure }}</P></TD>
         </TR>
         {% endfor %}
     </TABLE>

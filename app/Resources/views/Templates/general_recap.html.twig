@@ -41,7 +41,6 @@
         .tr5{height: 23px;}
 
         .t0{width: 604px;margin-left: 14px;font: 13px 'Kalinga';}
-        .t1{width: 736px;margin-top: 65px;font: bold 12px 'Kalinga';}
 
         .content-table {
             border-collapse: collapse;
@@ -67,11 +66,6 @@
         .content-table tbody tr:nth-child(even) {
             background-color: rgba(227, 251, 220, 0.3);
         }
-
-        .td-75 {
-            width: 75px;
-        }
-
     </style>
 </head>
 
@@ -108,25 +102,31 @@
     <table class="content-table">
         <thead>
             <tr>
-                <th>Ref. APC</th>
-                <th>Stagiaire</th>
-                <th>Structure</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>APC</th>
+                <th>Type</th>
                 <th>Module</th>
-                <th class="td-75">Nombre d'heures de la période</th>
-                <th class="td-75">Cumul d'heures réalisées depuis le début du parcours</th>
-                <th class="td-75">Nombre d'heures prévues pour le parcours</th>
+                <th>Nombre d'Heures de la période</th>
+                <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
+                <th>Nombre d'Heures prévues<br /> pour le parcours</th>
+                {% if structure is not defined %}<th class="ta-center">Structure</th>{% endif %}
+                <th>OF Sous-traitant</th>
             </tr>
         </thead>
         <tbody>
         {% for participant in participants %}
             <tr>
+                <td>{{ participant.nom }}</td>
+                <td>{{ participant.prenom }}</td>
                 <td>{{ participant.dossier }}</td>
-                <td>{{ participant.nom }} {{ participant.prenom }}</td>
-                <td>{{ participant.structure }}</td>
                 <td>{{ participant.type }}</td>
-                <td class="td-75">{{ participant.nombreHeureMois | default('0.00') }}</td>
-                <td class="td-75">{{ participant.nombreHeureCumulee | default('0.00') }}</td>
-                <td class="td-75">{{ participant.nombreHeurePrevue | default('0.00') }}</td>
+                <td>{{ participant.moduleCode }} - {{ participant.moduleIntitule }}</td>
+                <td class="ta-right">{{ participant.nombreHeureMois | default('0.00') }}</td>
+                <td class="ta-right">{{ participant.nombreHeureCumulee | default('0.00') }}</td>
+                <td class="ta-right">{{ participant.nombreHeurePrevue | default('0.00') }}</td>
+                {% if structure is not defined %}<td class="ta-center">{{ participant.structureDaf }}</td>{% endif %}
+                <td>{{ participant.structure }}</td>
             </tr>
         {% endfor %}
         </tbody>

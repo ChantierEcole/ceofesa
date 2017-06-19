@@ -55,7 +55,7 @@ class DashboardExporter
         ));
 
         return $this->snappy->getOutputFromHtml($html, array(
-            'orientation' => 'Portrait',
+            'orientation' => 'portrait',
             'page-size'   => 'A4',
         ));
     }
@@ -76,7 +76,7 @@ class DashboardExporter
         ));
 
         return $this->snappy->getOutputFromHtml($html, array(
-            'orientation' => 'Portrait',
+            'orientation' => 'portrait',
             'page-size'   => 'A4',
         ));
     }
@@ -119,15 +119,14 @@ class DashboardExporter
                 $participant['type'],
                 !empty($participant['nombreHeureMois']) ? $participant['nombreHeureMois'] : '0.00',
                 !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
-                !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00'
+                !empty($participant['nombreHeurePrevue']) ? $participant['nombreHeurePrevue'] : '0.00'
             );
 
+            $contentFields[] = $participant['structure'];
 
             if ($structure === null) {
-                $headerFields[] = $participant['structureDaf'];
+                $contentFields [] = $participant['structureDaf'];
             }
-
-            $contentFields [] = $participant['structure'];
 
             fputcsv($file, $contentFields, self::CSV_DELIMITER);
         }
