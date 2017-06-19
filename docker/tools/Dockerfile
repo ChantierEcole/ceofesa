@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     rubygems \
     && rm -rf /var/lib/apt/lists/*
 
-RUN cd / && wget -q http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz -O - | tar xvJ \
+RUN cd / && wget -q https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz -O - | tar xvJ \
     && apt-get remove -y wget && cp -r /wkhtmltox/* /usr/ && rm -rf /wkhtmltox
 
 RUN docker-php-ext-install intl mbstring zip mysql pdo_mysql json mcrypt gd

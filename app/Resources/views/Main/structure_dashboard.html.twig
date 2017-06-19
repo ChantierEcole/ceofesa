@@ -55,18 +55,18 @@
             <div class="col-md-12">
               <table class="js-data-table">
                 <thead>
-                <tr>
-                  <th>Nom</th>
-                  <th>Prénom</th>
-                  <th>APC</th>
-                  <th>Type</th>
-                  <th>Module</th>
-                  <th>Nombre d'Heures de la période</th>
-                  <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
-                  <th>Nombre d'Heures prévues<br /> pour le parcours</th>
-                  {% if structure is not defined %}<th class="ta-center">Structure</th>{% endif %}
-                  <th>OF Sous-traitant</th>
-                </tr>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>APC</th>
+                    <th>Type</th>
+                    <th>Module</th>
+                    <th>Nombre d'Heures de la période</th>
+                    <th>Cumul d'Heures réalisées<br /> depuis le début du parcours</th>
+                    <th>Nombre d'Heures prévues<br /> pour le parcours</th>
+                    {% if structure is not defined %}<th class="ta-center">Structure</th>{% endif %}
+                    <th>OF Sous-traitant</th>
+                  </tr>
                 </thead>
                 <tbody>
                 {% for participant in participants %}
@@ -91,8 +91,6 @@
       </div>
     </div>
   </div>
-
-
 
 <!-- End: Main -->
 {% endblock %}
