@@ -95,12 +95,12 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $devis = $em->getRepository('CEOFESABundle:Devis')->find($DevisId);
-        $devstructure = $devis->getDevstructure();
-        $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devstructure);
+        $devStructure = $devis->getDevstructure();
+        $mails = $em->getRepository('CEOFESABundle:Utilisateurs')->getMails($devStructure);
 
         if (!$devis) {
             throw $this->createNotFoundException(
-                'Aucun devis trouvé pour cet id : '.$id
+                'Aucun devis trouvé pour cet id : '.$DevisId
             );
         }
 

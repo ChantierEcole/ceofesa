@@ -47,20 +47,21 @@
                                         <i class="fa fa-eye"></i> Voir
                                     </button>
                                 </a>
-                                {% if devi.devStatut != "Validé" %}
+                                {% if devi.getIdDaf == null and devi.devAnnee >= 2017 %}
                                     <a href="{{ path('devis_edit', { 'id': devi.devId }) }}">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-pencil"></i> Editer
                                         </button>
                                     </a>
-                                {% else %}
-                                    {% if is_granted('ROLE_ADMIN') %}
+                                {% endif %}
+                                {% if is_granted('ROLE_ADMIN') %}
                                     <a href="{{ path('new_daf', { 'id': devi.devId }) }}">
                                         <button type="button" class="btn btn-blue btn-xs">
                                             <i class="fa fa-folder"></i> Créer un APC
                                         </button>
                                     </a>
-                                    {% endif %}
+                                {% endif %}
+                                {% if devi.devStatut == "Validé" %}
                                     <a href="{{ path('devis_print', { 'id': devi.devId }) }}" target="_blank">
                                         <button type="button" class="btn btn-blue4 btn-xs">
                                             <i class="fa fa-print"></i> Imprimer Devis

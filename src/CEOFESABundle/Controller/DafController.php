@@ -48,7 +48,6 @@ class DafController extends Controller
         );
     }
 
-
     /**
      * Creation d'une daf
      *
@@ -78,8 +77,8 @@ class DafController extends Controller
             $daf->setDafNbsalarie($daf->calcNbSalarie());
             $daf->setDafNbheure($daf->calcNbheure());
             $daf->setDafMontant($daf->calcMontant());
-
             $em->persist($daf);
+            $devis->setIdDAF($daf);
             $em->flush();
 
             $this->manageBonCommande($daf);
@@ -133,7 +132,8 @@ class DafController extends Controller
     /**
      * @param DAF $daf
      */
-    private function manageBonCommande(DAF $daf) {
+    private function manageBonCommande(DAF $daf)
+    {
 
         $em             = $this->getDoctrine()->getManager();
         $sousTraitants  = $em->getRepository('CEOFESABundle:Structure')->findDAFSousTraitants($daf->getDafId());
@@ -169,10 +169,8 @@ class DafController extends Controller
             $em->flush();
         }
 
-
         return ;
     }
-
 
     /**
      * Formulaire pour la création d'une entité Daf à partir d'un devis
@@ -246,6 +244,4 @@ class DafController extends Controller
 
         return $response;
     }
-
-
 }

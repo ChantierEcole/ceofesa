@@ -2,10 +2,10 @@
 
 namespace CEOFESABundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use CEOFESABundle\Validator\Constraints as CeofesaAssert;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Devis
@@ -101,7 +101,15 @@ class Devis
      */
     private $devStatut = 'en cours';
 
+    /**
+     * @ORM\OneToOne(targetEntity="CEOFESABundle\Entity\DAF", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="daf_ID")
+     */
+    private $idDAF;
 
+    /**
+     * Devis constructor.
+     */
     public function __construct()
     {
         $this->devParcours = new ArrayCollection();
@@ -405,4 +413,25 @@ class Devis
         }
         return $heures;
     }
+
+    /**
+     * @return DAF
+     */
+    public function getIdDAF()
+    {
+        return $this->idDAF;
+    }
+
+    /**
+     * @param $idDAF
+     *
+     * @return $this
+     */
+    public function setIdDAF($idDAF)
+    {
+        $this->idDAF = $idDAF;
+
+        return $this;
+    }
+
 }
