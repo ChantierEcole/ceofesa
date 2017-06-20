@@ -27,6 +27,15 @@ class TiersRepository extends EntityRepository
         ;
     }
 
+    public function getStagiaires()
+    {
+        return $this
+            ->createQueryBuilder('s')
+            ->andWhere('s.trsType = 3')
+            ->orderBy('s.trsNom','ASC')
+            ;
+    }
+
     public function getStructureFormateurs($id_structure)
     {
         return $this

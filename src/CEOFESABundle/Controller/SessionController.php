@@ -5,6 +5,7 @@ namespace CEOFESABundle\Controller;
 use CEOFESABundle\Entity\Parcours;
 use CEOFESABundle\Entity\Structure;
 use CEOFESABundle\Form\Type\PresenceType;
+use CEOFESABundle\Form\Type\StudentAttendanceType;
 use CEOFESABundle\Helper\CeoHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -25,6 +26,7 @@ use CEOFESABundle\Repository\ParcoursRepository;
 use CEOFESABundle\Form\Type\SessionType;
 use CEOFESABundle\Form\Type\MonthType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Session controller.
@@ -465,9 +467,41 @@ class SessionController extends Controller
     public function stagiaireListPrintAction(Request $request)
     {
         $id = $this->get('session')->get('structure');
-        $form = $this->createForm(new MonthType(), null, array('structure' => $id));
+        $form = $this->createForm(new MonthType(), null, ['structure' => $id]);
+        $formStagiaire = $this->createForm(new StudentAttendanceType(), null, ['structure' => $id]);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($formStagiaire->handleRequest($request)->isValid() && $formStagiaire->get('print')->isClicked()) {
+
+            $data = $formStagiaire->getData();
+            $dateBegin = $data['start'];
+            $dateEnd = $data['end'];
+            $student = $data['stagiaire'];
+
+            $em = $this->getDoctrine()->getManager();
+
+            $participants = [];
+            $interval = \DateInterval::createFromDateString('1 month');
+            $period = new \DatePeriod($dateBegin, $interval, $dateEnd);
+
+            foreach ( $period as $dt ) {
+                foreach ($em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessionsForStudent($id, $student, $dt) as $p) {
+                    $participants[] = $p;
+                }
+            }
+
+            $html = $this->renderView('::Templates\emargement_student.html.twig', array(
+                'participants' => $participants,
+            ));
+
+            $response= new Response();
+            $response->setContent($this->get('knp_snappy.pdf')->getOutputFromHtml($html,array('orientation' => 'Landscape','page-size' => 'A4')));
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-disposition', 'filename=emargement-'.$dateBegin->format('mY').'.pdf');
+
+            return $response;
+        }
+
+        if ($form->handleRequest($request)->isValid() && $form->get('print')->isClicked()) {
             $data = $form->getData();
             $date = $data['date'];
             $module = $data['module'];
@@ -492,7 +526,10 @@ class SessionController extends Controller
             return $response;
         }
 
-        return array('printForm' => $form->createView());
+        return [
+            'printForm' => $form->createView(),
+            'printFormStudent' => $formStagiaire->createView(),
+        ];
     }
 
     /**
