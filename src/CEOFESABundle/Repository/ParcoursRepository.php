@@ -183,6 +183,27 @@ class ParcoursRepository extends EntityRepository
             ->getResult();
     }
 
+
+    public function getParcoursAndSessionsForStudent($idStructure, $student, $date)
+    {
+        return $this
+            ->getParcoursByStructure($idStructure)
+            ->addSelect('pre', 'ses')
+            ->innerJoin('par.prcPresence', 'pre')
+            ->innerJoin('pre.pscSession', 'ses')
+            ->innerJoin('pre.pscParcours', 'pre_par')
+            ->innerJoin('pre_par.prcDcont', 'pre_par_dcont')
+            ->andWhere('ses.sesDate >= :dateMin')
+            ->andWhere('ses.sesDate <= :dateMax')
+            ->andWhere('pre_par_dcont.cntTiers = :student')
+            ->setParameter('dateMin', new \DateTime($date->format('Y-m-01')))
+            ->setParameter('dateMax', new \DateTime($date->format('Y-m-t')))
+            ->setParameter('student', $student)
+            ->orderBy('ses.sesDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param DCont $dcont
      *

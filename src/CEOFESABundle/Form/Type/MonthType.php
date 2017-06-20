@@ -47,7 +47,8 @@ class MonthType extends AbstractType
                 'years'  => range(date('Y')-5, date('Y')+5),
                 'days'   => array(1),
                 'data'   => new \DateTime(),
-            ));
+            ))
+            ->add('print', 'submit', ['label' => 'valider']);
     }
     
     /**
