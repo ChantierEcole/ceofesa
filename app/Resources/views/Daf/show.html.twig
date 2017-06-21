@@ -110,6 +110,40 @@
                     {% endfor %}
                 </table>
                 <br />
+                <h3>Blocage des heures pour l'APC</h3>
+                <table class="table table-bordered table-condensed table-hover col-lg-4">
+                    <tr>
+                        <th colspan="2">Mois bloqués</th>
+                    </tr>
+                    {% for stuckMonth in stuckMonths %}
+                        <tr>
+                            <td>{{ stuckMonth.dateStuck|date("m") }}</td>
+                            <td>{{ stuckMonth.dateStuck|date("Y") }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% if is_granted('ROLE_ADMIN') %}
+                    {{ form_start(stuckApcMonthForm) }}
+                        <div class="row">
+                            <div class="col-sm-1 col-sm-offset-3">
+                                {{ form_label(stuckApcMonthForm.dateStuck) }}
+                            </div>
+                            {{ form_widget(stuckApcMonthForm.dateStuck.day, { 'attr': { 'style': 'display:none' }} )  }}
+                            <div class="col-sm-2">
+                                {{ form_widget(stuckApcMonthForm.dateStuck.month, { 'attr': { 'class': 'form-control' }} )  }}
+                            </div>
+                            <div class="col-sm-2">
+                                {{ form_widget(stuckApcMonthForm.dateStuck.year, { 'attr': { 'class': 'form-control' }} )  }}
+                            </div>
+                            <div class="col-sm-3">
+                                {{ form_widget(stuckApcMonthForm.save, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                            </div>
+                        </div>
+                    {{ form_rest(stuckApcMonthForm) }}
+                    {{ form_rest(stuckApcMonthForm) }}
+                    <br/>
+                {% endif %}
+
                 <a href="{{ path('daf') }}">
                     <button type="button" class="btn btn-light4 spacing-button">
                         Retour à la liste
