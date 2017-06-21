@@ -2,16 +2,19 @@
 
 namespace CEOFESABundle\Controller;
 
+use CEOFESABundle\Entity\DAF;
+use CEOFESABundle\Entity\Presence;
+use CEOFESABundle\Entity\StuckApcMonth;
 use CEOFESABundle\Form\Type\EmailType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use CEOFESABundle\Form\Type\StuckApcMonthType;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
-use CEOFESABundle\Form\Domain\utilisateur;
-use CEOFESABundle\Form\Type\UtilisateurType;
 
 /**
  * Admin controller.
@@ -287,9 +290,9 @@ class AdminController extends Controller
             return $this->redirectToRoute('admin_email');
         }
 
-        return $this->render("User/email.html.twig", array(
-            'form' => $form->createView()
-        ));
+        return $this->render("User/email.html.twig", [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -344,5 +347,42 @@ class AdminController extends Controller
             'participants' => $em->getRepository('CEOFESABundle:Parcours')->getParcoursByStructureAndDate(null, $start, $end),
             'form'         => $form->createView(),
         ));
+    }
+
+    /**
+     * @Route(
+     *       path="/admin/daf/stuck-month/{daf}",
+     *       name="stuck_apc_month"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function stuckAPCMonthAction(Request $request, DAF $daf)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $stuckApcMonth = new StuckApcMonth();
+        $form = $this->createForm(new StuckApcMonthType(), $stuckApcMonth);
+
+        if ($form->handleRequest($request)->isValid()) {
+            $stuckApcMonth->setIdDAF($daf);
+            $stuckMonthExist = $em->getRepository('CEOFESABundle:StuckApcMonth')->findOneBy(['dateStuck' => $stuckApcMonth->getDateStuck(), 'idDAF' => $daf]);
+
+            if (!($stuckMonthExist instanceof StuckApcMonth)) {
+                $presences = $em->getRepository('CEOFESABundle:Presence')->getPresenceOfDafByMonth($daf, $stuckApcMonth->getDateStuck());
+
+                /** @var Presence $presence */
+                foreach ($presences as $presence) {
+                   $presence->setPscValidate(true);
+                }
+
+                $em->persist($stuckApcMonth);
+                $em->flush();
+            }
+        }
+
+        return $this->redirect($this->generateUrl('daf_show', ['id' => $daf->getDafId()]));
     }
 }

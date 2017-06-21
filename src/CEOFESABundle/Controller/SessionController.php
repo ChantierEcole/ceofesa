@@ -376,10 +376,10 @@ class SessionController extends Controller
         $form = $this->createForm(
             new SessionType($this->getDoctrine()->getRepository(Structure::class), $id),
             $entity,
-            array(
+            [
                 'action' => $this->generateUrl('session_edit', array('id' => $idsession)),
                 'method' => 'POST',
-            )
+            ]
         );
 
         return $form;
