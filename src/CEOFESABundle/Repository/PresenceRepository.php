@@ -90,4 +90,28 @@ class PresenceRepository extends EntityRepository
         ->setParameter('idparcours', $idparcours)
         ;
     }
+
+    /**
+     * @param $daf
+     * @param $date
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getPresenceOfDafByMonth($daf, $date)
+    {
+        return $this
+            ->createQueryBuilder('pre')
+            ->where('pre_ses.sesDate >= :dateMin')
+            ->andWhere('pre_ses.sesDate <= :dateMax')
+            ->andWhere('pre_par_dcont.cntDaf = :daf')
+            ->innerJoin('pre.pscParcours', 'pre_par')
+            ->innerJoin('pre_par.prcDcont', 'pre_par_dcont')
+            ->innerJoin('pre.pscSession', 'pre_ses')
+            ->setParameter('dateMin', new \DateTime($date->format('Y-m-01')))
+            ->setParameter('dateMax', new \DateTime($date->format('Y-m-t')))
+            ->setParameter('daf', $daf)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }
