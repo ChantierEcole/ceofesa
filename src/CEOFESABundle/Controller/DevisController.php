@@ -186,7 +186,6 @@ class DevisController extends Controller
     public function editAction($id)
     {
         $this->checkStructure($id);
-        $this->checkValid($id);
 
         $em = $this->getDoctrine()->getManager();
 
