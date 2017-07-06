@@ -61,7 +61,6 @@ class DashboardExporter
     }
 
     /**
-     * @param Structure $structure
      * @param \DateTime $start
      * @param \DateTime $end
      *
@@ -97,6 +96,7 @@ class DashboardExporter
             'Prénom',
             'APC',
             'Type',
+            'Module',
             'Nombre d\'Heures de la période',
             'Cumul d\'Heures réalisées depuis le début du parcours',
             'Nombre d\'Heures prévues pour le parcours',
@@ -117,6 +117,7 @@ class DashboardExporter
                 $participant['prenom'],
                 $participant['dossier'],
                 $participant['type'],
+                $participant['moduleCode'].' - '.$participant['moduleIntitule'],
                 !empty($participant['nombreHeureMois']) ? $participant['nombreHeureMois'] : '0.00',
                 !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
                 !empty($participant['nombreHeurePrevue']) ? $participant['nombreHeurePrevue'] : '0.00'
