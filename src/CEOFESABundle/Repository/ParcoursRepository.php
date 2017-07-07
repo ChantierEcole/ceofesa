@@ -36,15 +36,15 @@ class ParcoursRepository extends EntityRepository
     public function getParcoursByStructure($idStructure)
     {
         return $this
-            ->createQueryBuilder('p')
+            ->createQueryBuilder('par')
             ->addSelect('prcModule')
             ->addSelect('prcType')
             ->addSelect('prcDcont')
             ->addSelect('cntDaf')
             ->addSelect('cntTiers')
-            ->innerJoin('p.prcModule', 'prcModule')
-            ->innerJoin('p.prcType', 'prcType')
-            ->innerJoin('p.prcDcont', 'prcDcont')
+            ->innerJoin('par.prcModule', 'prcModule')
+            ->innerJoin('par.prcType', 'prcType')
+            ->innerJoin('par.prcDcont', 'prcDcont')
             ->innerJoin('prcDcont.cntDaf', 'cntDaf')
             ->innerJoin('prcDcont.cntTiers', 'cntTiers')
             ->where('cntDaf.dafStructure = :IdStructure')
@@ -197,18 +197,23 @@ class ParcoursRepository extends EntityRepository
 
     public function getParcoursAndSessionsForStudent($idStructure, $student, $date)
     {
+        $dateStart = new \DateTime($date->format('Y-m-01'));
+        $dateEnd = new \DateTime($date->format('Y-m-t 23:59:59'));
+
         return $this
             ->getParcoursByStructure($idStructure)
             ->addSelect('pre', 'ses')
             ->innerJoin('par.prcPresence', 'pre')
             ->innerJoin('pre.pscSession', 'ses')
+            ->innerJoin('par.prcDcont', 'dcnt2')
+            ->innerJoin('dcnt2.cntTiers', 'trs')
             ->innerJoin('pre.pscParcours', 'pre_par')
             ->innerJoin('pre_par.prcDcont', 'pre_par_dcont')
             ->andWhere('ses.sesDate >= :dateMin')
             ->andWhere('ses.sesDate <= :dateMax')
             ->andWhere('pre_par_dcont.cntTiers = :student')
-            ->setParameter('dateMin', new \DateTime($date->format('Y-m-01')))
-            ->setParameter('dateMax', new \DateTime($date->format('Y-m-t')))
+            ->setParameter('dateMin', $dateStart)
+            ->setParameter('dateMax', $dateEnd)
             ->setParameter('student', $student)
             ->orderBy('ses.sesDate', 'ASC')
             ->getQuery()

@@ -479,13 +479,23 @@ class SessionController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            $participants = [];
+            $start    = $dateBegin->modify('first day of this month');
+            $end      = $dateEnd->modify('first day of next month');
             $interval = \DateInterval::createFromDateString('1 month');
-            $period = new \DatePeriod($dateBegin, $interval, $dateEnd);
+            $period   = new \DatePeriod($start, $interval, $end);
 
-            foreach ( $period as $dt ) {
-                foreach ($em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessionsForStudent($id, $student, $dt) as $p) {
-                    $participants[] = $p;
+            $participants = [];
+
+            foreach ($period as $dt) {
+
+                $perticipantsPeriod = $em->getRepository('CEOFESABundle:Parcours')->getParcoursAndSessionsForStudent($id, $student, $dt);
+                foreach ($perticipantsPeriod as $participant) {
+
+                    if (!(in_array($participant, $participants))) {
+                        $participants[] = $participant;
+                    }
+                    $em->detach($participant);
+
                 }
             }
 

@@ -39,7 +39,7 @@ class StudentAttendanceType extends AbstractType
                 'widget' => 'choice',
                 'format' => 'ddMMyyyy',
                 'years'  => range($year - 10, $year + 10),
-                'data'   => new \DateTime(date('Y-m-t 23:59:59')),
+                'data'   => new \DateTime(date('Y-m-01 23:59:59')),
             ])
             ->add('print', 'submit', ['label' => 'Imprimer']);
     }

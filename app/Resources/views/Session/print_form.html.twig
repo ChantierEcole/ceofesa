@@ -14,43 +14,41 @@
 
                     {{ form_start(printFormStudent) }}
                     <div class="row">
-                        <div class="col-md-2 col-sm-offset-2">
+                        <div class="col-md-2 col-md-offset-2">
                             {{ form_label(printFormStudent.stagiaire) }}
-                            {{ form_widget(printFormStudent.stagiaire, { 'attr': {'class': 'select2'} }) }}
+                            {{ form_widget(printFormStudent.stagiaire, { 'attr': {'class': 'select2 form-control'} }) }}
                             {{ form_errors(printFormStudent.stagiaire) }}
                         </div>
 
                     </div>
                     <br/>
                     <div class="row">
-                        <div class="col-sm-1">
+                        <div class="col-md-1 col-md-offset-1">
+                            {{ form_errors(printFormStudent.start) }}
                             {{ form_label(printFormStudent.start, null, { 'attr': { 'class': 'form-label' }}) }}
                         </div>
-                        <div class="col-sm-2">
                             {{ form_widget(printFormStudent.start.day, { 'attr': { 'class': 'form-control', 'style': 'display:none' }} )  }}
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col-md-2">
                             {{ form_widget(printFormStudent.start.month, { 'attr': { 'class': 'form-control' }} )  }}
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-md-2">
                             {{ form_widget(printFormStudent.start.year, { 'attr': { 'class': 'form-control' }} )  }}
                         </div>
                     </div>
                     <br/>
                     <div class="row">
-                        <div class="col-sm-1">
+                        <div class="col-md-1 col-md-offset-1">
+                            {{ form_errors(printFormStudent.end) }}
                             {{ form_label(printFormStudent.end, null, { 'attr': { 'class': 'form-label' }}) }}
                         </div>
-                        <div class="col-sm-2">
                             {{ form_widget(printFormStudent.end.day, { 'attr': { 'class': 'form-control', 'style': 'display:none' }} )  }}
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col-md-2">
                             {{ form_widget(printFormStudent.end.month, { 'attr': { 'class': 'form-control' }} )  }}
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-md-2">
                             {{ form_widget(printFormStudent.end.year, { 'attr': { 'class': 'form-control' }} )  }}
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             {{ form_widget(printFormStudent.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
                         </div>
 
