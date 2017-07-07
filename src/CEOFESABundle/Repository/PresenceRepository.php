@@ -114,4 +114,31 @@ class PresenceRepository extends EntityRepository
             ->getResult()
             ;
     }
+
+    /**
+     * @param $daf
+     * @param $start
+     * @param $end
+     *
+     * @return array
+     */
+    public function getPresenceOfDafByDateIntervalDafModule($daf, $module,$start, $end)
+    {
+        return $this
+            ->createQueryBuilder('pre')
+            ->where('pre_ses.sesDate >= :dateMin')
+            ->andWhere('pre_ses.sesDate <= :dateMax')
+            ->andWhere('pre_par_dcont.cntDaf = :daf')
+            ->andWhere('pre_par.prcModule = :module')
+            ->innerJoin('pre.pscParcours', 'pre_par')
+            ->innerJoin('pre_par.prcDcont', 'pre_par_dcont')
+            ->innerJoin('pre.pscSession', 'pre_ses')
+            ->setParameter('dateMin', new \DateTime($start->format('Y-m-01')))
+            ->setParameter('dateMax', new \DateTime($end->format('Y-m-t')))
+            ->setParameter('daf', $daf)
+            ->setParameter('module', $module)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

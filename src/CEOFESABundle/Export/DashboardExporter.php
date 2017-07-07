@@ -3,6 +3,7 @@
 namespace CEOFESABundle\Export;
 
 use CEOFESABundle\Entity\Parcours;
+use CEOFESABundle\Entity\Presence;
 use CEOFESABundle\Entity\Structure;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Snappy\GeneratorInterface;
@@ -27,9 +28,11 @@ class DashboardExporter
     private $snappy;
 
     /**
-     * @param EntityManagerInterface $em
-     * @param \Twig_Environment      $twig
-     * @param GeneratorInterface     $snappy
+     * DashboardExporter constructor.
+     *
+     * @param \Doctrine\ORM\EntityManagerInterface $em
+     * @param \Twig_Environment                    $twig
+     * @param \Knp\Snappy\GeneratorInterface       $snappy
      */
     public function __construct(EntityManagerInterface $em, \Twig_Environment $twig, GeneratorInterface $snappy)
     {
@@ -91,7 +94,7 @@ class DashboardExporter
     {
         $file = fopen('php://memory', 'rw+');
 
-        $headerFields = array(
+        $headerFields = [
             'Nom',
             'Prénom',
             'APC',
@@ -100,19 +103,21 @@ class DashboardExporter
             'Nombre d\'Heures de la période',
             'Cumul d\'Heures réalisées depuis le début du parcours',
             'Nombre d\'Heures prévues pour le parcours',
-        );
+        ];
 
         if ($structure === null) {
             $headerFields[] = 'Structure';
         }
 
         $headerFields[] = 'OF Sous-traitant';
+        $headerFields[] = 'Heures bloquées';
 
         fputcsv($file, $headerFields, self::CSV_DELIMITER);
 
         $participants = $this->resolveParticipants($structure, $start, $end);
         foreach ($participants as $participant) {
-            $contentFields = array(
+
+            $contentFields = [
                 $participant['nom'],
                 $participant['prenom'],
                 $participant['dossier'],
@@ -120,16 +125,49 @@ class DashboardExporter
                 $participant['moduleCode'].' - '.$participant['moduleIntitule'],
                 !empty($participant['nombreHeureMois']) ? $participant['nombreHeureMois'] : '0.00',
                 !empty($participant['nombreHeureCumulee']) ? $participant['nombreHeureCumulee'] : '0.00',
-                !empty($participant['nombreHeurePrevue']) ? $participant['nombreHeurePrevue'] : '0.00'
-            );
+                !empty($participant['nombreHeurePrevue']) ? $participant['nombreHeurePrevue'] : '0.00',
 
-            $contentFields[] = $participant['structure'];
+            ];
 
             if ($structure === null) {
                 $contentFields [] = $participant['structureDaf'];
             }
 
+            $contentFields[] = $participant['structure'];
+
+            $presences = $this->em->getRepository('CEOFESABundle:Presence')->getPresenceOfDafByDateIntervalDafModule($participant['dafId'], $participant['moduleId'],$start, $end);
+
+            $hours = ['yes' => [] , 'no' => []];
+
+            /** @var Presence $presence */
+            foreach ($presences as $presence) {
+                $session = $presence->getPscSession();
+                if ($presence->isPscValidate()) {
+                   $hours['yes'][] = $session->getSesDate()->format('d/m/Y').' '.$session->getSesHeureDebut().' -> '.$session->getSesHeureFin();
+                } else {
+                   $hours['no'][] = $session->getSesDate()->format('d/m/Y').' '.$session->getSesHeureDebut().' -> '.$session->getSesHeureFin();
+                }
+            }
+
+            $additionalLine = false;
+
+            if (count($hours['no']) == 0) {
+                $isStuck = 'oui';
+            } else if (count($hours['yes']) == 0) {
+                $isStuck = 'non';
+            } else {
+                $isStuck = 'détails ci-dessous :';
+                $stuckHours = ['','bloqués : '.implode(', ', $hours['yes'])];
+                $unstuckHours = ['','non bloqués '.implode(', ', $hours['no'])];
+                $additionalLine = true;
+            }
+
+            $contentFields[] = $isStuck;
             fputcsv($file, $contentFields, self::CSV_DELIMITER);
+            if ($additionalLine) {
+                fputcsv($file, $stuckHours, self::CSV_DELIMITER);
+                fputcsv($file, $unstuckHours, self::CSV_DELIMITER);
+            }
         }
 
         rewind($file);
