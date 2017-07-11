@@ -38,7 +38,7 @@ class DafController extends Controller
         $em = $this->getDoctrine()->getManager();
         $id = $this->get('session')->get('structure');
 
-        $entities = $em->getRepository('CEOFESABundle:DAF')->findBy(array('dafStructure' => $id), array('dafDatedebut' => 'ASC'));
+        $entities = $em->getRepository('CEOFESABundle:DAF')->getDafByStructure($id);
 
         return array(
             'dafs' => $entities,

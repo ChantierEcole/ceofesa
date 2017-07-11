@@ -1,11 +1,11 @@
 # This file is a "template" of what your parameters.yml file should look like
 parameters:
     database_driver:   pdo_mysql
-    database_host:     127.0.0.1
+    database_host:     db
     database_port:     ~
-    database_name:     cqp_test2
-    database_user:     root
-    database_password: ~
+    database_name:     ceofesa
+    database_user:     ceofesa
+    database_password: ceofesa
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
 
