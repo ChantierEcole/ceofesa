@@ -22,12 +22,16 @@ class DevisRepository extends EntityRepository
         return (empty($result)) ? 1 : $result[0]['devNumero'] + 1;
     }
 
-    public function getDevisStructure($id_structure){
+    public function getDevisStructure($id_structure)
+    {
         return $this
-        ->createQueryBuilder('s')
-        ->where('s.devStructure = :StructureId')
-        ->setParameter('StructureId',$id_structure)
-        ;
+            ->createQueryBuilder('s')
+            ->addSelect('devParcours')
+            ->addSelect('dprTiers')
+            ->innerJoin('s.devParcours', 'devParcours')
+            ->innerJoin('devParcours.dprTiers', 'dprTiers')
+            ->where('s.devStructure = :StructureId')
+            ->setParameter('StructureId', $id_structure);
     }
 
     // Affiche les devis non-intégrés dans des parcours modifiés dans les deux derniers mois
