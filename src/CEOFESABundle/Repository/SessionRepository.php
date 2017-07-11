@@ -18,16 +18,19 @@ class SessionRepository extends EntityRepository
         ;
     }
 
-    public function getSessions($idModule,$idType,$idOf,$idStructure)
+    public function getSessions($idModule, $idType, $idOf, $idStructure)
     {
-    	return $this
-    	->createQueryBuilder('sess')
-    	->where('sess.sesStructure = :idStructure')
-        ->andWhere('sess.sesModule = :idModule')
-        ->andWhere('sess.sesMtype = :idType')
-        ->andWhere('sess.sesOf = :idOf')
-        ->setParameters(array('idStructure' => $idStructure, 'idModule' => $idModule, 'idType' => $idType, 'idOf' => $idOf))
-        ;
+        return $this
+            ->createQueryBuilder('sess')
+            ->addSelect('presences')
+            ->addSelect('sesStype')
+            ->innerJoin('sess.presences', 'presences')
+            ->innerJoin('sess.sesStype', 'sesStype')
+            ->andWhere('sess.sesStructure = :idStructure')
+            ->andWhere('sess.sesModule = :idModule')
+            ->andWhere('sess.sesMtype = :idType')
+            ->andWhere('sess.sesOf = :idOf')
+            ->setParameters(array('idStructure' => $idStructure, 'idModule' => $idModule, 'idType' => $idType, 'idOf' => $idOf));
     }
 
     public function getStructureSession($idSession)
