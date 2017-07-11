@@ -14,6 +14,9 @@ class ParcoursRepository extends EntityRepository
     {
         return $this
             ->createQueryBuilder('par')
+            ->addSelect('dcnt')
+            ->addSelect('daf')
+            ->addSelect('trs')
             ->innerJoin('par.prcDcont', 'dcnt')
             ->innerJoin('dcnt.cntDaf', 'daf')
             ->innerJoin('dcnt.cntTiers', 'trs')
@@ -33,10 +36,18 @@ class ParcoursRepository extends EntityRepository
     public function getParcoursByStructure($idStructure)
     {
         return $this
-            ->createQueryBuilder('par')
-            ->innerJoin('par.prcDcont', 'dcnt')
-            ->innerJoin('dcnt.cntDaf', 'daf')
-            ->where('daf.dafStructure = :IdStructure')
+            ->createQueryBuilder('p')
+            ->addSelect('prcModule')
+            ->addSelect('prcType')
+            ->addSelect('prcDcont')
+            ->addSelect('cntDaf')
+            ->addSelect('cntTiers')
+            ->innerJoin('p.prcModule', 'prcModule')
+            ->innerJoin('p.prcType', 'prcType')
+            ->innerJoin('p.prcDcont', 'prcDcont')
+            ->innerJoin('prcDcont.cntDaf', 'cntDaf')
+            ->innerJoin('prcDcont.cntTiers', 'cntTiers')
+            ->where('cntDaf.dafStructure = :IdStructure')
             ->setParameters(array('IdStructure' => $idStructure));
     }
 

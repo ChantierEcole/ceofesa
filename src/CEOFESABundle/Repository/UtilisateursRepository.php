@@ -6,6 +6,15 @@ use Doctrine\ORM\EntityRepository;
 
 class UtilisateursRepository extends EntityRepository
 {
+    public function getUsersStructure()
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->addSelect('structure')
+            ->innerJoin('u.structure', 'structure');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 	public function getMails($structure){
 		$qb = $this->createQueryBuilder('m');
         $qb->select('m.email')

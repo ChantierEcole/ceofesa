@@ -20,22 +20,20 @@ use CEOFESABundle\Form\Type\UtilisateurType;
  */
 class AdminController extends Controller
 {
-	/**
-    * @Route(
-    * 	path="/users",
-    * 	name="users_gestion"
-    * )
-    * @Method({"GET","POST"})
-    */
-    public function userGestionAction(Request $request)
+    /**
+     * @Route(
+     *    path="/users",
+     *    name="users_gestion"
+     * )
+     * @Method({"GET","POST"})
+     */
+    public function userGestionAction()
     {
-        // Pour récupérer le service UserManager du bundle
-        $userManager = $this->get('fos_user.user_manager');
+        $em = $this->getDoctrine()->getManager();
 
-        // Pour récupérer la liste de tous les utilisateurs
-        $users = $userManager->findUsers();
-        
-        return $this->render("User/gestion.html.twig",array('users'=>$users));
+        $users = $em->getRepository('CEOFESABundle:Utilisateurs')->getUsersStructure();
+
+        return $this->render("User/gestion.html.twig", array('users' => $users));
     }
 
 	/**
