@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Add to user 'root' crontab :
-# @reboot  /var/www/ceofesa-prod/current/iptables-script.sh >/dev/null 2>&1
-# 0 * * * * /var/www/ceofesa-prod/current/iptables-script.sh >/dev/null 2>&1
+
+# @reboot  /var/www/ceofesa/prod/current/iptables-script.sh >/dev/null 2>&1
+# 0 * * * * /var/www/ceofesa/prod/current/iptables-script.sh >/dev/null 2>&1
 
 # RENITIALISER LES IPTABLES
 # Flush iptables
