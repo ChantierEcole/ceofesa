@@ -8,16 +8,19 @@ use CEOFESABundle\Entity\DCont;
 use CEOFESABundle\Entity\Devis;
 use CEOFESABundle\Entity\ModuleT;
 use CEOFESABundle\Entity\Structure;
+use CEOFESABundle\Entity\StuckApcMonth;
 use CEOFESABundle\Form\Type\DafType;
+use CEOFESABundle\Form\Type\StuckApcMonthType;
+use Doctrine\ORM\EntityManager;
 use Proxies\__CG__\CEOFESABundle\Entity\BParcours;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Devis controller
@@ -44,7 +47,6 @@ class DafController extends Controller
             'dafs' => $entities,
         );
     }
-
 
     /**
      * Creation d'une daf
@@ -75,8 +77,8 @@ class DafController extends Controller
             $daf->setDafNbsalarie($daf->calcNbSalarie());
             $daf->setDafNbheure($daf->calcNbheure());
             $daf->setDafMontant($daf->calcMontant());
-
             $em->persist($daf);
+            $devis->setIdDAF($daf);
             $em->flush();
 
             $this->manageBonCommande($daf);
@@ -130,7 +132,8 @@ class DafController extends Controller
     /**
      * @param DAF $daf
      */
-    private function manageBonCommande(DAF $daf) {
+    private function manageBonCommande(DAF $daf)
+    {
 
         $em             = $this->getDoctrine()->getManager();
         $sousTraitants  = $em->getRepository('CEOFESABundle:Structure')->findDAFSousTraitants($daf->getDafId());
@@ -166,10 +169,8 @@ class DafController extends Controller
             $em->flush();
         }
 
-
         return ;
     }
-
 
     /**
      * Formulaire pour la création d'une entité Daf à partir d'un devis
@@ -203,14 +204,23 @@ class DafController extends Controller
      */
     public function showAction(DAF $daf)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
-        $bonCdes = $em->getRepository('CEOFESABundle:BonCde')->findBy(array('bcdDAF' => $daf));
+        $stuckApcMonthForm = $this->createForm(new StuckApcMonthType(), null, [
+            'action' => $this->generateUrl('stuck_apc_month', ['daf' => $daf->getDafId()]),
+        ]);
 
-        return array(
+
+        $stuckMonths = $em->getRepository('CEOFESABundle:StuckApcMonth')->findBy(['idDAF' => $daf]);
+        $bonCdes = $em->getRepository('CEOFESABundle:BonCde')->findBy(['bcdDAF' => $daf]);
+
+        return [
             'bonCdes' => $bonCdes,
-            'daf'     => $daf
-        );
+            'daf'     => $daf,
+            'stuckApcMonthForm' => $stuckApcMonthForm->createView(),
+            'stuckMonths' => $stuckMonths
+        ];
     }
 
     /**
@@ -234,6 +244,4 @@ class DafController extends Controller
 
         return $response;
     }
-
-
 }

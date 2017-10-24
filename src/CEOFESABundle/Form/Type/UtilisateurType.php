@@ -10,7 +10,7 @@ class UtilisateurType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //Crétation du formulaire php
+        //Création du formulaire php
         $builder
             ->add('nom')
             ->add('prenom')

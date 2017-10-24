@@ -3,60 +3,129 @@
 {% form_theme printForm 'bootstrap_3_layout.html.twig' %}
 
 {% block body %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-visible margin-bottom-none">
-            <div class="panel-heading">
-                <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-print"></span>Imprimer les feuilles d'émargement pour tous les stagiaires du module et du mois choisis :</div>
-            </div>
-            <div class="panel-body">
 
-                {{ form_start(printForm) }}
-                <div class="row">
-                    <div class="col-md-2 col-sm-offset-2">
-                        {{ form_label(printForm.module) }}
-                        {{ form_widget(printForm.module) }}
-                        {{ form_errors(printForm.module) }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form_label(printForm.type) }}
-                        {{ form_widget(printForm.type) }}
-                        {{ form_errors(printForm.type) }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form_label(printForm.of) }}
-                        {{ form_widget(printForm.of) }}
-                        {{ form_errors(printForm.of) }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form_label(printForm.opca) }}
-                        {{ form_widget(printForm.opca) }}
-                        {{ form_errors(printForm.opca) }}
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-visible margin-bottom-none">
+                <div class="panel-heading">
+                    <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-print"></span>Imprimer les feuilles d'émargement pour un stagiaire sur toute une période :</div>
                 </div>
+                <div class="panel-body">
 
-                <br />
+                    {{ form_start(printFormStudent) }}
+                    <div class="row">
+                        <div class="col-md-2 col-md-offset-2">
+                            {{ form_label(printFormStudent.stagiaire) }}
+                            {{ form_widget(printFormStudent.stagiaire, { 'attr': {'class': 'select2 form-control'} }) }}
+                            {{ form_errors(printFormStudent.stagiaire) }}
+                        </div>
 
-                <div class="row">
-                    <div class="col-sm-1 col-sm-offset-3">
-                        {{ form_label(printForm.date) }}
                     </div>
-                    {{ form_widget(printForm.date.day, { 'attr': { 'style': 'display:none' }} )  }}
-                    <div class="col-sm-2">
-                        {{ form_widget(printForm.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-1 col-md-offset-1">
+                            {{ form_errors(printFormStudent.start) }}
+                            {{ form_label(printFormStudent.start, null, { 'attr': { 'class': 'form-label' }}) }}
+                        </div>
+                            {{ form_widget(printFormStudent.start.day, { 'attr': { 'class': 'form-control', 'style': 'display:none' }} )  }}
+                        <div class="col-md-2">
+                            {{ form_widget(printFormStudent.start.month, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ form_widget(printFormStudent.start.year, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
                     </div>
-                    <div class="col-sm-2">
-                        {{ form_widget(printForm.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-1 col-md-offset-1">
+                            {{ form_errors(printFormStudent.end) }}
+                            {{ form_label(printFormStudent.end, null, { 'attr': { 'class': 'form-label' }}) }}
+                        </div>
+                            {{ form_widget(printFormStudent.end.day, { 'attr': { 'class': 'form-control', 'style': 'display:none' }} )  }}
+                        <div class="col-md-2">
+                            {{ form_widget(printFormStudent.end.month, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ form_widget(printFormStudent.end.year, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ form_widget(printFormStudent.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                        </div>
+
                     </div>
-                    <div class="col-sm-3">
-                        <input type="submit" value="Valider" class="btn btn-primary" />
-                    </div>
+                    {{ form_rest(printFormStudent) }}
+                    {{ form_end(printFormStudent) }}
                 </div>
-
-                {{ form_end(printForm) }}
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-visible margin-bottom-none">
+                <div class="panel-heading">
+                    <div class="panel-title hidden-xs"><span class="glyphicon glyphicon-print"></span>Imprimer les feuilles d'émargement pour tous les stagiaires du module et du mois choisis :</div>
+                </div>
+                <div class="panel-body">
+
+                    {{ form_start(printForm) }}
+                    <div class="row">
+                        <div class="col-md-2 col-sm-offset-2">
+                            {{ form_label(printForm.module) }}
+                            {{ form_widget(printForm.module) }}
+                            {{ form_errors(printForm.module) }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ form_label(printForm.type) }}
+                            {{ form_widget(printForm.type) }}
+                            {{ form_errors(printForm.type) }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ form_label(printForm.of) }}
+                            {{ form_widget(printForm.of) }}
+                            {{ form_errors(printForm.of) }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ form_label(printForm.opca) }}
+                            {{ form_widget(printForm.opca) }}
+                            {{ form_errors(printForm.opca) }}
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-sm-1 col-sm-offset-3">
+                            {{ form_label(printForm.date) }}
+                        </div>
+                        {{ form_widget(printForm.date.day, { 'attr': { 'style': 'display:none' }} )  }}
+                        <div class="col-sm-2">
+                            {{ form_widget(printForm.date.month, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(printForm.date.year, { 'attr': { 'class': 'form-control' }} )  }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ form_widget(printFormStudent.print, { 'attr': { 'class': 'btn btn-primary' }} )  }}
+                        </div>
+                    </div>
+
+                    {{ form_end(printForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $(".select2").select2();
+    });
+    </script>
+{% endblock javascripts%}

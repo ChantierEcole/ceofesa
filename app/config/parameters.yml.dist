@@ -24,4 +24,4 @@ parameters:
     debug_redirects:        false
     use_assetic_controller: true
 
-    wkhtmltopdf_path: /usr/local/bin/wkhtmltopdf.sh
+    wkhtmltopdf_path: /usr/bin/wkhtmltopdf

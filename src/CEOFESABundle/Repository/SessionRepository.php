@@ -24,7 +24,7 @@ class SessionRepository extends EntityRepository
             ->createQueryBuilder('sess')
             ->addSelect('presences')
             ->addSelect('sesStype')
-            ->innerJoin('sess.presences', 'presences')
+            ->leftJoin('sess.presences', 'presences')
             ->innerJoin('sess.sesStype', 'sesStype')
             ->andWhere('sess.sesStructure = :idStructure')
             ->andWhere('sess.sesModule = :idModule')
