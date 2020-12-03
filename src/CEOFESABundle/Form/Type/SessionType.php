@@ -47,7 +47,7 @@ class SessionType extends AbstractType
         $builder
             ->add('sesDate', 'date',array(
                 'label' => 'Date',
-                'years' => [2015, 2016, 2017, 2018, 2019, 2020],
+                'years' => range(2015, date('Y') + 1),
             ))
             ->add('sesHeuredebut', 'time',array(
                 'label'  => 'Heure début',
