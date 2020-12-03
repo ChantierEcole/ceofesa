@@ -1,3 +1,4 @@
+FROM composer:1.6.5 AS composer
 FROM php:5.5-cli
 
 RUN apt-get update && apt-get install -y \
@@ -15,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     rubygems \
     && rm -rf /var/lib/apt/lists/*
 
-RUN cd / && wget -q https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz -O - | tar xvJ \
+RUN cd / && wget -q https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz -O - | tar xvJ \
     && apt-get remove -y wget && cp -r /wkhtmltox/* /usr/ && rm -rf /wkhtmltox
 
 RUN docker-php-ext-install intl mbstring zip mysql pdo_mysql json mcrypt gd
@@ -25,10 +26,10 @@ RUN pecl install -o -f xdebug-2.4.0 \
     && rm -rf /tmp/pear
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Capifony
-RUN gem install -N net-ssh:3.1.1 capifony:2.8.3 capistrano_colors slack-notifier
+#RUN gem install -N net-ssh:3.1.1 capifony:2.8.3 capistrano_colors slack-notifier
 
 # Assign a shell to user www-data
 RUN chsh -s /bin/bash www-data
